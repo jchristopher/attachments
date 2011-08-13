@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Attachments pl_PL version\n"
+"Project-Id-Version: Attachments pl_PL 1.5.3.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-03 15:16-0500\n"
-"PO-Revision-Date: 2011-06-03 15:18-0500\n"
+"POT-Creation-Date: 2011-06-06 18:29+0100\n"
+"PO-Revision-Date: 2011-06-06 18:33+0100\n"
 "Last-Translator: Wiktor Maj <w.maj@majpage.com>\n"
 "Language-Team: Wiktor Maj <w.maj@majpage.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,55 +16,44 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
-# @ attachments
-#: attachments.options.php:28
-#, fuzzy
+#: attachments.options.php:29
 msgid "Post Type Settings"
 msgstr "Ustawienia Custom Post Types"
 
-# @ attachments
-#: attachments.options.php:29
-#, fuzzy
+#: attachments.options.php:30
 msgid "Include Attachments in the following Post Types:"
 msgstr "Dodaj załączniki do następujących Custom Post Types:"
 
-# @ attachments
-#: attachments.options.php:41
+#: attachments.options.php:42
 msgid "Attachments can be integrated with your Custom Post Types. Unfortunately, there are none to work with at this time."
 msgstr "Załączniki mogą być zintegrowane z Custom Post Types. Niestety w tej chwili nie ma żadnych zarejestrowanych Custom Post Types."
 
-#: attachments.options.php:47
+#: attachments.options.php:48
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Różne"
 
-# @ attachments
-#: attachments.options.php:57
+#: attachments.options.php:58
 msgid "Save"
 msgstr "Zapisz"
 
-# @ attachments
 #: attachments.php:132
-#: attachments.php:482
+#: attachments.php:480
 msgid "Attach"
 msgstr "Załącz"
 
-# @ attachments
 #: attachments.php:156
 msgid "Delete"
 msgstr "Usuń"
 
-# @ attachments
 #: attachments.php:160
 msgid "Title"
 msgstr "Tytuł"
 
-# @ attachments
 #: attachments.php:164
 msgid "Caption"
 msgstr "Opis"
 
-# @ attachments
-#: attachments.php:214
+#: attachments.php:212
 msgid "Attachments"
 msgstr "Załączniki"
 

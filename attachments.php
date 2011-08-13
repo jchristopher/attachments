@@ -38,6 +38,23 @@ if( !defined( 'IS_ADMIN' ) )
 global $wpdb;
 
 
+// environment check
+$wp_version = get_bloginfo( 'version' );
+if( !version_compare( PHP_VERSION, '5.2', '>=' ) || !version_compare( $wp_version, '3.0', '>=' ) )
+{
+    if( IS_ADMIN && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
+    {
+        require_once ABSPATH.'/wp-admin/includes/plugin.php';
+        deactivate_plugins( __FILE__ );
+        wp_die( __('Attachments requires PHP 5.2 or higher, as will WordPress 3.2 and higher. It has been automatically deactivated.') );
+    }
+    else
+    {
+        return;
+    }
+}
+
+
 
 // =========
 // = HOOKS =
@@ -48,6 +65,8 @@ if( IS_ADMIN )
     add_action( 'admin_head', 'attachments_init_js' );
     add_action( 'save_post',  'attachments_save' );
     add_action( 'admin_menu', 'attachments_menu' );
+
+    load_plugin_textdomain( 'attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
 
 
