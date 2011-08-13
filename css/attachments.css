@@ -23,7 +23,7 @@ p.attachments-actions { float:right; margin:6px 0 0 !important; }
 	#attachments-file-details .attachments-alt li { width:290px; }
 	#attachments-file-details .attachments-alt span.attachments-thumbnail { display:block; width:70px; float:left; }
 	#attachments-file-details .attachments-alt h2.attachments-title-display { display:block; width:220px; float:left; text-decoration:none; font:20px Georgia,"Times New Roman","Bitstream Charter",Times,serif; font-style:italic; font-weight:normal; height:2.4em; overflow:hidden; }
-	
+
 	#attachments-file-details .attachments-alt li a { display:block; border:0; text-decoration:none; }
 	#attachments-file-details .attachments-alt li a.attachments-selected { border:0; }
 	#attachments-file-details .attachments-alt li a span.attachments-thumbnail img { border:3px solid #fff; }
@@ -70,16 +70,3 @@ p.attachments-actions { float:right; margin:6px 0 0 !important; }
 #attachments-tabs-wrapper { border-bottom:1px solid #dfdfdf; position:relative; }
 #attachments-tabs #sidemenu { overflow:hidden; zoom:1; background:#f9f9f9; float:none !important; margin:0; }
 #attachments-live-filter { display:block; width:140px; float:left; margin:0 0 10px; }
-
-
-/* Hide WP UI elements only for Attachments */
-body#media-upload.attachments-media-upload #tab-type_url,
-body#media-upload.attachments-media-upload #tab-nextgen,
-body#media-upload.attachments-media-upload p.ml-submit,
-body#media-upload.attachments-media-upload p.savebutton.ml-submit,
-body#media-upload.attachments-media-upload div.media-item tr.url,
-body#media-upload.attachments-media-upload div.media-item tr.align,
-body#media-upload.attachments-media-upload div.media-item tr.image-size,
-body#media-upload.attachments-media-upload div.media-item tr.image_alt,
-body#media-upload.attachments-media-upload div.media-item tr.post_content,
-body#media-upload.attachments-media-upload div.media-item a.del-link { display:none !important; }
