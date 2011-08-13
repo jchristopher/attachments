@@ -1,0 +1,85 @@
+/* ============ */
+/* = META BOX = */
+/* ============ */
+
+#attachments-inner { padding-top:3px; }
+ul#attachments-actions { overflow:hidden; zoom:1; padding-top:4px; }
+ul#attachments-actions li { width:50%; float:left; }
+li#attachments-add-new { float:right; text-align:right; }
+
+#attachments-instructions { margin:0; padding:12px 0 !important; }
+
+#attachments-file-list { padding:0; }
+.attachments-file-section { padding:0 0 20px 0; }
+p.attachments-actions { float:right; margin:6px 0 0 !important; }
+
+#attachments-file-details .attachments img { display:block; }
+#attachments-file-details .attachments a { display:block; border:3px solid #fff; float:left; }
+#attachments-file-details .attachments a:hover { border:3px solid #ccc; }
+
+#attachments-file-details .attachments a.attachments-selected { border:3px solid #eb3525; }
+
+	/* File listings, not images */
+	#attachments-file-details .attachments-alt li { width:290px; }
+	#attachments-file-details .attachments-alt span.attachments-thumbnail { display:block; width:70px; float:left; }
+	#attachments-file-details .attachments-alt h2.attachments-title-display { display:block; width:220px; float:left; text-decoration:none; font:20px Georgia,"Times New Roman","Bitstream Charter",Times,serif; font-style:italic; font-weight:normal; height:2.4em; overflow:hidden; }
+	
+	#attachments-file-details .attachments-alt li a { display:block; border:0; text-decoration:none; }
+	#attachments-file-details .attachments-alt li a.attachments-selected { border:0; }
+	#attachments-file-details .attachments-alt li a span.attachments-thumbnail img { border:3px solid #fff; }
+	#attachments-file-details .attachments-alt li a.attachments-selected span.attachments-thumbnail img { border:3px solid #eb3525; }
+
+
+/* ========================= */
+/* = META BOX FILE LISTING = */
+/* ========================= */
+#attachments-list ul { padding:10px 0; }
+#attachments-list li.attachments-file { overflow:hidden; zoom:1; }
+.attachments-data { display:none; }
+#poststuff li.attachments-file { height:115px; }
+#poststuff li.attachments-file h2 { margin:0; overflow:hidden; zoom:1; }
+#poststuff li.attachments-file h2 a { text-decoration:none; color:inherit; }
+#poststuff li.attachments-file h2 span { display:block; float:left; }
+#poststuff li.attachments-file h2 a span.attachment-handle-icon { padding:6px 0 0 0; cursor:move; }
+#poststuff li.attachments-file h2 span.attachment-name { padding:0 10px; height:2em; overflow:hidden; width:60%; }
+#poststuff li.attachments-file h2 span.attachment-delete { width:80px; text-align:center; padding:0.7em 0 0 0; float:right; margin-right:3px; }
+#poststuff li.attachments-file h2 span.attachment-delete a { font:11px "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif; color:#21759b; text-decoration:underline; }
+#poststuff li.attachments-file h2 span.attachment-delete a:hover { color:#d54e21; }
+
+#attachments-list .attachments-file { overflow:hidden; zoom:1; }
+#attachments-list .attachments-fields { width:80%; float:left; }
+#attachments-list .attachment-thumbnail { width:80px; float:right; margin-right:3px; }
+#attachments-list .attachments-thumbnail { width:80px; float:right; text-align:right; }
+#attachments-list .attachments-thumbnail img { display:block; max-width:80px; margin:0 auto; }
+
+.attachments-fields .textfield { overflow:hidden; zoom:1; padding-bottom:10px; }
+.attachments-fields .textfield label { display:block; width:20%; float:left; padding-top:6px; }
+.attachments-fields .textfield input { display:block; width:75%; float:left; }
+
+
+/* =========== */
+/* = OPTIONS = */
+/* =========== */
+.attachments_checkbox { overflow:hidden; zoom:1; padding:0 0 7px 0; }
+.attachments_checkbox input { display:block; float:left; margin-top:2px; }
+.attachments_checkbox label { display:block; float:left; padding:0 0 0 7px; }
+.attachments_checkbox p.note { clear:both; font-style:italic; padding:4px 0 0 21px; max-width:550px; color:#888; }
+
+#attachments-tabs .subsubsub { float:left; }
+#attachments-tabs .subsubsub a { color:#21759b !important; }
+#attachments-tabs-wrapper { border-bottom:1px solid #dfdfdf; position:relative; }
+#attachments-tabs #sidemenu { overflow:hidden; zoom:1; background:#f9f9f9; float:none !important; margin:0; }
+#attachments-live-filter { display:block; width:140px; float:left; margin:0 0 10px; }
+
+
+/* Hide WP UI elements only for Attachments */
+body#media-upload.attachments-media-upload #tab-type_url,
+body#media-upload.attachments-media-upload #tab-nextgen,
+body#media-upload.attachments-media-upload p.ml-submit,
+body#media-upload.attachments-media-upload p.savebutton.ml-submit,
+body#media-upload.attachments-media-upload div.media-item tr.url,
+body#media-upload.attachments-media-upload div.media-item tr.align,
+body#media-upload.attachments-media-upload div.media-item tr.image-size,
+body#media-upload.attachments-media-upload div.media-item tr.image_alt,
+body#media-upload.attachments-media-upload div.media-item tr.post_content,
+body#media-upload.attachments-media-upload div.media-item a.del-link { display:none !important; }

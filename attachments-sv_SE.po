@@ -1,0 +1,69 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Attachments sv_SE version\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-02-03 20:40-0100\n"
+"PO-Revision-Date: 2011-02-03 21:11+0100\n"
+"Last-Translator: Sebastian Johansson <johansson.seb@gmail.com>\n"
+"Language-Team: Sebastian Johansson <johansson.seb@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Swedish\n"
+"X-Poedit-Country: SWEDEN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: attachments.options.php:35
+#@ attachments
+msgid "Save"
+msgstr "Spara"
+
+#: attachments.php:156
+#@ attachments
+msgid "Delete"
+msgstr "Ta bort"
+
+#: attachments.php:160
+#@ attachments
+msgid "Title"
+msgstr "Titel"
+
+#: attachments.php:164
+#@ attachments
+msgid "Caption"
+msgstr "Beskrivning"
+
+#: attachments.php:201
+#: attachments.php:204
+#: attachments.php:220
+#@ attachments
+msgid "Attachments"
+msgstr "Bilagor"
+
+#: attachments.options.php:21
+#@ attachments
+msgid "Custom Post Type Settings"
+msgstr "Inställningar för Custom Post Types"
+
+#: attachments.options.php:22
+#@ attachments
+msgid "Include Attachments in the following Custom Post Types:"
+msgstr "Använd Attachments i följande Custom Post Types:"
+
+#: attachments.options.php:40
+#@ attachments
+msgid "Attachments can be integrated with your Custom Post Types. Unfortunately, there are none to work with at this time."
+msgstr "Attachments kan integreras med dina Custom Post Types. Tyvärr är inga Custom Post Types registrerade."
+
+#: attachments.php:132
+#: attachments.php:440
+#@ attachments
+msgid "Attach"
+msgstr "Bifoga"
+

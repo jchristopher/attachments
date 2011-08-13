@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Attachments pt_BR version\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-08-02 09:43-0300\n"
+"PO-Revision-Date: 2010-08-02 09:43-0300\n"
+"Last-Translator: Tecsite Estúdio Digital <tecsite@gmail.com>\n"
+"Language-Team: Miriam de Paula (Tecsite Estúdio Digital) <tecsite@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: BRAZIL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: attachments.php:92
+msgid "Attachments Options"
+msgstr "Opções do Attachments"
+
+#: attachments.php:97
+msgid "Users can only see their own attachments"
+msgstr "Os usuários só poderão ver seus próprios anexos"
+
+#: attachments.php:102
+msgid "Save"
+msgstr "Salvar"
+
+#: attachments.php:139
+msgid "Browse Existing"
+msgstr "Pesquisar os anexos existentes"
+
+#: attachments.php:144
+msgid "Add to Media Library"
+msgstr "Adicionar à Biblioteca de Mídia"
+
+#: attachments.php:168
+msgid "Delete"
+msgstr "Apagar"
+
+#: attachments.php:172
+msgid "Title"
+msgstr "Título"
+
+#: attachments.php:176
+msgid "Caption"
+msgstr "Legenda"
+
+#: attachments.php:213
+#: attachments.php:216
+msgid "Attachments"
+msgstr "Attachments"
+
+#: media.php:28
+msgid "Available attachments are listed from your <strong>Media Library</strong>. If you need to upload a new attachment, please close this dialog and use the available <strong>Add to Media Library</strong> button."
+msgstr "Os anexos disponíveis são listados em sua <strong>Biblioteca de Mídia</strong>. Se for necessário fazer upload de um novo anexo, por favor feche esta janela e use o botão <strong>Adicionar à Biblioteca de Mídia</strong>"
+
+#: media.php:28
+msgid "Select/deselect an attachment by clicking its thumbnail. When you're done managing your attachments, click <strong>Apply</strong>."
+msgstr "Selecionar/ deselecionar um anexo, clicando em sua miniatura. Quando você terminar de gerenciar seus anexos, clique no botão <strong>Aplicar</strong>"
+
+#: media.php:30
+#: media.php:132
+msgid "Apply"
+msgstr "Aplicar"
+
+#: media.php:38
+msgid "Images"
+msgstr "Imagens"
+
+#: media.php:42
+msgid "Videos"
+msgstr "Vídeos"
+
+#: media.php:46
+msgid "Documents"
+msgstr "Documentos"
+
+#: media.php:50
+msgid "Audio"
+msgstr "Áudio"
+
+#: media.php:86
+#: media.php:92
+msgid "Icon"
+msgstr "Ícone"
+
+#: media.php:87
+#: media.php:93
+msgid "File"
+msgstr "Arquivo"
+
+#~ msgid "Available attachments are listed from your"
+#~ msgstr "Anexos disponíveis estão listados desde"
+
+#, fuzzy
+#~ msgid "Media Library"
+#~ msgstr "Biblioteca de Mídia"
+
+#~ msgid ""
+#~ "If you need to upload a new attachment, please close this dialog and use "
+#~ "the available"
+#~ msgstr ""
+#~ "Se você precisar fazer upload de um novo anexo, por favor feche esta "
+#~ "janela e use o disponível"
+
+#~ msgid "button"
+#~ msgstr "botão"
