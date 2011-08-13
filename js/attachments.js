@@ -1,54 +1,3 @@
-function str_replace (search, replace, subject, count) {
-    // http://kevin.vanzonneveld.net
-    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   improved by: Gabriel Paderni
-    // +   improved by: Philip Peterson
-    // +   improved by: Simon Willison (http://simonwillison.net)
-    // +    revised by: Jonas Raoni Soares Silva (http://www.jsfromhell.com)
-    // +   bugfixed by: Anton Ongson
-    // +      input by: Onno Marsman
-    // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +    tweaked by: Onno Marsman
-    // +      input by: Brett Zamir (http://brett-zamir.me)
-    // +   bugfixed by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-    // +   input by: Oleg Eremeev
-    // +   improved by: Brett Zamir (http://brett-zamir.me)
-    // +   bugfixed by: Oleg Eremeev
-    // %          note 1: The count parameter must be passed as a string in order
-    // %          note 1:  to find a global variable in which the result will be given
-    // *     example 1: str_replace(' ', '.', 'Kevin van Zonneveld');
-    // *     returns 1: 'Kevin.van.Zonneveld'
-    // *     example 2: str_replace(['{name}', 'l'], ['hello', 'm'], '{name}, lars');
-    // *     returns 2: 'hemmo, mars'
-
-    var i = 0, j = 0, temp = '', repl = '', sl = 0, fl = 0,
-    f = [].concat(search),
-    r = [].concat(replace),
-    s = subject,
-    ra = r instanceof Array, sa = s instanceof Array;
-    s = [].concat(s);
-    if (count) {
-        this.window[count] = 0;
-    }
-
-    for (i=0, sl=s.length; i < sl; i++) {
-        if (s[i] === '') {
-            continue;
-        }
-        for (j=0, fl=f.length; j < fl; j++) {
-            temp = s[i]+'';
-            repl = ra ? (r[j] !== undefined ? r[j] : '') : r[0];
-            s[i] = (temp).split(f[j]).join(repl);
-            if (count && s[i] !== temp) {
-                this.window[count] += (temp.length-s[i].length)/f[j].length;}
-            }
-        }
-        return sa ? s : s[0];
-    }
-
-
-
-
     function init_attachments_sortable() {
         if(jQuery('div#attachments-list ul:data(sortable)').length==0&&jQuery('div#attachments-list ul li').length>0){
             jQuery('div#attachments-list ul').sortable({
@@ -109,13 +58,14 @@ function str_replace (search, replace, subject, count) {
         if(attachments_is_attachments_context)
         {
             jQuery('body').addClass('attachments-media-upload');
+            jQuery('#media-search').css('visibility','hidden');
 
             // we need to hijack the Attach button
             jQuery('td.savesend input').live('click',function(e){
                 theparent = jQuery(this).parent().parent().parent();
                 thetitle = theparent.find('tr.post_title td.field input').val();
                 thecaption = theparent.find('tr.post_excerpt td.field input').val();
-                theid = str_replace( 'imgedit-response-', '', theparent.find('td.imgedit-response').attr('id') );
+                theid = theparent.find('td.imgedit-response').attr('id').replace('imgedit-response-','');
                 thethumb = theparent.parent().parent().find('img.pinkynail').attr('src');
                 attachments_handle_attach(thetitle,thecaption,theid,thethumb);
                 jQuery(this).after('<span class="attachments-attached-note"> Attached</span>').parent().find('span.attachments-attached-note').delay(1000).fadeOut();
@@ -158,7 +108,7 @@ function str_replace (search, replace, subject, count) {
                         jQuery('#attachments-list').hide();
                     });
                 }
-            });		
+            });
             return false;
         });
 

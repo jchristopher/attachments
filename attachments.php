@@ -3,12 +3,12 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.5.3.2
+ Version: 1.5.4
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
 
-/*  Copyright 2009 Jonathan Christopher  (email : jonathandchr@gmail.com)
+/*  Copyright 2009-2011 Jonathan Christopher  (email : jonathan@irontoiron.com)
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,11 @@
  */
 
 
+// constant definition
+if( !defined( 'IS_ADMIN' ) )
+    define( 'IS_ADMIN',  is_admin() );
+
+
 // ===========
 // = GLOBALS =
 // ===========
@@ -37,7 +42,7 @@ global $wpdb;
 // =========
 // = HOOKS =
 // =========
-if( is_admin() )
+if( IS_ADMIN )
 {
     add_action( 'admin_menu', 'attachments_init' );
     add_action( 'admin_head', 'attachments_init_js' );
@@ -200,7 +205,7 @@ function attachments_meta_box()
         $args = array(
             'public'    => true,
             'show_ui'   => true
-            ); 
+            );
         $output         = 'objects';
         $operator       = 'and';
         $post_types     = get_post_types( $args, $output, $operator );
@@ -344,7 +349,7 @@ function attachments_save($post_id)
                 if( get_option( 'attachments_store_native' ) == 'true' )
                 {
                     // need to first check to make sure we're not overwriting a native Attach
-                    $attach_post_ref                = get_post( $attachment_id ); 
+                    $attach_post_ref                = get_post( $attachment_id );
 
                     if( $attach_post_ref->post_parent == 0 )
                     {
@@ -419,7 +424,7 @@ function attachments_get_attachments( $post_id=null )
     // We can now proceed as normal, all legacy data should now be upgraded
 
     $post_attachments = array();
-    
+
     if( is_array( $existing_attachments ) && count( $existing_attachments ) > 0 )
     {
 
