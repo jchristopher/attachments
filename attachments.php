@@ -48,7 +48,6 @@ if( IS_ADMIN )
     add_action( 'admin_head', 'attachments_init_js' );
     add_action( 'save_post',  'attachments_save' );
     add_action( 'admin_menu', 'attachments_menu' );
-    add_action( 'admin_init', 'fix_async_upload_image' );
 }
 
 
@@ -235,22 +234,6 @@ function attachments_init_js()
     echo '<script type="text/javascript" charset="utf-8">';
     echo '  var attachments_base = "' . WP_PLUGIN_URL . '/attachments"; ';
     echo '  var attachments_media = ""; ';
-    if ( 'media-upload.php' == $pagenow || 'async-upload.php' == $pagenow )
-    {
-        echo '  var attachments_upload = true; ';
-    }
-    else
-    {
-        echo '  var attachments_upload = false; ';
-    }
-    if( ( 'media-upload.php' == $pagenow || 'async-upload.php' == $pagenow ) && is_attachments_context() )
-    {
-        echo '  var attachments_is_attachments_context = true; ';
-    }
-    else
-    {
-        echo '  var attachments_is_attachments_context = false; ';
-    }
     echo '</script>';
 }
 
@@ -455,38 +438,6 @@ function attachments_get_attachments( $post_id=null )
 }
 
 
-if( !function_exists( 'fix_async_upload_image' ) )
-{
-    function fix_async_upload_image() {
-        if( isset( $_REQUEST['attachment_id'] ) )
-        {
-            $GLOBALS['post'] = get_post( $_REQUEST['attachment_id'] );
-        }
-    }
-}
-
-function is_attachments_context()
-{
-    global $pagenow;
-
-    // if post_id is set, it's the editor upload...
-    if ( !isset( $_REQUEST['post_id'] ) || ( 'media-upload.php' == $pagenow || 'async-upload.php' == $pagenow ) && ( empty( $_REQUEST['post_id'] ) && $_REQUEST['post_id'] != '0' ) )
-    {
-        return true;
-    }
-    return false;
-}
-
-function hijack_thickbox_text($translated_text, $source_text, $domain)
-{
-    if ( is_attachments_context() )
-    {
-        if ('Insert into Post' == $source_text) {
-            return __('Attach', 'attachments' );
-        }
-    }
-    return $translated_text;
-}
 
 
 
@@ -505,11 +456,6 @@ function attachments_init()
 
     wp_enqueue_script( 'jquery-ui-core' );
     wp_enqueue_style( 'thickbox' );
-
-    if ( 'media-upload.php' == $pagenow || 'async-upload.php' == $pagenow )
-    {
-        add_filter( 'gettext', 'hijack_thickbox_text', 1, 3 );
-    }
 
     wp_enqueue_style( 'attachments', WP_PLUGIN_URL . '/attachments/css/attachments.css' );
     wp_enqueue_script( 'attachments', WP_PLUGIN_URL . '/attachments/js/attachments.js', array( 'jquery', 'thickbox' ), false, false );

@@ -45,7 +45,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 == Changelog ==
 
 = 1.5.4 =
-* Updated the way Thickbox is hijacked in an effort to be more stable among tab switching
+* Updated the way Thickbox is hijacked in an effort to be more stable among tab switching. As an unfortunate result, bulk attaching is no longer possible.
 
 = 1.5.3.1 =
 * Hotfix for an oversight where Attachments no longer display with Custom Post Types
