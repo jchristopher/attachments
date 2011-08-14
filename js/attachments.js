@@ -66,14 +66,8 @@ jQuery(document).ready(function() {
         send_to_editor = function(markup){
             clearInterval(attachments_button_label_updater);
             if(attachments_hijacked_thickbox){
-                // determine what got retuned
-                var src = markup.match(/src="(.*)" alt=/i);
-                src = (src && src[1]) ? src[1] : '' ;
-                var href = markup.match(/href='(.*)'/i);
-                href = (href && href[1]) ? href[1] : '' ;
-                var attachments_asset = href ? href : src ;
                 attachments_hijacked_thickbox = false;     // reset our flag
-                tb_remove();
+                // our click handler is in the interval, not here
             }else{
                 attachments_send_to_editor_default(markup);
             }
@@ -85,11 +79,14 @@ jQuery(document).ready(function() {
             // our new click handler for the attach button
             jQuery('#TB_iframeContent').contents().find('td.savesend input').unbind('click').click(function(e){
                 theparent = jQuery(this).parent().parent().parent();
+                jQuery(this).after('<span class="attachments-attached">Attached!</span>');
                 thetitle = theparent.find('tr.post_title td.field input').val();
                 thecaption = theparent.find('tr.post_excerpt td.field input').val();
                 theid = theparent.find('td.imgedit-response').attr('id').replace('imgedit-response-','');
                 thethumb = theparent.parent().parent().find('img.pinkynail').attr('src');
                 attachments_handle_attach(thetitle,thecaption,theid,thethumb);
+                theparent.find('span.attachments-attached').delay(1000).fadeOut('fast');
+                return false;
             });
             // update button
             if(jQuery('#TB_iframeContent').contents().find('.media-item .savesend input[type=submit], #insertonlybutton').length){

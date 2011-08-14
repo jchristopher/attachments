@@ -18,6 +18,7 @@ p.attachments-actions { float:right; margin:6px 0 0 !important; }
 #attachments-file-details .attachments a:hover { border:3px solid #ccc; }
 
 #attachments-file-details .attachments a.attachments-selected { border:3px solid #eb3525; }
+span.attachments-attached { background:#fff; color:#d54e21; padding-left:10px; font-style:italic;  }
 
 	/* File listings, not images */
 	#attachments-file-details .attachments-alt li { width:290px; }

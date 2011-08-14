@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.2.1
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 
 Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types
 
@@ -66,6 +66,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 4. Once assets have been attached, you can customize the title, caption, and order
 
 == Changelog ==
+
+= 1.5.5 =
+# Re-implemented bulk Attach
 
 = 1.5.4 =
 * Updated the way Thickbox is hijacked in an effort to be more stable among tab switching. As an unfortunate result, bulk attaching is no longer possible.
