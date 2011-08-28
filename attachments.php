@@ -3,7 +3,7 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.5.6
+ Version: 1.5.7
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
@@ -66,6 +66,7 @@ if( IS_ADMIN )
     add_action( 'save_post',  'attachments_save' );
     add_action( 'admin_menu', 'attachments_menu' );
     add_action( 'admin_footer', 'attachments_footer_js' );
+    add_action( 'in_plugin_update_message-attachments/attachments.php', 'attachments_update_message' );
 
     load_plugin_textdomain( 'attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
@@ -75,6 +76,28 @@ if( IS_ADMIN )
 // =============
 // = FUNCTIONS =
 // =============
+
+/**
+ * Includes our plugin update message
+ *
+ * @return void
+ * @author Jonathan Christopher
+ */
+function attachments_update_message()
+{ ?>
+    <div style="color: #f00;padding-top:4px;">Attachments Pro is now available!</div>
+    <div style="font-weight:normal;padding-top:8px;">
+        <p><a href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a> is Attachments' big brother. With it come a number of often-requested features such as:</p>
+        <ul style="list-style:disc;margin-left:20px;margin-bottom:13px;">
+            <li>Multiple Attachments instances on edit screens</li>
+            <li>Customizable field labels and meta box title</li>
+            <li>Unlimited number of fields per Attachment</li>
+            <li>Ability to define rules limiting the availability of Attachments on edit screens</li>
+        </ul>
+        <p>Attachments has always been and <em>will always be free</em>. <a href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a> is <strong>available now</strong>. To find out more about the new features already added, and to stay up-to-date on what's to come, <a href="http://mondaybynoon.com/store/attachments-pro/">have a look at the details</a>. From there, you can make formal support and feature requests.</p>
+    </div>
+<?php }
+
 
 /**
  * Compares two array values with the same key "order"
