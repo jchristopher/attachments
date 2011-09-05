@@ -3,7 +3,7 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.5.7
+ Version: 1.5.8
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
@@ -31,12 +31,12 @@ if( !defined( 'IS_ADMIN' ) )
     define( 'IS_ADMIN',  is_admin() );
 
 
+
 // ===========
 // = GLOBALS =
 // ===========
 
 global $wpdb;
-
 
 // environment check
 $wp_version = get_bloginfo( 'version' );
@@ -59,6 +59,7 @@ if( !version_compare( PHP_VERSION, '5.2', '>=' ) || !version_compare( $wp_versio
 // =========
 // = HOOKS =
 // =========
+
 if( IS_ADMIN )
 {
     add_action( 'admin_menu', 'attachments_init' );
@@ -67,6 +68,7 @@ if( IS_ADMIN )
     add_action( 'admin_menu', 'attachments_menu' );
     add_action( 'admin_footer', 'attachments_footer_js' );
     add_action( 'in_plugin_update_message-attachments/attachments.php', 'attachments_update_message' );
+    add_filter( 'plugin_row_meta', 'attachments_filter_plugin_row_meta', 10, 2 );
 
     load_plugin_textdomain( 'attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
@@ -88,11 +90,13 @@ function attachments_update_message()
     <div style="color: #f00;padding-top:4px;">Attachments Pro is now available!</div>
     <div style="font-weight:normal;padding-top:8px;">
         <p><a href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a> is Attachments' big brother. With it come a number of often-requested features such as:</p>
-        <ul style="list-style:disc;margin-left:20px;margin-bottom:13px;">
-            <li>Multiple Attachments instances on edit screens</li>
-            <li>Customizable field labels and meta box title</li>
-            <li>Unlimited number of fields per Attachment</li>
-            <li>Ability to define rules limiting the availability of Attachments on edit screens</li>
+        <ul style="list-style:disc;padding-left:20px;margin-bottom:13px;overflow:hidden;zoom:1;">
+            <li style="width:48%;padding-right:2%;float:left;">Multiple Attachments instances on edit screens</li>
+            <li style="width:48%;padding-right:2%;float:left;">Customizable field labels and meta box title</li>
+            <li style="width:48%;padding-right:2%;float:left;">Unlimited number of fields per Attachment</li>
+            <li style="width:48%;padding-right:2%;float:left;">Ability to define rules limiting the availability of Attachments on edit screens</li>
+            <li style="width:48%;padding-right:2%;float:left;">Limit the number of Attachments that can be added</li>
+            <li style="width:48%;padding-right:2%;float:left;">Limit Attach-able Media items by file/mime type</li>
         </ul>
         <p>Attachments has always been and <em>will always be free</em>. <a href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a> is <strong>available now</strong>. To find out more about the new features already added, and to stay up-to-date on what's to come, <a href="http://mondaybynoon.com/store/attachments-pro/">have a look at the details</a>. From there, you can make formal support and feature requests.</p>
     </div>
@@ -127,8 +131,6 @@ function attachments_cmp($a, $b)
 }
 
 
-
-
 /**
  * Creates the markup for the WordPress admin options page
  *
@@ -141,8 +143,6 @@ function attachments_options()
 }
 
 
-
-
 /**
  * Creates the entry for Attachments Options under Settings in the WordPress Admin
  *
@@ -153,8 +153,6 @@ function attachments_menu()
 {
     add_options_page('Settings', 'Attachments', 'manage_options', __FILE__, 'attachments_options');
 }
-
-
 
 
 /**
@@ -232,7 +230,6 @@ function attachments_add()
 <?php }
 
 
-
 /**
  * Creates meta box on all Posts and Pages
  *
@@ -263,7 +260,6 @@ function attachments_meta_box()
 }
 
 
-
 /**
  * Echos JavaScript that sets some required global variables
  *
@@ -279,7 +275,6 @@ function attachments_init_js()
     echo '  var attachments_media = ""; ';
     echo '</script>';
 }
-
 
 
 /**
@@ -396,7 +391,6 @@ function attachments_save($post_id)
 }
 
 
-
 /**
  * Retrieves all Attachments for provided Post or Page
  *
@@ -405,6 +399,7 @@ function attachments_save($post_id)
  * @author Jonathan Christopher
  * @author JR Tashjian
  */
+
 function attachments_get_attachments( $post_id=null )
 {
     global $post;
@@ -481,7 +476,12 @@ function attachments_get_attachments( $post_id=null )
 }
 
 
-
+/**
+ * Outputs Attachments JS into the footer
+ *
+ * @return void
+ * @author Jonathan Christopher
+ */
 function attachments_footer_js()
 {
     $uri    = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : NULL ;
@@ -497,18 +497,12 @@ function attachments_footer_js()
 }
 
 
-
-
-
-
-
 /**
  * This is the main initialization function, it will invoke the necessary meta_box
  *
  * @return void
  * @author Jonathan Christopher
  */
-
 function attachments_init()
 {
     global $pagenow;
@@ -532,4 +526,25 @@ function attachments_init()
     }
 
     attachments_meta_box();
+}
+
+
+/**
+ * Modifies the plugin meta line on the WP Plugins page
+ *
+ * @return $plugin_meta Array of plugin meta data
+ * @author Jonathan Christopher
+ */
+function attachments_filter_plugin_row_meta( $plugin_meta, $plugin_file )
+{
+    if( strstr( $plugin_file, 'attachments/attachments.php' ) )
+    {
+        $plugin_meta[2] = '<a title="Attachments Pro" href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a>';
+        $plugin_meta[3] = 'Visit <a title="Iron to Iron" href="http://irontoiron.com/">' . __( 'Iron to Iron', 'attachmentspro' ) . '</a>';
+        return $plugin_meta;
+    }
+    else
+    {
+        return $plugin_meta;
+    }
 }
