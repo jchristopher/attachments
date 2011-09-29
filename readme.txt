@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.2.1
-Stable tag: 1.5.8
+Stable tag: 1.5.9
 
 Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types
 
@@ -19,6 +19,8 @@ Attachments Pro brings a number of frequently requested features:
 * Ability to define rules limiting the availability of Attachments on edit screens
 * Limit the number of Attachments that can be added
 * Limit Attach-able Media items by file/mime type
+* Shortcode support
+* Auto-inclusion of Attachments content within `the_content()`
 
 **Much more information** available about [Attachments Pro](http://mondaybynoon.com/store/attachments-pro/)
 
@@ -59,6 +61,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 4. Once assets have been attached, you can customize the title, caption, and order
 
 == Changelog ==
+
+= 1.5.9 =
+* Retrieve file size when `firing attachments_get_attachments()`
 
 = 1.5.8 =
 * Code cleanup
@@ -175,7 +180,7 @@ Attachments are now stored in such a way that removes an in-place limitation on 
 
 Planned feature additions include:
 
-* Code refactoring in preparation for future features
+* Update Settings to use official Settings API
 
 == Usage ==
 
@@ -190,6 +195,7 @@ Firing `attachments_get_attachments()` returns an array consisting of all availa
 * **id** - The WordPress assigned attachment id (for use with other WordPress media functions)
 * **location** - The attachment URI
 * **mime** - The attachment MIME type (as defined by WordPress)
+* **filesize** - Formatted file size
 
 Here is a basic implementation:
 
@@ -206,6 +212,7 @@ Here is a basic implementation:
         <li><?php echo $attachments[$i]['id']; ?></li>
         <li><?php echo $attachments[$i]['location']; ?></li>
         <li><?php echo $attachments[$i]['mime']; ?></li>
+        <li><?php echo $attachments[$i]['filesize']; ?></li>
       <?php endfor; ?>
       </ul>
     <?php endif; ?>

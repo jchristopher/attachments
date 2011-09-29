@@ -3,7 +3,7 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.5.8
+ Version: 1.5.9
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
@@ -37,6 +37,9 @@ if( !defined( 'IS_ADMIN' ) )
 // ===========
 
 global $wpdb;
+global $units;
+
+$units = array( ' bytes', ' KB', ' MB', ' GB', ' TB', ' PB' );
 
 // environment check
 $wp_version = get_bloginfo( 'version' );
@@ -97,6 +100,8 @@ function attachments_update_message()
             <li style="width:48%;padding-right:2%;float:left;">Ability to define rules limiting the availability of Attachments on edit screens</li>
             <li style="width:48%;padding-right:2%;float:left;">Limit the number of Attachments that can be added</li>
             <li style="width:48%;padding-right:2%;float:left;">Limit Attach-able Media items by file/mime type</li>
+            <li style="width:48%;padding-right:2%;float:left;">Shortcode support</li>
+            <li style="width:48%;padding-right:2%;float:left;">Auto-inclusion of Attachments content within the_content()</li>
         </ul>
         <p>Attachments has always been and <em>will always be free</em>. <a href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a> is <strong>available now</strong>. To find out more about the new features already added, and to stay up-to-date on what's to come, <a href="http://mondaybynoon.com/store/attachments-pro/">have a look at the details</a>. From there, you can make formal support and feature requests.</p>
     </div>
@@ -392,6 +397,28 @@ function attachments_save($post_id)
 
 
 /**
+ * Returns a formatted filesize
+ *
+ * @param string $path Path to file on disk
+ * @return string $formatted formatted filesize
+ * @author Jonathan Christopher
+ */
+function attachments_get_filesize_formatted( $path = NULL )
+{
+    global $units;
+    $formatted = '0 bytes';
+    if( file_exists( $path ) )
+    {
+        $bytes      = intval( filesize( $path ) );
+        $s          = $units;
+        $e          = floor( log( $bytes ) / log( 1024 ) );
+        $formatted  = sprintf( '%.2f ' . $s[$e], ( $bytes / pow( 1024, floor( $e ) ) ) );
+    }
+    return $formatted;
+}
+
+
+/**
  * Retrieves all Attachments for provided Post or Page
  *
  * @param int $post_id (optional) ID of target Post or Page, otherwise pulls from global $post
@@ -460,6 +487,7 @@ function attachments_get_attachments( $post_id=null )
                 'mime' 			=> stripslashes( get_post_mime_type( $data['id'] ) ),
                 'title' 		=> stripslashes( $data['title'] ),
                 'caption' 		=> stripslashes( $data['caption'] ),
+                'filesize'      => stripslashes( attachments_get_filesize_formatted( get_attached_file( $data['id'] ) ) ),
                 'location' 		=> stripslashes( wp_get_attachment_url( $data['id'] ) ),
                 'order' 		=> stripslashes( $data['order'] )
                 ));
@@ -540,7 +568,7 @@ function attachments_filter_plugin_row_meta( $plugin_meta, $plugin_file )
     if( strstr( $plugin_file, 'attachments/attachments.php' ) )
     {
         $plugin_meta[2] = '<a title="Attachments Pro" href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a>';
-        $plugin_meta[3] = 'Visit <a title="Iron to Iron" href="http://irontoiron.com/">' . __( 'Iron to Iron', 'attachmentspro' ) . '</a>';
+        $plugin_meta[3] = 'Visit <a title="Iron to Iron" href="http://irontoiron.com/">Iron to Iron</a>';
         return $plugin_meta;
     }
     else
