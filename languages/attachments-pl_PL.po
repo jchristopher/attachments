@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Attachments pl_PL 1.5.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-14 23:32+0100\n"
-"PO-Revision-Date: 2011-08-14 23:36+0100\n"
+"POT-Creation-Date: 2011-10-23 11:05+0100\n"
+"PO-Revision-Date: 2011-10-23 11:05+0100\n"
 "Last-Translator: Wiktor Maj <w.maj@majpage.com>\n"
 "Language-Team: Wiktor Maj <w.maj@majpage.com>\n"
 "MIME-Version: 1.0\n"
@@ -17,47 +17,51 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../attachments.options.php:29
+#: ../attachments.options.php:19
+msgid "<p><strong>Attachments Pro is now available!</strong> <a href=\"http://mondaybynoon.com/store/attachments-pro/\">Find out more</a> about Attachments Pro. <a href=\"options-general.php?page=attachments/attachments.php&dismisspro=1\">Dismiss</a>.</p>"
+msgstr "<p><strong>Dostępna jest wtyczka Attachments Pro!</strong> <a href=\"http://mondaybynoon.com/store/attachments-pro/\">Dowiedz się więcej</a> o Attachments Pro. <a href=\"options-general.php?page=attachments/attachments.php&dismisspro=1\">Usuń komunikat</a>.</p>"
+
+#: ../attachments.options.php:48
 msgid "Post Type Settings"
-msgstr "Ustawienia Custom Post Types"
+msgstr "Ustawienia typów wpisów"
 
-#: ../attachments.options.php:30
+#: ../attachments.options.php:49
 msgid "Include Attachments in the following Post Types:"
-msgstr "Dodaj załączniki do następujących Custom Post Types:"
+msgstr "Dodaj Załączniki do następujących typów wpisów:"
 
-#: ../attachments.options.php:42
+#: ../attachments.options.php:61
 msgid "Attachments can be integrated with your Custom Post Types. Unfortunately, there are none to work with at this time."
 msgstr "Załączniki mogą być zintegrowane z Custom Post Types. Niestety w tej chwili nie ma żadnych zarejestrowanych Custom Post Types."
 
-#: ../attachments.options.php:48
+#: ../attachments.options.php:67
 msgid "Miscellaneous"
 msgstr "Różne"
 
-#: ../attachments.options.php:58
+#: ../attachments.options.php:77
 msgid "Save"
 msgstr "Zapisz"
 
-#: ../attachments.php:49
+#: ../attachments.php:52
 msgid "Attachments requires PHP 5.2 or higher, as will WordPress 3.2 and higher. It has been automatically deactivated."
 msgstr "Załączniki wymagają PHP w wersji 5.2 lub wyższej, a także WordPressa w wersji 3.2 lub wyższej. Plugin został automatycznie wyłączony."
 
-#: ../attachments.php:156
+#: ../attachments.php:182
 msgid "Attach"
 msgstr "Załącz"
 
-#: ../attachments.php:180
+#: ../attachments.php:206
 msgid "Delete"
 msgstr "Usuń"
 
-#: ../attachments.php:184
+#: ../attachments.php:210
 msgid "Title"
 msgstr "Tytuł"
 
-#: ../attachments.php:188
+#: ../attachments.php:214
 msgid "Caption"
 msgstr "Opis"
 
-#: ../attachments.php:236
+#: ../attachments.php:261
 msgid "Attachments"
 msgstr "Załączniki"
 
