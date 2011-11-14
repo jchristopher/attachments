@@ -123,7 +123,7 @@ jQuery(document).ready(function() {
     }
 
     // thickbox handler
-    if(parseFloat(jQuery.fn.jquery)<1.7){
+    if(parseFloat(jQuery.fn.jquery)>=1.7){
         // 'live' is deprecated
         jQuery(document).on("click", "a#attachments-thickbox", function(event){
             theparent = jQuery(this);
@@ -159,7 +159,7 @@ jQuery(document).ready(function() {
         });
     }
     // Hook our delete links
-    if(parseFloat(jQuery.fn.jquery)<1.7){
+    if(parseFloat(jQuery.fn.jquery)>=1.7){
         // 'live' is deprecated
         jQuery(document).on("click", "span.attachment-delete a", function(event){
             theparent = jQuery(this);
