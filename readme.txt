@@ -65,6 +65,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 = 1.5.10 =
 * WordPress 3.3 compatibility
 * Updated Polish translation
+* Removed soon-to-be deprecated jQuery methods in prep for 1.7
 
 = 1.5.9 =
 * Retrieve file size when `firing attachments_get_attachments()`

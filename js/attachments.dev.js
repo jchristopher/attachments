@@ -24,10 +24,10 @@ function attachments_handle_attach(title,caption,id,thumb){
     attachment_index = jQuery('li.attachments-file', top.document).length;
     new_attachments = '';
 
-    attachment_name 		= title;
-    attachment_caption 		= caption;
-    attachment_id			= id;
-    attachment_thumb 		= thumb;
+    attachment_name         = title;
+    attachment_caption      = caption;
+    attachment_id           = id;
+    attachment_thumb        = thumb;
 
     attachment_index++;
     new_attachments += '<li class="attachments-file">';
@@ -71,7 +71,7 @@ jQuery(document).ready(function() {
             }else{
                 attachments_send_to_editor_default(markup);
             }
-        }
+        };
     }
 
     function attachments_update_button_label(){
@@ -109,32 +109,47 @@ jQuery(document).ready(function() {
         }
     }
 
-    // thickbox handler
-    jQuery('a#attachments-thickbox').live('click',function(event){
-        var href = jQuery(this).attr('href'), width = jQuery(window).width(), H = jQuery(window).height(), W = ( 720 < width ) ? 720 : width;
+
+    function attachments_handle_thickbox(event,theparent){
+        var href = theparent.attr('href'), width = jQuery(window).width(), H = jQuery(window).height(), W = ( 720 < width ) ? 720 : width;
         if ( ! href ) return;
         href = href.replace(/&width=[0-9]+/g, '');
         href = href.replace(/&height=[0-9]+/g, '');
-        jQuery(this).attr( 'href', href + '&width=' + ( W - 80 ) + '&height=' + ( H - 85 ) );
+        theparent.attr( 'href', href + '&width=' + ( W - 80 ) + '&height=' + ( H - 85 ) );
         attachments_hijacked_thickbox = true;
         attachments_button_label_updater = setInterval(attachments_update_button_label, 500);
         // jQuery(this).parent().parent().find('ul.attachments-pro-list').addClass('attachments-pro-context');
         tb_show('Attach a file', event.target.href, false);
-        return false;
-    });
+    }
+
+    // thickbox handler
+    if(parseFloat(jQuery.fn.jquery)<1.7){
+        // 'live' is deprecated
+        jQuery(document).on("click", "a#attachments-thickbox", function(event){
+            theparent = jQuery(this);
+            attachments_handle_thickbox(event,theparent);
+            return false;
+        });
+    }else{
+        jQuery('a#attachments-thickbox').live('click',function(event){
+            theparent = jQuery(this);
+            attachments_handle_thickbox(event,theparent);
+            return false;
+        });
+    }
 
     // If there are no attachments, let's hide this thing...
     if(jQuery('div#attachments-list li').length == 0) {
         jQuery('#attachments-list').hide();
     }
 
-    // Hook our delete links
-    jQuery('span.attachment-delete a').live('click', function() {
-        attachment_parent = jQuery(this).parent().parent().parent();
+
+    function attachments_hook_delete_links(theparent){
+        attachment_parent = theparent.parent().parent().parent();
         attachment_parent.slideUp(function() {
             attachment_parent.remove();
             jQuery('#attachments-list ul li').each(function(i, id) {
-                jQuery(this).find('input.attachment_order').val(i+1);
+                theparent.find('input.attachment_order').val(i+1);
             });
             if(jQuery('div#attachments-list li').length == 0) {
                 jQuery('#attachments-list').slideUp(function() {
@@ -142,8 +157,22 @@ jQuery(document).ready(function() {
                 });
             }
         });
-        return false;
-    });
+    }
+    // Hook our delete links
+    if(parseFloat(jQuery.fn.jquery)<1.7){
+        // 'live' is deprecated
+        jQuery(document).on("click", "span.attachment-delete a", function(event){
+            theparent = jQuery(this);
+            attachments_hook_delete_links(theparent);
+            return false;
+        });
+    }else{
+        jQuery('span.attachment-delete a').live('click',function(event){
+            theparent = jQuery(this);
+            attachments_hook_delete_links(theparent);
+            return false;
+        });
+    }
 
     // we also need to get a bit hacky with sortable...
     setInterval('init_attachments_sortable()',500);
