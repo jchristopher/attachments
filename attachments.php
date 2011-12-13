@@ -3,7 +3,7 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.5.10
+ Version: 1.6
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
@@ -30,6 +30,8 @@
 if( !defined( 'IS_ADMIN' ) )
     define( 'IS_ADMIN',  is_admin() );
 
+define( 'ATTACHMENTS_PREFIX', 'attachments_' );
+define( 'ATTACHMENTS_VERSION', '1.6' );
 
 
 // ===========
@@ -49,7 +51,7 @@ if( !version_compare( PHP_VERSION, '5.2', '>=' ) || !version_compare( $wp_versio
     {
         require_once ABSPATH.'/wp-admin/includes/plugin.php';
         deactivate_plugins( __FILE__ );
-        wp_die( __('Attachments requires PHP 5.2 or higher, as will WordPress 3.2 and higher. It has been automatically deactivated.') );
+        wp_die( __('Attachments requires PHP 5.2 or higher, as does WordPress 3.2+. Attachments has been automatically deactivated.') );
     }
     else
     {
@@ -65,13 +67,16 @@ if( !version_compare( PHP_VERSION, '5.2', '>=' ) || !version_compare( $wp_versio
 
 if( IS_ADMIN )
 {
-    add_action( 'admin_menu', 'attachments_init' );
-    add_action( 'admin_head', 'attachments_init_js' );
-    add_action( 'save_post',  'attachments_save' );
-    add_action( 'admin_menu', 'attachments_menu' );
-    add_action( 'admin_footer', 'attachments_footer_js' );
-    add_action( 'in_plugin_update_message-attachments/attachments.php', 'attachments_update_message' );
-    add_filter( 'plugin_row_meta', 'attachments_filter_plugin_row_meta', 10, 2 );
+    add_action( 'init',                                                     'attachments_pre_init' );
+
+    add_action( 'admin_menu',                                               'attachments_init' );
+    add_action( 'admin_head',                                               'attachments_init_js' );
+    add_action( 'save_post',                                                'attachments_save' );
+    add_action( 'admin_menu',                                               'attachments_menu' );
+    add_action( 'admin_footer',                                             'attachments_footer_js' );
+    add_action( 'in_plugin_update_message-attachments/attachments.php',     'attachments_update_message' );
+    add_filter( 'plugin_row_meta',                                          'attachments_filter_plugin_row_meta', 10, 2 );
+    add_action( 'admin_init',                                               'attachments_register_settings' );
 
     load_plugin_textdomain( 'attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
@@ -81,6 +86,150 @@ if( IS_ADMIN )
 // =============
 // = FUNCTIONS =
 // =============
+
+function attachments_pre_init()
+{
+    // as of version 1.6 we'll be storing a proper settings array
+    if( !get_option( ATTACHMENTS_PREFIX . 'settings' ) )
+    {
+        $settings = array();
+
+        // we've got a version < 1.6 and therefore no real settings
+        $settings['version'] = ATTACHMENTS_VERSION;
+
+        $post_parent = get_option( 'attachments_store_native' );
+
+        if( $post_parent === false )
+        {
+            // it wasn't set
+            $settings['post_parent'] = false;
+        }
+        else
+        {
+            $settings['post_parent'] = true;
+        }
+
+        // grab our custom post types
+        $args           = array(
+            'public'    => true,
+            'show_ui'   => true,
+            '_builtin'  => false
+            );
+        $output         = 'objects';
+        $operator       = 'and';
+        $post_types     = get_post_types( $args, $output, $operator );
+
+        // we also want to optionally enable Pages and Posts
+        $post_types['post']->labels->name   = 'Posts';
+        $post_types['post']->name           = 'post';
+        $post_types['page']->labels->name   = 'Pages';
+        $post_types['page']->name           = 'page';
+
+        if( count( $post_types ) )
+        {
+            foreach( $post_types as $post_type )
+            {
+                $post_parent = get_option( 'attachments_cpt_' . $post_type->name );
+
+                if( $post_parent === false )
+                {
+                    // it wasn't set
+                    $settings['post_types'][$post_type->name] = false;
+                }
+                else
+                {
+                    $settings['post_types'][$post_type->name] = true;
+                }
+            }
+        }
+
+        // save our settings
+        update_option( ATTACHMENTS_PREFIX . 'settings', $settings );
+    }
+}
+
+
+function attachments_register_settings()
+{
+    // flag our settings
+    register_setting(
+        ATTACHMENTS_PREFIX . 'settings',        // group
+        ATTACHMENTS_PREFIX . 'settings',        // name of options
+        'attachments_validate_settings'         // validation callback
+    );
+
+    add_settings_section(
+        ATTACHMENTS_PREFIX . 'options',         // section ID
+        'Post Type Settings',                   // title
+        'attachments_edit_options',             // display callback
+        'attachments_options'                   // page name (do_settings_sections)
+    );
+
+    // post types
+    add_settings_field(
+        ATTACHMENTS_PREFIX . 'post_types',      // unique field ID
+        'Post Types',                           // title
+        'attachments_edit_post_types',          // input box display callback
+        'attachments_options',                  // page name (as above)
+        ATTACHMENTS_PREFIX . 'options'          // first arg to add_settings_section
+    );
+
+    // post_parent
+    add_settings_field(
+        ATTACHMENTS_PREFIX . 'post_parent',     // unique field ID
+        'Set Post Parent',                      // title
+        'attachments_edit_post_parent',         // input box display callback
+        'attachments_options',                  // page name (as above)
+        ATTACHMENTS_PREFIX . 'options'          // first arg to add_settings_section
+    );
+}
+
+function attachments_edit_options()
+{  }
+
+function attachments_validate_settings($input)
+{
+    $input['version'] = ATTACHMENTS_VERSION;
+    return $input;
+}
+
+function attachments_edit_post_parent()
+{
+    $settings = get_option( ATTACHMENTS_PREFIX . 'settings' );
+    ?>
+    <div>
+        <label for="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_parent]">
+            <input name="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_parent]" type="checkbox" id="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_parent]" value="1"<?php if( isset( $settings['post_parent'] ) && $settings['post_parent'] ) : ?> checked="checked"<?php endif; ?> /> Set the <code>post_parent</code> when Attachments are saved
+        </label>
+    </div>
+<?php }
+
+function attachments_edit_post_types()
+{
+    $settings = get_option( ATTACHMENTS_PREFIX . 'settings' );
+    $args           = array(
+                        'public'    => true,
+                        'show_ui'   => true,
+                        '_builtin'  => false
+                        );
+    $output         = 'objects';
+    $operator       = 'and';
+    $post_types     = get_post_types( $args, $output, $operator );
+
+    // we also want to optionally enable Pages and Posts
+    $post_types['post']->labels->name   = 'Posts';
+    $post_types['post']->name           = 'post';
+    $post_types['page']->labels->name   = 'Pages';
+    $post_types['page']->name           = 'page';
+
+    if( count( $post_types ) ) : foreach($post_types as $post_type) : ?>
+        <div>
+            <label for="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]">
+                <input name="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]" type="checkbox" id="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]" value="1"<?php if( isset( $settings['post_types'][$post_type->name] ) && $settings['post_types'][$post_type->name] ) : ?> checked="checked"<?php endif; ?> /> <?php echo $post_type->labels->name; ?>
+            </label>
+        </div>
+    <?php endforeach; endif; ?>
+<?php }
 
 /**
  * Includes our plugin update message
@@ -246,6 +395,8 @@ function attachments_meta_box()
     // for custom post types
     if( function_exists( 'get_post_types' ) )
     {
+        $settings = get_option( ATTACHMENTS_PREFIX . 'settings' );
+
         $args = array(
             'public'    => true,
             'show_ui'   => true
@@ -256,7 +407,7 @@ function attachments_meta_box()
 
         foreach($post_types as $post_type)
         {
-            if (get_option('attachments_cpt_' . $post_type->name)=='true')
+            if( isset( $settings['post_types'][$post_type->name] ) && $settings['post_types'][$post_type->name] )
             {
                 add_meta_box( 'attachments_list', __( 'Attachments', 'attachments' ), 'attachments_add', $post_type->name, 'normal' );
             }
@@ -273,8 +424,6 @@ function attachments_meta_box()
  */
 function attachments_init_js()
 {
-    global $pagenow;
-
     echo '<script type="text/javascript" charset="utf-8">';
     echo '  var attachments_base = "' . WP_PLUGIN_URL . '/attachments"; ';
     echo '  var attachments_media = ""; ';
@@ -372,7 +521,8 @@ function attachments_save($post_id)
                 add_post_meta( $post_id, '_attachments', $attachment_serialized );
 
                 // save native Attach
-                if( get_option( 'attachments_store_native' ) == 'true' )
+                $settings = get_option( ATTACHMENTS_PREFIX . 'settings' );
+                if( isset( $settings['post_parent'] ) && $settings['post_parent'] )
                 {
                     // need to first check to make sure we're not overwriting a native Attach
                     $attach_post_ref                = get_post( $attachment_id );
@@ -439,36 +589,6 @@ function attachments_get_attachments( $post_id=null )
     // get all attachments
     $existing_attachments = get_post_meta( $post_id, '_attachments', false );
 
-    if( !empty( $existing_attachments ) )
-    {
-        try
-        {
-            $legacy_existing_attachments = unserialize( $existing_attachments[0] );
-        }
-        catch( Exception $e )
-        {
-            // unserialization failed
-        }
-    }
-
-    // Check for legacy attachments
-    if( isset( $legacy_existing_attachments ) )
-    {
-        if( is_array( $legacy_existing_attachments ) )
-        {
-            $tmp_legacy_attachments = array();
-
-            // Legacy attachments (single serialized record)
-            foreach ( $legacy_existing_attachments as $legacy_attachment )
-            {
-                array_push( $tmp_legacy_attachments, base64_encode( serialize( $legacy_attachment ) ) );
-            }
-
-            $existing_attachments = $tmp_legacy_attachments;
-        }
-    }
-
-
     // We can now proceed as normal, all legacy data should now be upgraded
 
     $post_attachments = array();
@@ -533,8 +653,6 @@ function attachments_footer_js()
  */
 function attachments_init()
 {
-    global $pagenow;
-
     wp_enqueue_script( 'jquery-ui-core' );
     wp_enqueue_script( 'thickbox' );
 
@@ -560,7 +678,9 @@ function attachments_init()
 /**
  * Modifies the plugin meta line on the WP Plugins page
  *
- * @return $plugin_meta Array of plugin meta data
+ * @param $plugin_meta
+ * @param $plugin_file
+ * @return array $plugin_meta Array of plugin meta data
  * @author Jonathan Christopher
  */
 function attachments_filter_plugin_row_meta( $plugin_meta, $plugin_file )
