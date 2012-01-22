@@ -3,12 +3,12 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.6
+ Version: 1.6.1
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
 
-/*  Copyright 2009-2011 Jonathan Christopher  (email : jonathan@irontoiron.com)
+/*  Copyright 2009-2012 Jonathan Christopher  (email : jonathan@irontoiron.com)
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -327,7 +327,7 @@ function attachments_add()
 
                 <ul id="attachments-actions">
                     <li>
-                        <a id="attachments-thickbox" href="<?php echo $image_upload_iframe_src; ?>&attachments_thickbox=1" title="Attachments" class="button button-highlighted">
+                        <a id="attachments-thickbox" href="media-upload.php?type=image&amp;TB_iframe=1&amp;width=640&amp;height=1500&amp;attachments_thickbox=1" title="Attachments" class="button button-highlighted">
                             <?php _e( 'Attach', 'attachments' ) ?>
                         </a>
                     </li>
