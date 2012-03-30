@@ -560,9 +560,12 @@ function attachments_get_filesize_formatted( $path = NULL )
     if( file_exists( $path ) )
     {
         $bytes      = intval( filesize( $path ) );
-        $s          = $units;
-        $e          = floor( log( $bytes ) / log( 1024 ) );
-        $formatted  = sprintf( '%.2f ' . $s[$e], ( $bytes / pow( 1024, floor( $e ) ) ) );
+        if( $bytes > 0 )
+        {
+            $s          = $units;
+            $e          = floor( log( $bytes ) / log( 1024 ) );
+            $formatted  = sprintf( '%.2f ' . $s[$e], ( $bytes / pow( 1024, floor( $e ) ) ) );
+        }
     }
     return $formatted;
 }
