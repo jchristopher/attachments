@@ -329,6 +329,7 @@ function attachments_add()
     <div id="attachments-inner">
 
         <?php
+            do_action('attachments_meta_before');
             $media_upload_iframe_src = "media-upload.php?type=image&TB_iframe=1";
             $image_upload_iframe_src = apply_filters( 'image_upload_iframe_src', "$media_upload_iframe_src" );
             ?>
@@ -352,6 +353,7 @@ function attachments_add()
 
                         if( is_array($existing_attachments) && !empty($existing_attachments) )
                         {
+                            do_action('attachments_list_before', $existing_attachments);
                             $attachment_index = 0;
                             foreach ($existing_attachments as $attachment) : $attachment_index++; ?>
                             <li class="attachments-file">
@@ -383,11 +385,13 @@ function attachments_add()
                                 </div>
                             </li>
                         <?php endforeach;
+                        do_action('attachments_list_after', $existing_attachments);
                     }
                 }
                 ?>
             </ul>
         </div>
+        <?php do_action('attachments_meta_after');
     </div>
 <?php }
 
