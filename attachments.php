@@ -124,7 +124,9 @@ function attachments_pre_init()
         $post_types['post']->name           = 'post';
         $post_types['page']->labels->name   = 'Pages';
         $post_types['page']->name           = 'page';
-
+        
+        $post_types = apply_filters('attachments_post_types', $post_types);
+        
         if( count( $post_types ) )
         {
             foreach( $post_types as $post_type )
