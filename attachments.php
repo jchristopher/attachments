@@ -124,7 +124,9 @@ function attachments_pre_init()
         $post_types['post']->name           = 'post';
         $post_types['page']->labels->name   = 'Pages';
         $post_types['page']->name           = 'page';
-
+        
+        $post_types = apply_filters('attachments_post_types', $post_types);
+        
         if( count( $post_types ) )
         {
             foreach( $post_types as $post_type )
@@ -222,6 +224,10 @@ function attachments_edit_post_types()
     $post_types['page']->labels->name   = 'Pages';
     $post_types['page']->name           = 'page';
 
+    $post_types = apply_filters('attachments_post_types', $post_types);
+
+    do_action('attachments_edit_post_types_before', $post_types);
+
     if( count( $post_types ) ) : foreach($post_types as $post_type) : ?>
         <div>
             <label for="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]">
@@ -229,6 +235,8 @@ function attachments_edit_post_types()
             </label>
         </div>
     <?php endforeach; endif; ?>
+    
+    <?php do_action('attachments_edit_post_types_after', $post_types); ?>
 <?php }
 
 /**
@@ -305,7 +313,7 @@ function attachments_options()
  */
 function attachments_menu()
 {
-    add_options_page('Settings', 'Attachments', 'manage_options', __FILE__, 'attachments_options');
+    add_options_page('Settings', __('Attachments', 'attachments'), 'manage_options', __FILE__, 'attachments_options');
 }
 
 
@@ -321,6 +329,7 @@ function attachments_add()
     <div id="attachments-inner">
 
         <?php
+            do_action('attachments_meta_before');
             $media_upload_iframe_src = "media-upload.php?type=image&TB_iframe=1";
             $image_upload_iframe_src = apply_filters( 'image_upload_iframe_src', "$media_upload_iframe_src" );
             ?>
@@ -344,6 +353,7 @@ function attachments_add()
 
                         if( is_array($existing_attachments) && !empty($existing_attachments) )
                         {
+                            do_action('attachments_list_before', $existing_attachments);
                             $attachment_index = 0;
                             foreach ($existing_attachments as $attachment) : $attachment_index++; ?>
                             <li class="attachments-file">
@@ -375,11 +385,13 @@ function attachments_add()
                                 </div>
                             </li>
                         <?php endforeach;
+                        do_action('attachments_list_after', $existing_attachments);
                     }
                 }
                 ?>
             </ul>
         </div>
+        <?php do_action('attachments_meta_after');
     </div>
 <?php }
 
@@ -496,6 +508,7 @@ function attachments_save($post_id)
         }
 
     }
+    $attachment_ids = apply_filters('attachments_save_attachment_ids', $attachment_ids, $post_id);
 
     // If we have attachments, there's work to do
     if( !empty( $attachment_ids ) )
@@ -513,6 +526,8 @@ function attachments_save($post_id)
                     'caption'           => str_replace( '"', '&quot;', $_POST['attachment_caption_' . $i] ),
                     'order'             => intval( $_POST['attachment_order_' . $i] )
                     );
+                    
+                $attachment_details = apply_filters('attachments_save_attachment_details', $attachment_details, $attachment_id, $post_id);
 
                 // serialize data and encode
                 $attachment_serialized = base64_encode( serialize( $attachment_details ) );
@@ -542,7 +557,7 @@ function attachments_save($post_id)
         }
 
     }
-
+    do_action('attachments_save', $post_id);
 }
 
 
@@ -564,6 +579,7 @@ function attachments_get_filesize_formatted( $path = NULL )
         $e          = floor( log( $bytes ) / log( 1024 ) );
         $formatted  = sprintf( '%.2f ' . $s[$e], ( $bytes / pow( 1024, floor( $e ) ) ) );
     }
+    $formatted = apply_filters('attachments_get_filesize_formatted', $formatted, $path);
     return $formatted;
 }
 
@@ -620,6 +636,7 @@ function attachments_get_attachments( $post_id=null )
         }
     }
 
+    $post_attachments = apply_filters('attachments_get_attachments', $post_attachments);
     return $post_attachments;
 }
 
@@ -672,6 +689,7 @@ function attachments_init()
     }
 
     attachments_meta_box();
+    do_action('attachments_init');
 }
 
 
