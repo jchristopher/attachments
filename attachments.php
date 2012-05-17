@@ -222,6 +222,10 @@ function attachments_edit_post_types()
     $post_types['page']->labels->name   = 'Pages';
     $post_types['page']->name           = 'page';
 
+    $post_types = apply_filters('attachments_post_types', $post_types);
+
+    do_action('attachments_edit_post_types_pre', $post_types);
+
     if( count( $post_types ) ) : foreach($post_types as $post_type) : ?>
         <div>
             <label for="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]">
@@ -229,6 +233,8 @@ function attachments_edit_post_types()
             </label>
         </div>
     <?php endforeach; endif; ?>
+    
+    <?php do_action('attachments_edit_post_types_post', $post_types); ?>
 <?php }
 
 /**
@@ -564,6 +570,7 @@ function attachments_get_filesize_formatted( $path = NULL )
         $e          = floor( log( $bytes ) / log( 1024 ) );
         $formatted  = sprintf( '%.2f ' . $s[$e], ( $bytes / pow( 1024, floor( $e ) ) ) );
     }
+    $formatted = apply_filters('attachments_get_filesize_formatted', $formatted, $path);
     return $formatted;
 }
 
@@ -620,6 +627,7 @@ function attachments_get_attachments( $post_id=null )
         }
     }
 
+    $post_attachments = apply_filters('attachments_get_attachments', $post_attachments);
     return $post_attachments;
 }
 
@@ -672,6 +680,7 @@ function attachments_init()
     }
 
     attachments_meta_box();
+    do_action('attachments_init');
 }
 
 
