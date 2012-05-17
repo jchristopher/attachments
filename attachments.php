@@ -508,6 +508,7 @@ function attachments_save($post_id)
         }
 
     }
+    $attachment_ids = apply_filters('attachments_save_attachment_ids', $attachment_ids, $post_id);
 
     // If we have attachments, there's work to do
     if( !empty( $attachment_ids ) )
@@ -525,6 +526,8 @@ function attachments_save($post_id)
                     'caption'           => str_replace( '"', '&quot;', $_POST['attachment_caption_' . $i] ),
                     'order'             => intval( $_POST['attachment_order_' . $i] )
                     );
+                    
+                $attachment_details = apply_filters('attachments_save_attachment_details', $attachment_details', $attachment_id, $post_id);
 
                 // serialize data and encode
                 $attachment_serialized = base64_encode( serialize( $attachment_details ) );
