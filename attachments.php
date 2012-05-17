@@ -554,7 +554,7 @@ function attachments_save($post_id)
         }
 
     }
-
+    do_action('attachments_save', $post_id);
 }
 
 
