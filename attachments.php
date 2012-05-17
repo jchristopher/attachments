@@ -226,7 +226,7 @@ function attachments_edit_post_types()
 
     $post_types = apply_filters('attachments_post_types', $post_types);
 
-    do_action('attachments_edit_post_types_pre', $post_types);
+    do_action('attachments_edit_post_types_before', $post_types);
 
     if( count( $post_types ) ) : foreach($post_types as $post_type) : ?>
         <div>
@@ -236,7 +236,7 @@ function attachments_edit_post_types()
         </div>
     <?php endforeach; endif; ?>
     
-    <?php do_action('attachments_edit_post_types_post', $post_types); ?>
+    <?php do_action('attachments_edit_post_types_after', $post_types); ?>
 <?php }
 
 /**
@@ -313,7 +313,7 @@ function attachments_options()
  */
 function attachments_menu()
 {
-    add_options_page('Settings', 'Attachments', 'manage_options', __FILE__, 'attachments_options');
+    add_options_page('Settings', __('Attachments', 'attachments'), 'manage_options', __FILE__, 'attachments_options');
 }
 
 
