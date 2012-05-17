@@ -527,7 +527,7 @@ function attachments_save($post_id)
                     'order'             => intval( $_POST['attachment_order_' . $i] )
                     );
                     
-                $attachment_details = apply_filters('attachments_save_attachment_details', $attachment_details', $attachment_id, $post_id);
+                $attachment_details = apply_filters('attachments_save_attachment_details', $attachment_details, $attachment_id, $post_id);
 
                 // serialize data and encode
                 $attachment_serialized = base64_encode( serialize( $attachment_details ) );
