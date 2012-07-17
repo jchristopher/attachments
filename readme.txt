@@ -3,28 +3,12 @@ Contributors: jchristopher
 Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
-Tested up to: 3.3
-Stable tag: 1.6.1
+Tested up to: 3.4.1
+Stable tag: 1.6.2
 
 Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types
 
 == Description ==
-
-= Attachments Pro Now Available! =
-
-Attachments Pro brings a number of frequently requested features:
-
-* Multiple Attachments instances on edit screens
-* Customizable, limitless fields and labels
-* Ability to define rules limiting the availability of Attachments on edit screens
-* Limit the number of Attachments that can be added
-* Limit Attach-able Media items by file/mime type
-* Shortcode support
-* Auto-inclusion of Attachments content within `the_content()`
-
-**Much more information** available about [Attachments Pro](http://mondaybynoon.com/store/attachments-pro/)
-
-= About Attachments =
 
 Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types. This plugin *does not* directly interact with your theme, you will need to edit your template files.
 
@@ -61,6 +45,12 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 4. Once assets have been attached, you can customize the title, caption, and order
 
 == Changelog ==
+
+= 1.6.2 =
+* Fixed an issue when you both add and delete Attachments prior to saving posts
+* Cleaned up the JavaScript that powers the file browse interaction
+* Swapped out some custom code for WordPress native function calls
+* Better handling of asset inclusion
 
 = 1.6.1 =
 * Fixed a conflict with WP-Ecommerce

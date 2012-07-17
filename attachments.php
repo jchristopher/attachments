@@ -3,7 +3,7 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.6.1
+ Version: 1.6.2
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
@@ -30,8 +30,10 @@
 if( !defined( 'IS_ADMIN' ) )
     define( 'IS_ADMIN',  is_admin() );
 
-define( 'ATTACHMENTS_PREFIX', 'attachments_' );
-define( 'ATTACHMENTS_VERSION', '1.6' );
+define( 'ATTACHMENTS_PREFIX',   'attachments_' );
+define( 'ATTACHMENTS_VERSION',  '1.6.2' );
+define( 'ATTACHMENTS_URL',      plugin_dir_url( __FILE__ ) );
+define( 'ATTACHMENTS_DIR',      plugin_dir_path( __FILE__ ) );
 
 
 // ===========
@@ -39,9 +41,6 @@ define( 'ATTACHMENTS_VERSION', '1.6' );
 // ===========
 
 global $wpdb;
-global $units;
-
-$units = array( ' bytes', ' KB', ' MB', ' GB', ' TB', ' PB' );
 
 // environment check
 $wp_version = get_bloginfo( 'version' );
@@ -67,19 +66,53 @@ if( !version_compare( PHP_VERSION, '5.2', '>=' ) || !version_compare( $wp_versio
 
 if( IS_ADMIN )
 {
-    add_action( 'init',                                                     'attachments_pre_init' );
 
-    add_action( 'admin_menu',                                               'attachments_init' );
-    add_action( 'admin_head',                                               'attachments_init_js' );
-    add_action( 'save_post',                                                'attachments_save' );
-    add_action( 'admin_menu',                                               'attachments_menu' );
-    add_action( 'admin_footer',                                             'attachments_footer_js' );
-    add_action( 'in_plugin_update_message-attachments/attachments.php',     'attachments_update_message' );
-    add_filter( 'plugin_row_meta',                                          'attachments_filter_plugin_row_meta', 10, 2 );
-    add_action( 'admin_init',                                               'attachments_register_settings' );
+    // pre-flight check
+    add_action( 'init',                     'attachments_pre_init' );
 
-    load_plugin_textdomain( 'attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+    // get our assets in line
+    add_action( 'admin_enqueue_scripts',    'attachments_enqueues' );
+    add_action( 'admin_head',               'attachments_init_js' );
+
+    // get our menu in line
+    add_action( 'admin_menu',               'attachments_menu' );
+
+    // need our textdomain
+    add_action( 'plugins_loaded',           'attachments_localization' );
+
+    // make sure we've got our settings in place
+    add_action( 'admin_init',               'attachments_register_settings' );
+
+    // make sure we handle the save
+    add_action( 'save_post',                'attachments_save' );
+
+    // invoke our meta box
+    add_action( 'add_meta_boxes',           'attachments_meta_box' );
+
 }
+
+
+function attachments_localization()
+{
+    load_plugin_textdomain( 'attachments', false, ATTACHMENTS_DIR . '/languages/' );
+}
+
+
+
+function attachments_enqueues( $hook )
+{
+
+    wp_enqueue_style( 'attachments', trailingslashit( ATTACHMENTS_URL ) . 'css/attachments.css' );
+
+    if( 'edit.php' != $hook && 'post.php' != $hook && 'post-new.php' != $hook )
+        return;
+
+    wp_enqueue_script( 'handlebars', trailingslashit( ATTACHMENTS_URL ) . 'js/handlebars.js', null, '1.0.beta.6', false );
+    wp_enqueue_script( 'attachments', trailingslashit( ATTACHMENTS_URL ) . 'js/attachments.js', array( 'handlebars', 'jquery', 'thickbox' ), ATTACHMENTS_VERSION, true );
+
+    wp_enqueue_style( 'thickbox' );
+}
+
 
 
 
@@ -153,34 +186,34 @@ function attachments_register_settings()
 {
     // flag our settings
     register_setting(
-        ATTACHMENTS_PREFIX . 'settings',        // group
-        ATTACHMENTS_PREFIX . 'settings',        // name of options
-        'attachments_validate_settings'         // validation callback
+        ATTACHMENTS_PREFIX . 'settings',
+        ATTACHMENTS_PREFIX . 'settings',
+        'attachments_validate_settings'
     );
 
     add_settings_section(
-        ATTACHMENTS_PREFIX . 'options',         // section ID
-        'Post Type Settings',                   // title
-        'attachments_edit_options',             // display callback
-        'attachments_options'                   // page name (do_settings_sections)
+        ATTACHMENTS_PREFIX . 'options',
+        'Post Type Settings',
+        'attachments_edit_options',
+        'attachments_options'
     );
 
     // post types
     add_settings_field(
-        ATTACHMENTS_PREFIX . 'post_types',      // unique field ID
-        'Post Types',                           // title
-        'attachments_edit_post_types',          // input box display callback
-        'attachments_options',                  // page name (as above)
-        ATTACHMENTS_PREFIX . 'options'          // first arg to add_settings_section
+        ATTACHMENTS_PREFIX . 'post_types',
+        'Post Types',
+        'attachments_edit_post_types',
+        'attachments_options',
+        ATTACHMENTS_PREFIX . 'options'
     );
 
     // post_parent
     add_settings_field(
-        ATTACHMENTS_PREFIX . 'post_parent',     // unique field ID
-        'Set Post Parent',                      // title
-        'attachments_edit_post_parent',         // input box display callback
-        'attachments_options',                  // page name (as above)
-        ATTACHMENTS_PREFIX . 'options'          // first arg to add_settings_section
+        ATTACHMENTS_PREFIX . 'post_parent',
+        'Set Post Parent',
+        'attachments_edit_post_parent',
+        'attachments_options',
+        ATTACHMENTS_PREFIX . 'options'
     );
 }
 
@@ -229,31 +262,6 @@ function attachments_edit_post_types()
             </label>
         </div>
     <?php endforeach; endif; ?>
-<?php }
-
-/**
- * Includes our plugin update message
- *
- * @return void
- * @author Jonathan Christopher
- */
-function attachments_update_message()
-{ ?>
-    <div style="color: #f00;padding-top:4px;">Attachments Pro is now available!</div>
-    <div style="font-weight:normal;padding-top:8px;">
-        <p><a href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a> is Attachments' big brother. With it come a number of often-requested features such as:</p>
-        <ul style="list-style:disc;padding-left:20px;margin-bottom:13px;overflow:hidden;zoom:1;">
-            <li style="width:48%;padding-right:2%;float:left;">Multiple Attachments instances on edit screens</li>
-            <li style="width:48%;padding-right:2%;float:left;">Customizable field labels and meta box title</li>
-            <li style="width:48%;padding-right:2%;float:left;">Unlimited number of fields per Attachment</li>
-            <li style="width:48%;padding-right:2%;float:left;">Ability to define rules limiting the availability of Attachments on edit screens</li>
-            <li style="width:48%;padding-right:2%;float:left;">Limit the number of Attachments that can be added</li>
-            <li style="width:48%;padding-right:2%;float:left;">Limit Attach-able Media items by file/mime type</li>
-            <li style="width:48%;padding-right:2%;float:left;">Shortcode support</li>
-            <li style="width:48%;padding-right:2%;float:left;">Auto-inclusion of Attachments content within the_content()</li>
-        </ul>
-        <p>Attachments has always been and <em>will always be free</em>. <a href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a> is <strong>available now</strong>. To find out more about the new features already added, and to stay up-to-date on what's to come, <a href="http://mondaybynoon.com/store/attachments-pro/">have a look at the details</a>. From there, you can make formal support and feature requests.</p>
-    </div>
 <?php }
 
 
@@ -316,7 +324,7 @@ function attachments_menu()
  * @author Jonathan Christopher
  */
 function attachments_add()
-{?>
+{ ?>
 
     <div id="attachments-inner">
 
@@ -344,44 +352,68 @@ function attachments_add()
 
                         if( is_array($existing_attachments) && !empty($existing_attachments) )
                         {
-                            $attachment_index = 0;
-                            foreach ($existing_attachments as $attachment) : $attachment_index++; ?>
-                            <li class="attachments-file">
-                                <h2>
-                                    <a href="#" class="attachment-handle">
-                                        <span class="attachment-handle-icon"><img src="<?php echo WP_PLUGIN_URL; ?>/attachments/images/handle.gif" alt="Drag" /></span>
-                                    </a>
-                                    <span class="attachment-name"><?php echo $attachment['name']; ?></span>
-                                    <span class="attachment-delete"><a href="#"><?php _e("Delete", "attachments")?></a></span>
-                                </h2>
-                                <div class="attachments-fields">
-                                    <div class="textfield" id="field_attachment_title_<?php echo $attachment_index ; ?>">
-                                        <label for="attachment_title_<?php echo $attachment_index; ?>"><?php _e("Title", "attachments")?></label>
-                                        <input type="text" id="attachment_title_<?php echo $attachment_index; ?>" name="attachment_title_<?php echo $attachment_index; ?>" value="<?php echo $attachment['title']; ?>" size="20" />
-                                    </div>
-                                    <div class="textfield" id="field_attachment_caption_<?php echo $attachment_index; ?>">
-                                        <label for="attachment_caption_<?php echo $attachment_index; ?>"><?php _e("Caption", "attachments")?></label>
-                                        <input type="text" id="attachment_caption_<?php echo $attachment_index; ?>" name="attachment_caption_<?php echo $attachment_index; ?>" value="<?php echo $attachment['caption']; ?>" size="20" />
-                                    </div>
-                                </div>
-                                <div class="attachments-data">
-                                    <input type="hidden" name="attachment_id_<?php echo $attachment_index; ?>" id="attachment_id_<?php echo $attachment_index; ?>" value="<?php echo $attachment['id']; ?>" />
-                                    <input type="hidden" class="attachment_order" name="attachment_order_<?php echo $attachment_index; ?>" id="attachment_order_<?php echo $attachment_index; ?>" value="<?php echo $attachment['order']; ?>" />
-                                </div>
-                                <div class="attachment-thumbnail">
-                                    <span class="attachments-thumbnail">
-                                        <?php echo wp_get_attachment_image( $attachment['id'], array(80, 60), 1 ); ?>
-                                    </span>
-                                </div>
-                            </li>
-                        <?php endforeach;
+                            foreach ($existing_attachments as $attachment)
+                            {
+                                // TODO: Better handle this when examining Handlebars template
+                                if( empty( $attachment['title'] ) )
+                                {
+                                    $attachment['title'] = ' ';
+                                }
+                                if( empty( $attachment['caption'] ) )
+                                {
+                                    $attachment['caption'] = ' ';
+                                }
+                                attachments_attachment_markup( $attachment['name'], $attachment['title'], $attachment['caption'], $attachment['id'], $attachment['order'] );
+                            }
                     }
                 }
                 ?>
             </ul>
         </div>
     </div>
+    <script id="attachment-template" type="text/x-handlebars-template">
+        <?php attachments_attachment_markup(); ?>
+    </script>
 <?php }
+
+
+function attachments_attachment_markup( $name = null, $title = null, $caption = null, $id = null, $order = null )
+{ ?>
+    <li class="attachments-file">
+        <h2>
+            <a href="#" class="attachment-handle">
+                <span class="attachment-handle-icon"><img src="<?php echo WP_PLUGIN_URL; ?>/attachments/images/handle.gif" alt="Drag" /></span>
+            </a>
+            <span class="attachment-name"><?php echo empty( $name ) ? '{{name}}' : $name; ?></span>
+            <span class="attachment-delete"><a href="#"><?php _e("Delete", "attachments")?></a></span>
+        </h2>
+        <div class="attachments-fields">
+            <div class="textfield" id="field_attachment_title_<?php echo empty( $id ) ? '{{id}}' : $id; ?>">
+                <label for="attachment_title_<?php echo empty( $id ) ? '{{id}}' : $id; ?>"><?php _e("Title", "attachments")?></label>
+                <input type="text" id="attachment_title_<?php echo empty( $id ) ? '{{id}}' : $id; ?>" name="attachment_title_<?php echo empty( $id ) ? '{{id}}' : $id; ?>" value="<?php echo empty( $title ) ? '{{title}}' : $title; ?>" size="20" />
+            </div>
+            <div class="textfield" id="field_attachment_caption_<?php echo empty( $id ) ? '{{id}}' : $id; ?>">
+                <label for="attachment_caption_<?php echo empty( $id ) ? '{{id}}' : $id; ?>"><?php _e("Caption", "attachments")?></label>
+                <input type="text" id="attachment_caption_<?php echo empty( $id ) ? '{{id}}' : $id; ?>" name="attachment_caption_<?php echo empty( $id ) ? '{{id}}' : $id; ?>" value="<?php echo empty( $caption ) ? '{{caption}}' : $caption; ?>" size="20" />
+            </div>
+        </div>
+        <div class="attachments-data">
+            <input type="hidden" name="attachment_id_<?php echo empty( $id ) ? '{{id}}' : $id; ?>" id="attachment_id_<?php echo empty( $id ) ? '{{id}}' : $id; ?>" value="<?php echo empty( $id ) ? '{{id}}' : $id; ?>" />
+            <input type="hidden" class="attachment_order" name="attachment_order_<?php echo empty( $id ) ? '{{id}}' : $id; ?>" id="attachment_order_<?php echo empty( $id ) ? '{{id}}' : $id; ?>" value="<?php echo empty( $order ) ? '{{order}}' : $order; ?>" />
+        </div>
+        <div class="attachment-thumbnail">
+            <span class="attachments-thumbnail">
+                <?php $thumb = wp_get_attachment_image( $id, array(80, 60), 1 ); ?>
+                <?php if( !empty( $thumb ) ) : ?>
+                    <?php echo $thumb; ?>
+                <?php else: ?>
+                    <img src="{{thumb}}" alt="Thumbnail" />
+                <?php endif; ?>
+            </span>
+        </div>
+    </li>
+<?php }
+
 
 
 /**
@@ -508,10 +540,10 @@ function attachments_save($post_id)
                 $attachment_id      = intval( $_POST['attachment_id_' . $i] );
 
                 $attachment_details = array(
-                    'id'                => $attachment_id,
-                    'title'             => str_replace( '"', '&quot;', $_POST['attachment_title_' . $i] ),
-                    'caption'           => str_replace( '"', '&quot;', $_POST['attachment_caption_' . $i] ),
-                    'order'             => intval( $_POST['attachment_order_' . $i] )
+                    'id'        => $attachment_id,
+                    'title'     => str_replace( '"', '&quot;', $_POST['attachment_title_' . $i] ),
+                    'caption'   => str_replace( '"', '&quot;', $_POST['attachment_caption_' . $i] ),
+                    'order'     => intval( $_POST['attachment_order_' . $i] )
                     );
 
                 // serialize data and encode
@@ -525,7 +557,7 @@ function attachments_save($post_id)
                 if( isset( $settings['post_parent'] ) && $settings['post_parent'] )
                 {
                     // need to first check to make sure we're not overwriting a native Attach
-                    $attach_post_ref                = get_post( $attachment_id );
+                    $attach_post_ref = get_post( $attachment_id );
 
                     if( $attach_post_ref->post_parent == 0 )
                     {
@@ -555,17 +587,10 @@ function attachments_save($post_id)
  */
 function attachments_get_filesize_formatted( $path = NULL )
 {
-    global $units;
     $formatted = '0 bytes';
     if( file_exists( $path ) )
     {
-        $bytes      = intval( filesize( $path ) );
-        if( $bytes > 0 )
-        {
-            $s          = $units;
-            $e          = floor( log( $bytes ) / log( 1024 ) );
-            $formatted  = sprintf( '%.2f ' . $s[$e], ( $bytes / pow( 1024, floor( $e ) ) ) );
-        }
+        $formatted = size_format( @filesize( $path ) );
     }
     return $formatted;
 }
@@ -624,78 +649,4 @@ function attachments_get_attachments( $post_id=null )
     }
 
     return $post_attachments;
-}
-
-
-/**
- * Outputs Attachments JS into the footer
- *
- * @return void
- * @author Jonathan Christopher
- */
-function attachments_footer_js()
-{
-    $uri    = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : NULL ;
-    $file   = basename( parse_url( $uri, PHP_URL_PATH ) );
-
-    if( $uri && in_array( $file, array( 'post.php', 'post-new.php' ) ) )
-    {
-        // we only want this to fire on edit screens
-        echo '<script type="text/javascript">';
-        include 'js/attachments.js';
-        echo '</script>';
-    }
-}
-
-
-/**
- * This is the main initialization function, it will invoke the necessary meta_box
- *
- * @return void
- * @author Jonathan Christopher
- */
-function attachments_init()
-{
-    wp_enqueue_script( 'jquery-ui-core' );
-    wp_enqueue_script( 'thickbox' );
-
-    wp_enqueue_style( 'thickbox' );
-    wp_enqueue_style( 'attachments', WP_PLUGIN_URL . '/attachments/css/attachments.css' );
-
-    if( function_exists( 'load_plugin_textdomain' ) )
-    {
-        if( !defined('WP_PLUGIN_DIR') )
-        {
-            load_plugin_textdomain( 'attachments', str_replace( ABSPATH, '', dirname( __FILE__ ) ) );
-        }
-        else
-        {
-            load_plugin_textdomain( 'attachments', false, dirname( plugin_basename( __FILE__ ) ) );
-        }
-    }
-
-    attachments_meta_box();
-}
-
-
-/**
- * Modifies the plugin meta line on the WP Plugins page
- *
- * @param $plugin_meta
- * @param $plugin_file
- * @return array $plugin_meta Array of plugin meta data
- * @author Jonathan Christopher
- */
-function attachments_filter_plugin_row_meta( $plugin_meta, $plugin_file )
-{
-    if( strstr( $plugin_file, 'attachments/attachments.php' ) )
-    {
-        $plugin_meta[2] = '<a title="Attachments Pro" href="http://mondaybynoon.com/store/attachments-pro/">Attachments Pro</a>';
-        $plugin_meta[3] = 'Visit <a title="Iron to Iron" href="http://irontoiron.com/">Iron to Iron</a>';
-        return $plugin_meta;
-    }
-    else
-    {
-        return $plugin_meta;
-    }
 }
