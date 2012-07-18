@@ -1,6 +1,4 @@
-if(jQuery.isPlainObject(Handlebars)) {
-    return;
-}
+if(!jQuery.isPlainObject(Handlebars)) {
 
 // lib/handlebars/base.js
 var Handlebars = {};
@@ -1552,3 +1550,4 @@ Handlebars.VM = {
 
 Handlebars.template = Handlebars.VM.template;
 ;
+}

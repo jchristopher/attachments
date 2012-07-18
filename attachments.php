@@ -3,7 +3,7 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.6.2
+ Version: 1.6.2.1
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
@@ -31,7 +31,7 @@ if( !defined( 'IS_ADMIN' ) )
     define( 'IS_ADMIN',  is_admin() );
 
 define( 'ATTACHMENTS_PREFIX',   'attachments_' );
-define( 'ATTACHMENTS_VERSION',  '1.6.2' );
+define( 'ATTACHMENTS_VERSION',  '1.6.2.1' );
 define( 'ATTACHMENTS_URL',      plugin_dir_url( __FILE__ ) );
 define( 'ATTACHMENTS_DIR',      plugin_dir_path( __FILE__ ) );
 
