@@ -335,7 +335,7 @@ function attachments_add()
 
                 <ul id="attachments-actions">
                     <li>
-                        <a id="attachments-thickbox" href="media-upload.php?type=image&amp;TB_iframe=1&amp;width=640&amp;height=1500&amp;attachments_thickbox=1" title="Attachments" class="button button-highlighted">
+                        <a id="attachments-thickbox" href="media-upload.php?TB_iframe=1&amp;width=640&amp;height=1500&amp;attachments_thickbox=1" title="Attachments" class="button button-highlighted">
                             <?php _e( 'Attach', 'attachments' ) ?>
                         </a>
                     </li>
