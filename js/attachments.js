@@ -78,7 +78,7 @@ jQuery(document).ready(function($){
                 modify_thickbox();
             }
         }, 500 );
-        tb_show('Attach a file', event.target.href, false);
+        tb_show(attachments.attach_a_file, event.target.href, false);
         return false;
     }
 
@@ -106,7 +106,7 @@ jQuery(document).ready(function($){
         // our new click handler for the attach button
         the_thickbox.find('td.savesend input').unbind('click').click(function(e){
 
-            jQuery(this).after('<span class="attachments-attached">Attached!</span>');
+            jQuery(this).after('<span class="attachments-attached">' + attachments.attached + '</span>');
 
             // grab our meta as per the Media library
             var wp_media_meta       = $(this).parent().parent().parent();
