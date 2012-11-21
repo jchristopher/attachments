@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Attachments v1.6.2.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2012-11-20 16:48:38+0000\n"
+"PO-Revision-Date: 2012-11-21 11:00:58+0000\n"
 "Last-Translator: horttcore <me@horttcore.de>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,12 +27,12 @@ msgstr "Attachments benötigt PHP 5.2 oder höher, so wie WordPress 3.2+. Attach
 #: attachments.php:341
 #@ attachments
 msgid "Attach"
-msgstr "Anhängen"
+msgstr "Datei Anhängen"
 
 #: attachments.php:390
 #@ attachments
 msgid "Delete"
-msgstr "löschen"
+msgstr "Löschen"
 
 #: attachments.php:394
 #@ attachments
