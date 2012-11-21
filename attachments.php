@@ -3,7 +3,7 @@
  Plugin Name: Attachments
  Plugin URI: http://mondaybynoon.com/wordpress-attachments/
  Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.6.2.1
+ Version: 1.6.2.2
  Author: Jonathan Christopher
  Author URI: http://mondaybynoon.com/
 */
@@ -50,7 +50,7 @@ if( !version_compare( PHP_VERSION, '5.2', '>=' ) || !version_compare( $wp_versio
     {
         require_once ABSPATH.'/wp-admin/includes/plugin.php';
         deactivate_plugins( __FILE__ );
-        wp_die( __('Attachments requires PHP 5.2 or higher, as does WordPress 3.2+. Attachments has been automatically deactivated.') );
+        wp_die( __('Attachments requires PHP 5.2 or higher, as does WordPress 3.2+. Attachments has been automatically deactivated.', 'attachments') );
     }
     else
     {
@@ -94,7 +94,7 @@ if( IS_ADMIN )
 
 function attachments_localization()
 {
-    load_plugin_textdomain( 'attachments', false, ATTACHMENTS_DIR . '/languages/' );
+    load_plugin_textdomain( 'attachments', false, 'attachments/languages/' );
 }
 
 
@@ -111,6 +111,8 @@ function attachments_enqueues( $hook )
     wp_enqueue_script( 'attachments', trailingslashit( ATTACHMENTS_URL ) . 'js/attachments.js', array( 'handlebars', 'jquery', 'thickbox' ), ATTACHMENTS_VERSION, true );
 
     wp_enqueue_style( 'thickbox' );
+
+    wp_localize_script( 'attachments', 'attachments', array( 'attach_a_file' => __( 'Attach a file', 'attachments' ), 'Attached!' => __( 'Attached!', 'attachments') ) );
 }
 
 
@@ -232,7 +234,7 @@ function attachments_edit_post_parent()
     ?>
     <div>
         <label for="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_parent]">
-            <input name="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_parent]" type="checkbox" id="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_parent]" value="1"<?php if( isset( $settings['post_parent'] ) && $settings['post_parent'] ) : ?> checked="checked"<?php endif; ?> /> Set the <code>post_parent</code> when Attachments are saved
+            <input name="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_parent]" type="checkbox" id="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_parent]" value="1"<?php if( isset( $settings['post_parent'] ) && $settings['post_parent'] ) : ?> checked="checked"<?php endif; ?> /> <?php _e( 'Set the <code>post_parent</code> when Attachments are saved', 'attac' ); ?>
         </label>
     </div>
 <?php }
