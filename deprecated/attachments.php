@@ -1,11 +1,6 @@
 <?php
 /*
- Plugin Name: Attachments
- Plugin URI: http://mondaybynoon.com/wordpress-attachments/
- Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
- Version: 1.6.2.1
- Author: Jonathan Christopher
- Author URI: http://mondaybynoon.com/
+    THIS IS A LEGACY VERSION OF ATTACHMENTS AND IS CONSIDERED DEPRECATED
 */
 
 /*  Copyright 2009-2012 Jonathan Christopher  (email : jonathan@irontoiron.com)
@@ -382,7 +377,7 @@ function attachments_attachment_markup( $name = null, $title = null, $caption = 
     <li class="attachments-file">
         <h2>
             <a href="#" class="attachment-handle">
-                <span class="attachment-handle-icon"><img src="<?php echo WP_PLUGIN_URL; ?>/attachments/images/handle.gif" alt="Drag" /></span>
+                <span class="attachment-handle-icon"><img src="<?php echo WP_PLUGIN_URL; ?>/attachments/deprecated/images/handle.gif" alt="Drag" /></span>
             </a>
             <span class="attachment-name"><?php echo empty( $name ) ? '{{name}}' : $name; ?></span>
             <span class="attachment-delete"><a href="#"><?php _e("Delete", "attachments")?></a></span>
