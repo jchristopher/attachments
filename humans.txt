@@ -1,0 +1,12 @@
+/* TEAM */
+Name: Jonathan Christopher
+Title: Lead Developer
+Twitter: jchristopher
+ADN: jchristopher
+
+/* THANKS */
+JR Tashjian
+
+/* META */
+Updated: 2012/11/13
+See: http://humanstxt.org/

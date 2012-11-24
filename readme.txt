@@ -40,11 +40,12 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 == Screenshots ==
 
-1. Attachments meta box as it appears on Posts, Pages, or Custom Post Types
-2. Native WordPress browse modal dialog, slightly customized for Attachments. Upload straight from your computer.
-4. Once assets have been attached, you can customize the title, caption, and order
 
 == Changelog ==
+
+= 3.0 =
+* **Major** rewrite. After three years of development, Attachments has been rewritten to make
+      even better use of what WordPress has to offer
 
 = 1.6.2.1 =
 * Fixed an issue with Handlebars in Firefox
