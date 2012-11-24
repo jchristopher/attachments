@@ -66,10 +66,12 @@ if ( !class_exists( 'Attachments' ) ) :
 
         function meta_box_init()
         {
-            $post_type = get_post_type();
-            if( in_array( $post_type, $this->instances_for_post_type ) )
+            if( !empty( $this->instances_for_post_type ) )
             {
-                add_meta_box( 'attachments', __( 'Attachments', 'attachments' ), array( $this, 'meta_box_markup' ), $post_type, 'normal' );
+                foreach( $this->instances_for_post_type as $instance )
+                {
+                    add_meta_box( 'attachments', __( 'Attachments', 'attachments' ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal' );
+                }
             }
         }
 
@@ -94,14 +96,14 @@ if ( !class_exists( 'Attachments' ) ) :
             if( !is_array( $params['post_type'] ) )
                 $params['post_type'] = array( $params['post_type'] );   // we always want an array
 
-            $instance   = str_replace( '-', '_', sanitize_title( $name ) );
+            $instance   = str_replace( '-', '_', sanitize_title( $name ) ); // TODO: Better sanitization
 
             $this->instances[$instance] = $params;
         }
 
         function get_instances_for_post_type( $post_type = null )
         {
-            $post_type = ( !is_null( $post_type ) && post_type_exists( $post_type ) ) ? $post_type : get_post_type();
+            $post_type = ( !is_null( $post_type ) && post_type_exists( $post_type ) ) ? $post_type : $this->get_post_type();
 
             $instances = array();
 
@@ -119,25 +121,33 @@ if ( !class_exists( 'Attachments' ) ) :
             return $instances;
         }
 
-        function set_instances_for_current_post_type()
+        function get_post_type()
         {
             global $post;
 
             // TODO: Retrieving the post_type at this point is ugly to say the least. This needs major cleanup.
-            if( empty( $post->ID ) )
+            if( !$post_type = get_post_type() )
             {
-                $post_type = str_replace( '-', '_', sanitize_title( $_GET['post_type'] ) );
-            }
-            else
-            {
-                $post_type = get_post_type( $post->ID );
+                if( empty( $post->ID ) )
+                {
+                    $post_type = str_replace( '-', '_', sanitize_title( $_GET['post_type'] ) ); // TODO: Better sanitization
+                }
+                else
+                {
+                    $post_type = get_post_type( $post->ID );
+                }
+
+                if( empty( $post_type ) )
+                    $post_type = 'post';
             }
 
-            if( empty( $post_type ) )
-                $post_type = 'post';
+            return $post_type;
+        }
 
+        function set_instances_for_current_post_type()
+        {
             // store the applicable instances for this post type
-            $this->instances_for_post_type  = $this->get_instances_for_post_type( $post_type );
+            $this->instances_for_post_type  = $this->get_instances_for_post_type( $this->get_post_type() );
         }
 
         function create_field( $field )
@@ -171,4 +181,4 @@ if ( !class_exists( 'Attachments' ) ) :
 
 endif; // class_exists check
 
-$attachments           = new Attachments();
+$attachments = new Attachments();
