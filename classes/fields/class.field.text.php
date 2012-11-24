@@ -17,20 +17,20 @@ if ( !class_exists( 'Attachments_Field_Text' ) ) :
         public $label;
         public $value;
 
-        function __construct( $label = 'Text' )
+        function __construct( $name = 'text', $label = 'Text' )
         {
-            $this->name     = 'text';
+            $this->name     = sanitize_title( $name );
             $this->label    = __( $label, 'attachments' );
         }
 
         function html( $field )
         {
         ?>
-            <input type="text" name="<?php echo $field->input_name; ?>" id="<?php echo $field->input_name; ?>" class="attachments attachments-field attachments-field-text" value="<?php echo $field->value; ?>" />
+            <input type="text" name="<?php echo $this->get_full_field_name( $field->name ); ?>" id="<?php echo $this->get_full_field_name( $field->name ); ?>" class="attachments attachments-field attachments-field-<?php echo $field->name; ?>" value="<?php echo $field->value; ?>" />
         <?php
         }
 
-        function format_value_for_input( $value, $field = null )
+        function format_value_for_input( $value )
         {
             return htmlspecialchars( $value, ENT_QUOTES );
         }

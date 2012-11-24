@@ -19,6 +19,9 @@ if( !defined( 'ABSPATH' ) ) exit;
 // Store whether or not we're in the admin
 if( !defined( 'IS_ADMIN' ) ) define( 'IS_ADMIN',  is_admin() );
 
+define( 'ATTACHMENTS_DIR', plugin_dir_path( __FILE__ ) );
+define( 'ATTACHMENTS_URL', plugin_dir_url( __FILE__ ) );
+
 // Environment check
 $wp_version = get_bloginfo( 'version' );
 
