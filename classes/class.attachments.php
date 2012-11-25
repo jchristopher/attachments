@@ -61,7 +61,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             add_action( 'add_meta_boxes',           array( $this, 'meta_box_init' ) );
 
-            add_action( 'admin_head',               array( $this, 'admin_head' ) );
+            add_action( 'admin_footer',             array( $this, 'admin_footer' ) );
         }
 
 
@@ -97,7 +97,8 @@ if ( !class_exists( 'Attachments' ) ) :
             {
                 foreach( $this->instances_for_post_type as $instance )
                 {
-                    add_meta_box( 'attachments', __( 'Attachments', 'attachments' ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal' );
+                    // TODO: Dynamic title
+                    add_meta_box( 'attachments-' . $instance, __( 'Attachments', 'attachments' ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal', 'high', array( 'instance' => $instance ) );
                 }
             }
         }
@@ -109,9 +110,10 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function meta_box_markup( $post )
+        function meta_box_markup( $post, $metabox )
         { ?>
             <a id="attachments-insert" class="button"><?php _e( 'Attach', 'attachments' ); ?></a>
+            <div class="attachments attachments-<?php echo $metabox['args']['instance']; ?>"></div>
         <?php }
 
 
@@ -326,10 +328,28 @@ if ( !class_exists( 'Attachments' ) ) :
          * @since 3.0
          */
         function create_attachment( $instance, $field )
-        { ?>
-            <div class="attachment attachment-<?php echo $instance; ?>">
+        {
+
+            // TODO: make sure we've got a registered instance
+            $field->set_field_instance( $instance, $field );
+            $field->set_field_identifiers( $field );
+
+            // define our field type as far as Attachments is concerned
+            $field_type_class = get_class( $field );
+            if( !empty( $this->fields ) )
+            {
+                foreach( $this->fields as $field_type => $class_name )
+                {
+                    if( $class_name == $field_type_class )
+                        break;
+                }
+            }
+            $field->set_field_type( $field_type );
+
+            ?>
+            <div class="attachments-attachment-field attachments-attachment-field-<?php echo $instance; ?> attachments-attachment-field-<?php echo $field->type; ?> attachment-field-<?php echo $field->name; ?>">
                 <div class="attachment-label attachment-label-<?php echo $instance; ?>">
-                    <label><?php echo $field->label; ?></label>
+                    <label for="<?php echo $field->field_id; ?>"><?php echo $field->label; ?></label>
                 </div>
                 <div class="attachment-field attachment-field-<?php echo $instance; ?>">
                     <?php echo $this->create_field( $instance, $field ); ?>
@@ -348,31 +368,35 @@ if ( !class_exists( 'Attachments' ) ) :
         {
             $field = (object) $field;
 
-            // TODO: make sure we've got a registered instance
-            $field->set_field_instance( $instance, $field );
-            $field->set_field_name( $field );
-
             // with all of our attributes properly set, we can output
             $field->html( $field );
         }
 
 
+
         /**
          * Outputs all necessary Backbone templates
+         * Each Backbone template includes each field present in an instance
          *
          * @since 3.0
          */
-        function admin_head()
+        function admin_footer()
         {
             if( !empty( $this->instances_for_post_type ) )
-            {
-                foreach( $this->instances_for_post_type as $instance ) :
-                    foreach( $this->instances[$instance]['fields'] as $field ) : ?>
-                        <script type="text/template" id="tmpl-attachments-field-<?php echo $instance; ?>-<?php echo $field->name; ?>">
-                            <?php $this->create_attachment( $instance, $field ); ?>
-                        </script>
-                    <?php endforeach;
-                endforeach;
+            { ?>
+                <script type="text/javascript">
+                    var ATTACHMENTS_VIEWS = {};
+                </script>
+            <?php
+                foreach( $this->instances_for_post_type as $instance ) : ?>
+                    <script type="text/template" id="tmpl-attachments-<?php echo $instance; ?>">
+                        <div class="attachments-attachment attachments-instance-<?php echo $instance; ?>">
+                            <?php foreach( $this->instances[$instance]['fields'] as $field ) : ?>
+                                <?php $this->create_attachment( $instance, $field ); ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </script>
+                <?php endforeach;
             }
         }
 

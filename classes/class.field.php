@@ -21,7 +21,9 @@ if ( !class_exists( 'Attachments_Field' ) ) :
         public $instance;       // the instance this field is used within
         public $name;           // the user-defined field name
         public $field_name;     // the name attribute to be used
+        public $field_id;       // the id attribute to be used
         public $label;          // the field label
+        public $type;           // field type as it was registered
 
         function __construct()
         {
@@ -34,19 +36,28 @@ if ( !class_exists( 'Attachments_Field' ) ) :
             $field->instance = $instance;
         }
 
-        function set_field_name( $field )
+        function set_field_identifiers( $field )
         {
             // we MUST have an instance
             if( empty( $field->instance ) )
                 return false;
 
+            // set the name
             $field->field_name = "attachments[$field->instance][][$field->name]";
+
+            // set the id
+            $field->field_id = uniqid( $this->field_name );
+        }
+
+        function set_field_type( $field_type )
+        {
+            $this->type = $field_type;
         }
 
         function html( $field )
         {
         ?>
-            <input type="text" name="<?php echo $field->field_name; ?>" id="<?php echo $field->field_name; ?>" class="attachments attachments-field attachments-field-<?php echo $field->field_name; ?>" value="<?php echo $field->value; ?>" />
+            <input type="text" name="<?php echo $field->field_name; ?>" id="<?php echo $field->field_id; ?>" class="attachments attachments-field attachments-field-<?php echo $field->field_name; ?> attachments-field-<?php echo $field->field_id; ?>" value="<?php echo $field->value; ?>" />
         <?php
         }
 

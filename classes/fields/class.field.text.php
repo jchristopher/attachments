@@ -28,7 +28,7 @@ if ( !class_exists( 'Attachments_Field_Text' ) ) :
         function html( $field )
         {
         ?>
-            <input type="text" name="<?php echo $field->field_name; ?>" id="<?php echo $field->field_name; ?>" class="attachments attachments-field attachments-field-<?php echo $field->field_name; ?>" value="<?php echo $field->value; ?>" />
+            <input type="text" name="<?php echo $field->field_name; ?>" id="<?php echo $field->field_id; ?>" class="attachments attachments-field attachments-field-<?php echo $field->field_name; ?> attachments-field-<?php echo $field->field_id; ?>" value="<?php echo $field->value; ?>" />
         <?php
         }
 

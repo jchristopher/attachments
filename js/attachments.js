@@ -48,14 +48,22 @@
                 if ( ! selection )
                     return;
 
+                // compile our template
+                var template = _.template($( "script#tmpl-attachments-attachments" ).html());
+
                 selection.each( function( attachment ) {
 
                     console.log(attachment.attributes);
-                    console.log(attachment.id);
+                    // set our attributes to the template
+                    var templateData = attachment.attributes;
 
-                    // cleanup
-                    wp.media.pluginattachments.restoreUI();
+                    // append the template
+                    $('.attachments-context').append(template(templateData));
                 });
+
+                // cleanup
+                wp.media.pluginattachments.restoreUI();
+                $('.attachments-context').removeClass('attachments-context');
 
             }, this );
 
@@ -81,6 +89,8 @@
                 $(this).blur();
 
                 workflow = wp.media.pluginattachments.get( 'pluginattachments' );
+
+                $(this).parent().find('.attachments').addClass('attachments-context');
 
                 // If the workflow exists, just open it.
                 if ( workflow ) {
