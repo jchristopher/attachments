@@ -21,12 +21,20 @@ if ( !class_exists( 'Attachments' ) ) :
 
     class Attachments {
 
-        public $version;
-        public $url;
-        public $instances;
-        public $instances_for_post_type;
-        public $fields;
+        public $version;                    // stores Attachments' version number
+        public $url;                        // stores Attachments' URL
+        public $dir;                        // stores Attachments' directory
+        public $instances;                  // all registered Attachments instances
+        public $instances_for_post_type;    // instance names that apply to the current post type
+        public $fields;                     // stores all registered field types
 
+
+
+        /**
+         * Constructor
+         *
+         * @since 3.0
+         */
         function __construct()
         {
             // establish our environment variables
@@ -56,6 +64,13 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'admin_head',               array( $this, 'admin_head' ) );
         }
 
+
+
+        /**
+         * Enqueues our necessary assets
+         *
+         * @since 3.0
+         */
         function assets( $hook )
         {
             // we only want our assets on edit screens
@@ -69,6 +84,13 @@ if ( !class_exists( 'Attachments' ) ) :
             wp_enqueue_script( 'attachments', trailingslashit( $this->url ) . 'js/attachments.js', array( 'jquery', 'backbone', 'media-gallery' ), $this->version, true );
         }
 
+
+
+        /**
+         * Registers meta box(es) for the current edit screen
+         *
+         * @since 3.0
+         */
         function meta_box_init()
         {
             if( !empty( $this->instances_for_post_type ) )
@@ -80,15 +102,26 @@ if ( !class_exists( 'Attachments' ) ) :
             }
         }
 
+
+
+        /**
+         * Callback that outputs the meta box markup
+         *
+         * @since 3.0
+         */
         function meta_box_markup( $post )
         { ?>
             <a id="attachments-insert" class="button"><?php _e( 'Attach', 'attachments' ); ?></a>
         <?php }
 
+
+
         /**
          * Support the inclusion of custom, user-defined field types
          * Borrowed implementation from Custom Field Suite by Matt Gibbs
          *      https://uproot.us/docs/creating-custom-field-types/
+         *
+         * @since 3.0
          **/
         function get_field_types()
         {
@@ -114,20 +147,28 @@ if ( !class_exists( 'Attachments' ) ) :
                     $classes = get_declared_classes();
                     if( $classes_before !== $classes )
                     {
+                        // the field's class is last in line
                         $field_class = end( $classes );
 
-                        // create our link
+                        // create our link using our new field class
                         $field_types[$type] = $field_class;
                     }
                 }
             }
 
+            // send it back
             return $field_types;
         }
 
-        function field( $params = array() )
-        {
 
+
+        /**
+         * Registers a field type for use within an instance
+         *
+         * @since 3.0
+         */
+        function register_field( $params = array() )
+        {
             $defaults = array(
                     'name'      => 'title',
                     'type'      => 'text',
@@ -149,10 +190,17 @@ if ( !class_exists( 'Attachments' ) ) :
             if( isset( $params['label'] ) )
                 $params['label'] = __( $params['label'] );
 
+            // instantiate the class for this field and send it back
             return new $this->fields[ $params['type'] ]( $params['name'], $params['label'] );
         }
 
 
+
+        /**
+         * Registers an Attachments instance
+         *
+         * @since 3.0
+         */
         function register( $name = 'attachments', $params = array() )
         {
             $defaults = array(
@@ -169,14 +217,17 @@ if ( !class_exists( 'Attachments' ) ) :
                     // include a note within the meta box
                     'note'          => null,
 
+                    // text for 'Attach' button
+                    'button_text'   => __( 'Attach', 'attachments' ),
+
                     // fields for this instance
                     'fields'        => array(
-                        $this->field( array(
+                        $this->register_field( array(
                             'name'  => 'title',
                             'type'  => 'text',
                             'label' => __( 'Title', 'attachments' ),
                         ) ),
-                        $this->field( array(
+                        $this->register_field( array(
                             'name'  => 'caption',
                             'type'  => 'text',
                             'label' => __( 'Caption', 'attachments' ),
@@ -195,6 +246,13 @@ if ( !class_exists( 'Attachments' ) ) :
             $this->instances[$instance] = $params;
         }
 
+
+
+        /**
+         * Gets the applicable Attachments instances for the current post type
+         *
+         * @since 3.0
+         */
         function get_instances_for_post_type( $post_type = null )
         {
             $post_type = ( !is_null( $post_type ) && post_type_exists( $post_type ) ) ? $post_type : $this->get_post_type();
@@ -215,6 +273,14 @@ if ( !class_exists( 'Attachments' ) ) :
             return $instances;
         }
 
+
+
+        /**
+         * Our own implementation of WordPress' get_post_type() as it's not
+         * functional when we need it
+         *
+         * @since 3.0
+         */
         function get_post_type()
         {
             global $post;
@@ -239,18 +305,63 @@ if ( !class_exists( 'Attachments' ) ) :
             return $post_type;
         }
 
+
+
+        /**
+         * Sets the applicable Attachments instances for the current post type
+         *
+         * @since 3.0
+         */
         function set_instances_for_current_post_type()
         {
             // store the applicable instances for this post type
-            $this->instances_for_post_type  = $this->get_instances_for_post_type( $this->get_post_type() );
+            $this->instances_for_post_type = $this->get_instances_for_post_type( $this->get_post_type() );
         }
 
-        function create_field( $field )
+
+
+        /**
+         * Outputs HTML for a single Attachment within an instance
+         *
+         * @since 3.0
+         */
+        function create_attachment( $instance, $field )
+        { ?>
+            <div class="attachment attachment-<?php echo $instance; ?>">
+                <div class="attachment-label attachment-label-<?php echo $instance; ?>">
+                    <label><?php echo $field->label; ?></label>
+                </div>
+                <div class="attachment-field attachment-field-<?php echo $instance; ?>">
+                    <?php echo $this->create_field( $instance, $field ); ?>
+                </div>
+            </div>
+        <?php }
+
+
+
+        /**
+         * Outputs HTML for submitted field
+         *
+         * @since 3.0
+         */
+        function create_field( $instance, $field )
         {
             $field = (object) $field;
+
+            // TODO: make sure we've got a registered instance
+            $field->set_field_instance( $instance, $field );
+            $field->set_field_name( $field );
+
+            // with all of our attributes properly set, we can output
             $field->html( $field );
         }
 
+
+        /**
+         * Outputs all necessary Backbone templates
+         *
+         * @since 3.0
+         */
         function admin_head()
         {
             if( !empty( $this->instances_for_post_type ) )
@@ -258,14 +369,7 @@ if ( !class_exists( 'Attachments' ) ) :
                 foreach( $this->instances_for_post_type as $instance ) :
                     foreach( $this->instances[$instance]['fields'] as $field ) : ?>
                         <script type="text/template" id="tmpl-attachments-field-<?php echo $instance; ?>-<?php echo $field->name; ?>">
-                            <div class="attachment">
-                                <div class="attachment-label">
-                                    <label><?php echo $field->label; ?></label>
-                                </div>
-                                <div class="attachment-field">
-                                    <?php echo $this->create_field( $field ); ?>
-                                </div>
-                            </div>
+                            <?php $this->create_attachment( $instance, $field ); ?>
                         </script>
                     <?php endforeach;
                 endforeach;

@@ -10,12 +10,14 @@
 // Declare our class
 if ( !class_exists( 'Attachments_Field_Text' ) ) :
 
-    class Attachments_Field_Text extends Attachments_Field
+    class Attachments_Field_Text extends Attachments_Field implements Attachments_Field_Template
     {
 
-        public $name;
-        public $label;
-        public $value;
+        public $instance;       // the instance this field is used within
+        public $name;           // the user-defined field name
+        public $field_name;     // the name attribute to be used
+        public $label;          // the field label
+        public $value;          // the field's value
 
         function __construct( $name = 'text', $label = 'Text' )
         {
@@ -26,11 +28,11 @@ if ( !class_exists( 'Attachments_Field_Text' ) ) :
         function html( $field )
         {
         ?>
-            <input type="text" name="<?php echo $this->get_full_field_name( $field->name ); ?>" id="<?php echo $this->get_full_field_name( $field->name ); ?>" class="attachments attachments-field attachments-field-<?php echo $field->name; ?>" value="<?php echo $field->value; ?>" />
+            <input type="text" name="<?php echo $field->field_name; ?>" id="<?php echo $field->field_name; ?>" class="attachments attachments-field attachments-field-<?php echo $field->field_name; ?>" value="<?php echo $field->value; ?>" />
         <?php
         }
 
-        function format_value_for_input( $value )
+        function format_value_for_input( $value, $field = null  )
         {
             return htmlspecialchars( $value, ENT_QUOTES );
         }
