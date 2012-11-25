@@ -49,6 +49,7 @@
                     return;
 
                 // compile our template
+                _.templateSettings.variable = 'attachments';
                 var template = _.template($( "script#tmpl-attachments-attachments" ).html());
 
                 selection.each( function( attachment ) {

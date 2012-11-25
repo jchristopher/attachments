@@ -327,7 +327,7 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function create_attachment( $instance, $field )
+        function create_attachment_field( $instance, $field )
         {
 
             // TODO: make sure we've got a registered instance
@@ -374,6 +374,26 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
+        function create_attachment( $instance )
+        {
+            // TODO: get name and id for hidden fields
+            ?>
+                <div class="attachments-attachment attachments-attachment-<?php echo $instance; ?>">
+                    <?php foreach( $this->instances[$instance]['fields'] as $field ) : ?>
+                        <?php $this->create_attachment_field( $instance, $field ); ?>
+                    <?php endforeach; ?>
+                    <input type="hidden" name="id" value="<%- attachments.id %>" />
+                    <input type="hidden" name="filename" value="<%- attachments.filename %>" />
+                    <input type="hidden" name="icon" value="<%- attachments.icon %>" />
+                    <input type="hidden" name="subtype" value="<%- attachments.subtype %>" />
+                    <input type="hidden" name="type" value="<%- attachments.type %>" />
+                    <input type="hidden" name="id" value="<%- attachments.id %>" />
+                </div>
+            <?php
+        }
+
+
+
         /**
          * Outputs all necessary Backbone templates
          * Each Backbone template includes each field present in an instance
@@ -390,11 +410,7 @@ if ( !class_exists( 'Attachments' ) ) :
             <?php
                 foreach( $this->instances_for_post_type as $instance ) : ?>
                     <script type="text/template" id="tmpl-attachments-<?php echo $instance; ?>">
-                        <div class="attachments-attachment attachments-instance-<?php echo $instance; ?>">
-                            <?php foreach( $this->instances[$instance]['fields'] as $field ) : ?>
-                                <?php $this->create_attachment( $instance, $field ); ?>
-                            <?php endforeach; ?>
-                        </div>
+                        <?php $this->create_attachment( $instance ); ?>
                     </script>
                 <?php endforeach;
             }
