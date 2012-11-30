@@ -50,21 +50,20 @@
 
                 // compile our template
                 _.templateSettings.variable = 'attachments';
-                var template = _.template($( "script#tmpl-attachments-attachments" ).html());
+                var template = _.template($('script#tmpl-attachments-attachments').html());
 
                 selection.each( function( attachment ) {
 
-                    console.log(attachment.attributes);
                     // set our attributes to the template
                     var templateData = attachment.attributes;
 
                     // append the template
-                    $('.attachments-context').append(template(templateData));
+                    $('.attachments-instance-context').append(template(templateData));
                 });
 
                 // cleanup
                 wp.media.pluginattachments.restoreUI();
-                $('.attachments-context').removeClass('attachments-context');
+                $('.attachments-instance-context').removeClass('attachments-instance-context');
 
             }, this );
 
@@ -91,7 +90,7 @@
 
                 workflow = wp.media.pluginattachments.get( 'pluginattachments' );
 
-                $(this).parent().find('.attachments').addClass('attachments-context');
+                $(this).parent().find('.attachments-container').addClass('attachments-instance-context');
 
                 // If the workflow exists, just open it.
                 if ( workflow ) {

@@ -50,7 +50,7 @@ if ( !class_exists( 'Attachments' ) ) :
             $this->fields = $this->get_field_types();
 
             // register our instances
-            $this->register();
+            // $this->register();
             // TODO: determine how to flag whether or not user wants default instance
             // TODO: only register if user wants
 
@@ -113,7 +113,7 @@ if ( !class_exists( 'Attachments' ) ) :
         function meta_box_markup( $post, $metabox )
         { ?>
             <a id="attachments-insert" class="button"><?php _e( 'Attach', 'attachments' ); ?></a>
-            <div class="attachments attachments-<?php echo $metabox['args']['instance']; ?>"></div>
+            <div class="attachments attachments-container attachments-<?php echo $metabox['args']['instance']; ?>"></div>
         <?php }
 
 
@@ -128,11 +128,11 @@ if ( !class_exists( 'Attachments' ) ) :
         function get_field_types()
         {
             $field_types = array(
-                'text' => ATTACHMENTS_DIR . '/classes/fields/class.field.text.php'
+                'text' => ATTACHMENTS_DIR . 'classes/fields/class.field.text.php'
             );
 
             // support custom field types
-            $field_types = apply_filters( 'attachments_fields', $field_types );
+            // $field_types = apply_filters( 'attachments_fields', $field_types );
 
             foreach( $field_types as $type => $path )
             {
@@ -224,21 +224,30 @@ if ( !class_exists( 'Attachments' ) ) :
 
                     // fields for this instance
                     'fields'        => array(
-                        $this->register_field( array(
-                            'name'  => 'title',
-                            'type'  => 'text',
-                            'label' => __( 'Title', 'attachments' ),
-                        ) ),
-                        $this->register_field( array(
-                            'name'  => 'caption',
-                            'type'  => 'text',
-                            'label' => __( 'Caption', 'attachments' ),
-                        ) ),
+                        array(
+                            'name'  => 'title',                         // unique field name
+                            'type'  => 'text',                          // registered field type
+                            'label' => __( 'Title', 'attachments' ),    // label to display
+                        ),
+                        array(
+                            'name'  => 'caption',                       // unique field name
+                            'type'  => 'text',                          // registered field type
+                            'label' => __( 'Caption', 'attachments' ),  // label to display
+                        ),
                     ),
 
                 );
 
             $params = array_merge( $defaults, $params );
+
+            // register the fields
+            if( isset( $params['fields'] ) && is_array( $params['fields'] ) && count( $params['fields'] ) )
+            {
+                foreach( $params['fields'] as $field )
+                {
+                    $this->register_field( $field );
+                }
+            }
 
             if( !is_array( $params['post_type'] ) )
                 $params['post_type'] = array( $params['post_type'] );   // we always want an array
@@ -382,12 +391,11 @@ if ( !class_exists( 'Attachments' ) ) :
                     <?php foreach( $this->instances[$instance]['fields'] as $field ) : ?>
                         <?php $this->create_attachment_field( $instance, $field ); ?>
                     <?php endforeach; ?>
-                    <input type="hidden" name="id" value="<%- attachments.id %>" />
-                    <input type="hidden" name="filename" value="<%- attachments.filename %>" />
-                    <input type="hidden" name="icon" value="<%- attachments.icon %>" />
-                    <input type="hidden" name="subtype" value="<%- attachments.subtype %>" />
-                    <input type="hidden" name="type" value="<%- attachments.type %>" />
-                    <input type="hidden" name="id" value="<%- attachments.id %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][id]" value="<%- attachments.id %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][filename]" value="<%- attachments.filename %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][icon]" value="<%- attachments.icon %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][subtype]" value="<%- attachments.subtype %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][type]" value="<%- attachments.type %>" />
                 </div>
             <?php
         }
@@ -419,5 +427,3 @@ if ( !class_exists( 'Attachments' ) ) :
     }
 
 endif; // class_exists check
-
-$attachments = new Attachments();

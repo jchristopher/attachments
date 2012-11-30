@@ -43,7 +43,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
                 return false;
 
             // set the name
-            $field->field_name = "attachments[$field->instance][][$field->name]";
+            $field->field_name = "attachments[$field->instance][][fields][$field->name]";
 
             // set the id
             $field->field_id = uniqid( $this->field_name );
