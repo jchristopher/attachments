@@ -28,6 +28,9 @@ if ( !class_exists( 'Attachments' ) ) :
         public $instances_for_post_type;    // instance names that apply to the current post type
         public $fields;                     // stores all registered field types
 
+        // what WordPress considers to be valid file types
+        public $valid_filetypes = array( 'image', 'video', 'text', 'audio', 'application' );
+
 
 
         /**
@@ -50,7 +53,7 @@ if ( !class_exists( 'Attachments' ) ) :
             $this->fields = $this->get_field_types();
 
             // register our instances
-            // $this->register();
+            $this->register();
             // TODO: determine how to flag whether or not user wants default instance
             // TODO: only register if user wants
 
@@ -81,7 +84,9 @@ if ( !class_exists( 'Attachments' ) ) :
 
             wp_enqueue_style( 'attachments', trailingslashit( $this->url ) . 'css/attachments.css', null, $this->version, 'screen' );
 
-            wp_enqueue_script( 'attachments', trailingslashit( $this->url ) . 'js/attachments.js', array( 'jquery', 'backbone', 'media-gallery' ), $this->version, true );
+            wp_enqueue_script( 'underscore' );
+            wp_enqueue_script( 'backbone' );
+            // wp_enqueue_script( 'attachments', trailingslashit( $this->url ) . 'js/attachments.js', array( 'jquery' ), $this->version, true );
         }
 
 
@@ -97,8 +102,11 @@ if ( !class_exists( 'Attachments' ) ) :
             {
                 foreach( $this->instances_for_post_type as $instance )
                 {
-                    // TODO: Dynamic title
-                    add_meta_box( 'attachments-' . $instance, __( 'Attachments', 'attachments' ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal', 'high', array( 'instance' => $instance ) );
+                    $title              = $instance;
+                    $instance           = (object) $this->instances[$instance];
+                    $instance->name     = $title;
+
+                    add_meta_box( 'attachments-' . esc_attr( $instance->name ), __( esc_attr( $title ) ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal', 'high', array( 'instance' => $instance ) );
                 }
             }
         }
@@ -111,9 +119,93 @@ if ( !class_exists( 'Attachments' ) ) :
          * @since 3.0
          */
         function meta_box_markup( $post, $metabox )
-        { ?>
-            <a id="attachments-insert" class="button"><?php _e( 'Attach', 'attachments' ); ?></a>
-            <div class="attachments attachments-container attachments-<?php echo $metabox['args']['instance']; ?>"></div>
+        {
+            // single out our $instance
+            $instance = (object) $metabox['args']['instance'];
+            print_r($instance);
+            ?>
+            <div id="attachments-<?php echo $instance->name; ?>">
+                <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
+                <?php if( !empty( $instance->note ) ) : ?>
+                    <div class="attachments-note"><?php echo apply_filters( 'the_content', $intsance->note ); ?></div>
+                <?php endif; ?>
+                <div class="attachments-container attachments-<?php echo $instance->name; ?>"></div>
+            </div>
+            <script type="text/javascript">
+                jQuery(document).ready(function($){
+                    var $element     = $('#attachments-<?php echo esc_attr( $instance->name ); ?>'),
+                        title        = '<?php echo __( esc_attr( $instance->label ) ); ?>',
+                        button       = '<?php echo __( esc_attr( $instance->modal_text ) ); ?>',
+                        Attachment   = wp.media.model.Attachment,
+                        frame;
+
+                    $element.on( 'click', '.attachments-invoke', function( event ) {
+                        var options, attachment;
+
+                        event.preventDefault();
+
+                        if ( frame ) {
+                            frame.open();
+                            return;
+                        }
+
+                        options = {
+                            title:   title,
+                            <?php if( $instance->limit < 0 || $instance->limit > 1 ) : ?>
+                                multiple: true,
+                            <?php endif; ?>
+                            library: {
+                                type: '<?php echo esc_attr( implode( ",", $instance->filetype ) ); ?>'
+                            }
+                        };
+
+                        frame = wp.media( options );
+
+                        frame.get('library').set( 'filterable', 'uploaded' );
+
+                        frame.toolbar.on( 'activate:select', function() {
+                            frame.toolbar.view().set({
+                                select: {
+                                    style: 'primary',
+                                    text:  button,
+
+                                    click: function() {
+                                        var selection = frame.state().get('selection');
+
+                                        if ( ! selection )
+                                            return;
+
+                                        // compile our Underscore template
+                                        _.templateSettings.variable = 'attachments';
+                                        var template = _.template($('script#tmpl-attachments-<?php echo $instance->name; ?>').html());
+
+                                        // loop through the selected files
+                                        selection.each( function( attachment ) {
+
+                                            // set our attributes to the template
+                                            var templateData = attachment.attributes;
+
+                                            // append the template
+                                            $element.find('.attachments-container').append(template(templateData));
+                                        });
+
+                                        // close out the frame
+                                        frame.close();
+                                    }
+                                }
+                            });
+                        });
+
+                        // set the environment
+                        frame.toolbar.mode('select');
+                    });
+
+                    $element.on( 'click', '.remove', function( event ) {
+                        event.preventDefault();
+                        setFeaturedImage( -1 );
+                    });
+                });
+            </script>
         <?php }
 
 
@@ -183,14 +275,12 @@ if ( !class_exists( 'Attachments' ) ) :
             if( !isset( $this->fields[$params['type']] ) )
                return false;
 
+           // sanitize
            if( isset( $params['name'] ) )
-               $params['name'] = sanitize_title( $params['name'] );
-
-            if( isset( $params['type'] ) )
-                $params['type'] = sanitize_title( $params['type'] );
+               $params['name'] = str_replace( '-', '_', sanitize_title( $params['name'] ) );
 
             if( isset( $params['label'] ) )
-                $params['label'] = __( $params['label'] );
+                $params['label'] = __( esc_html( $params['label'] ) );
 
             // instantiate the class for this field and send it back
             return new $this->fields[ $params['type'] ]( $params['name'], $params['label'] );
@@ -207,22 +297,28 @@ if ( !class_exists( 'Attachments' ) ) :
         {
             $defaults = array(
 
-                    // title of the meta box
+                    // title of the meta box (string)
                     'label'         => __( 'Attachments', 'attachments' ),
 
-                    // all post types to utilize
+                    // all post types to utilize (string|array)
                     'post_type'     => array( 'post', 'page' ),
 
-                    // maximum number of Attachments (-1 is unlimited)
+                    // maximum number of Attachments (int) (-1 is unlimited)
                     'limit'         => -1,
 
-                    // include a note within the meta box
-                    'note'          => null,
+                    // allowed file type(s) (array) (image|video|text|audio|application)
+                    'filetype'      => null,    // no filetype limit
 
-                    // text for 'Attach' button
+                    // include a note within the meta box (string)
+                    'note'          => null,    // no note
+
+                    // text for 'Attach' button (string)
                     'button_text'   => __( 'Attach', 'attachments' ),
 
-                    // fields for this instance
+                    // text for modal 'Attach' button (string)
+                    'modal_text'    => __( 'Attach', 'attachments' ),
+
+                    // fields for this instance (array)
                     'fields'        => array(
                         array(
                             'name'  => 'title',                         // unique field name
@@ -240,20 +336,45 @@ if ( !class_exists( 'Attachments' ) ) :
 
             $params = array_merge( $defaults, $params );
 
+            // sanitize
+            if( !is_array( $params['post_type'] ) )
+                $params['post_type'] = array( $params['post_type'] );   // we always want an array
+
+            if( !is_array( $params['filetype'] ) )
+                $params['filetype'] = array( $params['filetype'] );     // we always want an array
+
+            $params['label']        = esc_html( $params['label'] );
+            $params['limit']        = intval( $params['limit'] );
+            $params['note']         = esc_sql( $params['note'] );
+            $params['button_text']  = esc_html( $params['button_text'] );
+            $params['modal_text']   = esc_html( $params['modal_text'] );
+
+            // make sure we've got valid filetypes
+            if( is_array( $params['filetype'] ) )
+            {
+                foreach( $params['filetype'] as $key => $filetype )
+                {
+                    if( !in_array( $filetype, $this->valid_filetypes ) )
+                    {
+                        unset( $params['filetype'][$key] );
+                    }
+                }
+            }
+
+            // make sure the instance name is proper
+            $instance           = str_replace( '-', '_', sanitize_title( $name ) );
+
             // register the fields
             if( isset( $params['fields'] ) && is_array( $params['fields'] ) && count( $params['fields'] ) )
             {
                 foreach( $params['fields'] as $field )
                 {
+                    // register the field
                     $this->register_field( $field );
                 }
             }
 
-            if( !is_array( $params['post_type'] ) )
-                $params['post_type'] = array( $params['post_type'] );   // we always want an array
-
-            $instance   = str_replace( '-', '_', sanitize_title( $name ) ); // TODO: Better sanitization
-
+            // set the instance
             $this->instances[$instance] = $params;
         }
 
@@ -339,21 +460,21 @@ if ( !class_exists( 'Attachments' ) ) :
         function create_attachment_field( $instance, $field )
         {
 
+            // the $field at this point is just the user-declared array
+            // we need to make it a field object
+            $type = $field['type'];
+
+            if( isset( $this->fields[$type] ) )
+            {
+                $name   = sanitize_title( $field['name'] );
+                $label  = esc_html( $field['label'] );
+                $field  = new $this->fields[$type]( $name, $label );
+            }
+
             // TODO: make sure we've got a registered instance
             $field->set_field_instance( $instance, $field );
             $field->set_field_identifiers( $field );
-
-            // define our field type as far as Attachments is concerned
-            $field_type_class = get_class( $field );
-            if( !empty( $this->fields ) )
-            {
-                foreach( $this->fields as $field_type => $class_name )
-                {
-                    if( $class_name == $field_type_class )
-                        break;
-                }
-            }
-            $field->set_field_type( $field_type );
+            $field->set_field_type( $type );
 
             ?>
             <div class="attachments-attachment-field attachments-attachment-field-<?php echo $instance; ?> attachments-attachment-field-<?php echo $field->type; ?> attachment-field-<?php echo $field->name; ?>">
@@ -427,3 +548,5 @@ if ( !class_exists( 'Attachments' ) ) :
     }
 
 endif; // class_exists check
+
+$attachments = new Attachments();
