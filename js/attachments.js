@@ -72,3 +72,18 @@ function attachments_isset () {
   }
   return true;
 }
+
+jQuery(document).ready(function($){
+    $( '.attachments-container' ).sortable({
+        placeholder: 'attachments-attachment-highlight',
+        opacity: 0.5,
+        forceHelperSize: true,
+        forcePlaceholderSize: true,
+        items: '> .attachments-attachment',
+        scroll: true,
+        tolerance: 'intersect',
+        axis: 'y',
+        containment: 'parent'
+    });
+    $( '.attachments-container' ).disableSelection();
+});

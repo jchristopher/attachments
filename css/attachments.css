@@ -1,9 +1,75 @@
+a.attachments-invoke {
+    margin-top:5px;
+    margin-bottom:4px;
+}
 
-/* Modifies the media browser to hide what we don't want visible */
-.attachments-context .media-modal .media-menu .separator,
-.attachments-context .media-modal .media-menu #embed,
-.attachments-context .media-modal .attachment-display-settings,
-.attachments-context .media-modal label.setting,
-.attachments-context .media-modal .button.gallery {
-    display:none !important;
+.attachments-attachment {
+    position:relative;
+    overflow:hidden;
+    zoom:1;
+}
+
+.attachments-container {
+
+}
+
+.attachments-container .ui-sortable-helper {
+    background:#F9F9F9;
+}
+
+.attachments-attachment-highlight {
+    min-height:125px;
+    background:#f1f1f1;
+    border:1px solid #cecece;
+    border-radius(2px);
+}
+
+.attachments-attachment .attachment-thumbnail {
+    position:absolute;
+    right:0;
+    top:0;
+    padding-top:37px;
+    padding-right:7px;
+}
+
+.attachments-attachment .attachment-thumbnail img {
+    display:block;
+    max-width:80px;
+    height:auto !important;
+    border-radius:2px;
+}
+
+.attachments-fields {
+    margin-right:120px;
+    margin-left:40px;
+    padding-top:10px;
+}
+
+.attachments-fields .attachments-attachment-field {
+    overflow:hidden;
+    zoom:1;
+    padding:8px 0;
+}
+
+.attachments-fields label {
+    display:block;
+    margin-bottom:3px;
+}
+
+
+/* Text field styling */
+.attachments-attachment-field-text input {
+    display:block;
+    width:100%;
+}
+
+.attachments-handle {
+    position:absolute;
+    left:0;
+    top:17px;
+}
+
+.attachments-handle img {
+    display:block;
+    cursor:pointer;
 }

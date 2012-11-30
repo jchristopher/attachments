@@ -91,7 +91,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'backbone' );
-            wp_enqueue_script( 'attachments', trailingslashit( $this->url ) . 'js/attachments.js', array( 'jquery' ), $this->version, true );
+            wp_enqueue_script( 'attachments', trailingslashit( $this->url ) . 'js/attachments.js', array( 'jquery', 'jquery-ui-sortable' ), $this->version, true );
         }
 
 
@@ -203,7 +203,11 @@ if ( !class_exists( 'Attachments' ) ) :
                                             return;
 
                                         // compile our Underscore template
-                                        _.templateSettings.variable = 'attachments';
+                                        _.templateSettings = {
+                                            variable : 'attachments',
+                                            interpolate : /\{\{(.+?)\}\}/g
+                                        }
+
                                         var template = _.template($('script#tmpl-attachments-<?php echo $instance->name; ?>').html());
 
                                         // loop through the selected files
@@ -369,11 +373,6 @@ if ( !class_exists( 'Attachments' ) ) :
                             'name'  => 'caption',                       // unique field name
                             'type'  => 'text',                          // registered field type
                             'label' => __( 'Caption', 'attachments' ),  // label to display
-                        ),
-                        array(
-                            'name'  => 'derper',                       // unique field name
-                            'type'  => 'text',                          // registered field type
-                            'label' => __( 'Derper', 'attachments' ),  // label to display
                         ),
                     ),
 
@@ -565,22 +564,24 @@ if ( !class_exists( 'Attachments' ) ) :
         {
             ?>
                 <div class="attachments-attachment attachments-attachment-<?php echo $instance; ?>">
-                    <?php $array_flag = ( isset( $attachment->uid ) ) ? $attachment->uid : '<%- attachments.attachment_uid %>'; ?>
+                    <?php $array_flag = ( isset( $attachment->uid ) ) ? $attachment->uid : '{{ attachments.attachment_uid }}'; ?>
 
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '<%- attachments.id %>' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<?php echo isset( $attachment->filename ) ? $attachment->filename : '<%- attachments.filename %>' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][icon]" value="<?php echo isset( $attachment->icon ) ? $attachment->icon : '<%- attachments.icon %>' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<?php echo isset( $attachment->subtype ) ? $attachment->subtype : '<%- attachments.subtype %>' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<?php echo isset( $attachment->type ) ? $attachment->type : '<%- attachments.type %>' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '{{ attachments.id }}' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][icon]" value="<?php echo isset( $attachment->icon ) ? $attachment->icon : '{{ attachments.icon }}' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<?php echo isset( $attachment->subtype ) ? $attachment->subtype : '{{ attachments.subtype }}' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<?php echo isset( $attachment->type ) ? $attachment->type : '{{ attachments.type }}' ; ?>" />
 
                     <div class="attachment-thumbnail">
                         <?php
                             $thumbnail = isset( $attachment->id ) ? wp_get_attachment_image_src( $attachment->id, 'thumbnail', true ) : false;
 
-                            $image = $thumbnail ? $thumbnail[0] : '<%- attachments.attachment_thumb %>';
+                            $image = $thumbnail ? $thumbnail[0] : '{{ attachments.attachment_thumb }}';
                         ?>
                         <img src="<?php echo $image; ?>" alt="Thumbnail" />
                     </div>
+
+                    <div class="attachments-handle"><img src="<?php echo trailingslashit( $this->url ) . 'images/handle.gif'; ?>" alt="Handle" width="20" height="20" /></div>
 
                     <div class="attachments-fields">
                         <?php
