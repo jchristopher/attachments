@@ -13,14 +13,10 @@ if ( !class_exists( 'Attachments_Field_Text' ) ) :
     class Attachments_Field_Text extends Attachments_Field implements Attachments_Field_Template
     {
 
-        public $instance;       // the instance this field is used within
-        public $name;           // the user-defined field name
-        public $field_name;     // the name attribute to be used
-        public $label;          // the field label
-        public $value;          // the field's value
-
         function __construct( $name = 'text', $label = 'Text' )
         {
+            parent::__construct( $name, $label );
+
             $this->name     = sanitize_title( $name );
             $this->label    = __( $label, 'attachments' );
         }

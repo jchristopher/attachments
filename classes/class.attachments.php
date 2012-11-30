@@ -65,6 +65,8 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'add_meta_boxes',           array( $this, 'meta_box_init' ) );
 
             add_action( 'admin_footer',             array( $this, 'admin_footer' ) );
+
+            add_action( 'save_post',                array( $this, 'save' ) );
         }
 
 
@@ -86,7 +88,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             wp_enqueue_script( 'underscore' );
             wp_enqueue_script( 'backbone' );
-            // wp_enqueue_script( 'attachments', trailingslashit( $this->url ) . 'js/attachments.js', array( 'jquery' ), $this->version, true );
+            wp_enqueue_script( 'attachments', trailingslashit( $this->url ) . 'js/attachments.js', array( 'jquery' ), $this->version, true );
         }
 
 
@@ -98,6 +100,8 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function meta_box_init()
         {
+            $nonce_sent = false;
+
             if( !empty( $this->instances_for_post_type ) )
             {
                 foreach( $this->instances_for_post_type as $instance )
@@ -106,7 +110,9 @@ if ( !class_exists( 'Attachments' ) ) :
                     $instance           = (object) $this->instances[$instance];
                     $instance->name     = $title;
 
-                    add_meta_box( 'attachments-' . esc_attr( $instance->name ), __( esc_attr( $title ) ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal', 'high', array( 'instance' => $instance ) );
+                    add_meta_box( 'attachments-' . esc_attr( $instance->name ), __( esc_attr( $title ) ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal', 'high', array( 'instance' => $instance, 'setup_nonce' => !$nonce_sent ) );
+
+                    $nonce_sent = true;
                 }
             }
         }
@@ -122,8 +128,12 @@ if ( !class_exists( 'Attachments' ) ) :
         {
             // single out our $instance
             $instance = (object) $metabox['args']['instance'];
-            print_r($instance);
+
+            if( $metabox['args']['setup_nonce'] )
+                wp_nonce_field( 'attachments_save', 'attachments_nonce' );
+
             ?>
+
             <div id="attachments-<?php echo $instance->name; ?>">
                 <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
                 <?php if( !empty( $instance->note ) ) : ?>
@@ -183,6 +193,7 @@ if ( !class_exists( 'Attachments' ) ) :
                                         selection.each( function( attachment ) {
 
                                             // set our attributes to the template
+                                            attachment.attributes.attachment_uid = attachments_uniqid( 'attachmentsjs' );
                                             var templateData = attachment.attributes;
 
                                             // append the template
@@ -485,7 +496,9 @@ if ( !class_exists( 'Attachments' ) ) :
                     <?php echo $this->create_field( $instance, $field ); ?>
                 </div>
             </div>
-        <?php }
+        <?php
+            return $field;
+        }
 
 
 
@@ -510,13 +523,16 @@ if ( !class_exists( 'Attachments' ) ) :
             ?>
                 <div class="attachments-attachment attachments-attachment-<?php echo $instance; ?>">
                     <?php foreach( $this->instances[$instance]['fields'] as $field ) : ?>
-                        <?php $this->create_attachment_field( $instance, $field ); ?>
+                        <?php $field_ref = $this->create_attachment_field( $instance, $field ); ?>
                     <?php endforeach; ?>
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][id]" value="<%- attachments.id %>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][filename]" value="<%- attachments.filename %>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][icon]" value="<%- attachments.icon %>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][subtype]" value="<%- attachments.subtype %>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][][type]" value="<%- attachments.type %>" />
+                    <?php
+                        $array_flag = ( isset( $field_ref->uid ) ) ? $field_ref->uid : '<%- attachments.attachment_uid %>';
+                    ?>
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<%- attachments.id %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<%- attachments.filename %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][icon]" value="<%- attachments.icon %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<%- attachments.subtype %>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<%- attachments.type %>" />
                 </div>
             <?php
         }
@@ -543,6 +559,51 @@ if ( !class_exists( 'Attachments' ) ) :
                     </script>
                 <?php endforeach;
             }
+        }
+
+
+
+        function save( $post_id )
+        {
+            // is the user logged in?
+            if( !is_user_logged_in() )
+                return $post_id;
+
+            // is the nonce set?
+            if( !isset( $_POST['attachments_nonce'] ) )
+                return $post_id;
+
+            // is the nonce valid?
+            if( !wp_verify_nonce( $_POST['attachments_nonce'], 'attachments_save' ) )
+                return $post_id;
+
+            // can this user edit this post?
+            if( !current_user_can( 'edit_post', $post_id ) )
+                return $post_id;
+
+            // do we have any Attachments data?
+            if( !isset( $_POST['attachments'] ) )
+                return $post_id;
+
+            // passed authentication, proceed with save
+            $attachments_meta = $_POST['attachments'];
+
+            // final data store
+            $attachments = array();
+
+            // loop through each submitted instance
+            foreach( $attachments_meta as $instance => $instance_attachments )
+            {
+                // loop through each Attachment of this instance
+                foreach( $instance_attachments as $key => $attachment )
+                    $attachments[$instance][] = $attachment;
+            }
+
+            // we're going to store JSON
+            $attachments = json_encode( $attachments );
+
+            // we're going to wipe out any existing Attachments meta (because we'll put it back)
+            update_post_meta( $post_id, '_attachments', $attachments );
         }
 
     }

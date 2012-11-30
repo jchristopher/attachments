@@ -24,11 +24,14 @@ if ( !class_exists( 'Attachments_Field' ) ) :
         public $field_id;       // the id attribute to be used
         public $label;          // the field label
         public $type;           // field type as it was registered
+        public $uid;            // unique id for field
+        public $value;          // the value for the field
 
         function __construct()
         {
             $this->name     = 'text';
             $this->label    = __( 'Text', 'attachments' );
+            $this->value    = null;
         }
 
         function set_field_instance( $instance, $field )
@@ -42,11 +45,16 @@ if ( !class_exists( 'Attachments_Field' ) ) :
             if( empty( $field->instance ) )
                 return false;
 
+            // if we're pulling an existin Attachment (field has a value) we're going to use
+            // a PHP uniqid to set up our array flags but if we're setting up our Underscore
+            // template we need to use a variable flag to be processed later
+            $this->uid = !is_null( $this->value ) ? $uid : '<%- attachments.attachment_uid %>';
+
             // set the name
-            $field->field_name = "attachments[$field->instance][][fields][$field->name]";
+            $field->field_name = "attachments[$field->instance][$this->uid][fields][$field->name]";
 
             // set the id
-            $field->field_id = uniqid( $this->field_name );
+            $field->field_id = $this->field_name . $this->uid;
         }
 
         function set_field_type( $field_type )
