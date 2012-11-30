@@ -27,11 +27,11 @@ if ( !class_exists( 'Attachments_Field' ) ) :
         public $uid;            // unique id for field
         public $value;          // the value for the field
 
-        function __construct()
+        function __construct( $name = 'name', $label = 'Name', $value = null )
         {
-            $this->name     = 'text';
-            $this->label    = __( 'Text', 'attachments' );
-            $this->value    = null;
+            $this->name     = sanitize_title( $name );
+            $this->label    = __( esc_attr( $label) );
+            $this->value    = $value;
         }
 
         function set_field_instance( $instance, $field )

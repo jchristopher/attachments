@@ -7,7 +7,6 @@
  * @subpackage Main
  */
 
-// Declare our class
 if ( !class_exists( 'Attachments_Field_Text' ) ) :
 
     class Attachments_Field_Text extends Attachments_Field implements Attachments_Field_Template
@@ -15,13 +14,7 @@ if ( !class_exists( 'Attachments_Field_Text' ) ) :
 
         function __construct( $name = 'text', $label = 'Text', $value = null )
         {
-            parent::__construct( $name, $label );
-
-            $this->name     = sanitize_title( $name );
-            $this->label    = __( $label, 'attachments' );
-
-            if( $value )
-                $this->value = $value;
+            parent::__construct( $name, $label, $value );
         }
 
         function html( $field )
