@@ -48,7 +48,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
             // if we're pulling an existing Attachment (field has a value) we're going to use
             // a PHP uniqid to set up our array flags but if we're setting up our Underscore
             // template we need to use a variable flag to be processed later
-            $this->uid = !is_null( $this->value ) ? $uid : '<%- attachments.attachment_uid %>';
+            $this->uid = !is_null( $uid ) ? $uid : '<%- attachments.attachment_uid %>';
 
             // set the name
             $field->field_name = "attachments[$field->instance][$this->uid][fields][$field->name]";

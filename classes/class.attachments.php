@@ -354,6 +354,11 @@ if ( !class_exists( 'Attachments' ) ) :
                             'type'  => 'text',                          // registered field type
                             'label' => __( 'Caption', 'attachments' ),  // label to display
                         ),
+                        array(
+                            'name'  => 'derper',                       // unique field name
+                            'type'  => 'text',                          // registered field type
+                            'label' => __( 'Derper', 'attachments' ),  // label to display
+                        ),
                     ),
 
                 );
@@ -544,20 +549,23 @@ if ( !class_exists( 'Attachments' ) ) :
         {
             ?>
                 <div class="attachments-attachment attachments-attachment-<?php echo $instance; ?>">
-                    <?php
-
-                        foreach( $this->instances[$instance]['fields'] as $field )
-                            $field_ref = $this->create_attachment_field( $instance, $field, $attachment );
-
-                        $array_flag = ( isset( $field_ref->uid ) ) ? $field_ref->uid : '<%- attachments.attachment_uid %>';
-
-                    ?>
+                    <?php $array_flag = ( isset( $attachment->uid ) ) ? $attachment->uid : '<%- attachments.attachment_uid %>'; ?>
 
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '<%- attachments.id %>' ; ?>" />
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<?php echo isset( $attachment->filename ) ? $attachment->filename : '<%- attachments.filename %>' ; ?>" />
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][icon]" value="<?php echo isset( $attachment->icon ) ? $attachment->icon : '<%- attachments.icon %>' ; ?>" />
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<?php echo isset( $attachment->subtype ) ? $attachment->subtype : '<%- attachments.subtype %>' ; ?>" />
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<?php echo isset( $attachment->type ) ? $attachment->type : '<%- attachments.type %>' ; ?>" />
+
+                    <?php
+
+                        foreach( $this->instances[$instance]['fields'] as $field )
+                            $field_ref = $this->create_attachment_field( $instance, $field, $attachment );
+
+
+
+                    ?>
+
                 </div>
             <?php
         }
