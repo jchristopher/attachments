@@ -39,13 +39,13 @@ if ( !class_exists( 'Attachments_Field' ) ) :
             $field->instance = $instance;
         }
 
-        function set_field_identifiers( $field )
+        function set_field_identifiers( $field, $uid = null )
         {
             // we MUST have an instance
             if( empty( $field->instance ) )
                 return false;
 
-            // if we're pulling an existin Attachment (field has a value) we're going to use
+            // if we're pulling an existing Attachment (field has a value) we're going to use
             // a PHP uniqid to set up our array flags but if we're setting up our Underscore
             // template we need to use a variable flag to be processed later
             $this->uid = !is_null( $this->value ) ? $uid : '<%- attachments.attachment_uid %>';

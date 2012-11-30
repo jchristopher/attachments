@@ -31,6 +31,9 @@ if ( !class_exists( 'Attachments' ) ) :
         // what WordPress considers to be valid file types
         public $valid_filetypes = array( 'image', 'video', 'text', 'audio', 'application' );
 
+        // our meta key
+        public $meta_key = '_attachments';
+
 
 
         /**
@@ -106,11 +109,11 @@ if ( !class_exists( 'Attachments' ) ) :
             {
                 foreach( $this->instances_for_post_type as $instance )
                 {
-                    $title              = $instance;
+                    $instance_name      = $instance;
                     $instance           = (object) $this->instances[$instance];
-                    $instance->name     = $title;
+                    $instance->name     = $instance_name;
 
-                    add_meta_box( 'attachments-' . esc_attr( $instance->name ), __( esc_attr( $title ) ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal', 'high', array( 'instance' => $instance, 'setup_nonce' => !$nonce_sent ) );
+                    add_meta_box( 'attachments-' . $instance_name, __( esc_attr( $instance->label ) ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal', 'high', array( 'instance' => $instance, 'setup_nonce' => !$nonce_sent ) );
 
                     $nonce_sent = true;
                 }
@@ -139,7 +142,21 @@ if ( !class_exists( 'Attachments' ) ) :
                 <?php if( !empty( $instance->note ) ) : ?>
                     <div class="attachments-note"><?php echo apply_filters( 'the_content', $intsance->note ); ?></div>
                 <?php endif; ?>
-                <div class="attachments-container attachments-<?php echo $instance->name; ?>"></div>
+                <div class="attachments-container attachments-<?php echo $instance->name; ?>">
+                    <?php
+                        if( isset( $instance->attachments ) && !empty( $instance->attachments ) )
+                        {
+                            foreach( $instance->attachments as $attachment )
+                            {
+                                // we need to give our Attachment a uid to carry through to all the fields
+                                $attachment->uid = uniqid();
+
+                                // we'll create the attachment
+                                $this->create_attachment( $instance->name, $attachment );
+                            }
+                        }
+                    ?>
+                </div>
             </div>
             <script type="text/javascript">
                 jQuery(document).ready(function($){
@@ -211,10 +228,6 @@ if ( !class_exists( 'Attachments' ) ) :
                         frame.toolbar.mode('select');
                     });
 
-                    $element.on( 'click', '.remove', function( event ) {
-                        event.preventDefault();
-                        setFeaturedImage( -1 );
-                    });
                 });
             </script>
         <?php }
@@ -387,6 +400,10 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // set the instance
             $this->instances[$instance] = $params;
+
+            // set the Attachments for this instance
+            $this->instances[$instance]['attachments'] = $this->get_attachments( $instance );
+
         }
 
 
@@ -468,7 +485,7 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function create_attachment_field( $instance, $field )
+        function create_attachment_field( $instance, $field, $attachment = null )
         {
 
             // the $field at this point is just the user-declared array
@@ -479,12 +496,18 @@ if ( !class_exists( 'Attachments' ) ) :
             {
                 $name   = sanitize_title( $field['name'] );
                 $label  = esc_html( $field['label'] );
-                $field  = new $this->fields[$type]( $name, $label );
+
+                $value  = ( isset( $attachment->fields->$name ) ) ? $attachment->fields->$name : null;
+
+                $field  = new $this->fields[$type]( $name, $label, $value );
             }
+
+            // does this field already have a unique ID?
+            $uid = ( isset( $attachment->uid ) ) ? $attachment->uid : null;
 
             // TODO: make sure we've got a registered instance
             $field->set_field_instance( $instance, $field );
-            $field->set_field_identifiers( $field );
+            $field->set_field_identifiers( $field, $uid );
             $field->set_field_type( $type );
 
             ?>
@@ -517,22 +540,24 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
-        function create_attachment( $instance )
+        function create_attachment( $instance, $attachment = null )
         {
-            // TODO: get name and id for hidden fields
             ?>
                 <div class="attachments-attachment attachments-attachment-<?php echo $instance; ?>">
-                    <?php foreach( $this->instances[$instance]['fields'] as $field ) : ?>
-                        <?php $field_ref = $this->create_attachment_field( $instance, $field ); ?>
-                    <?php endforeach; ?>
                     <?php
+
+                        foreach( $this->instances[$instance]['fields'] as $field )
+                            $field_ref = $this->create_attachment_field( $instance, $field, $attachment );
+
                         $array_flag = ( isset( $field_ref->uid ) ) ? $field_ref->uid : '<%- attachments.attachment_uid %>';
+
                     ?>
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<%- attachments.id %>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<%- attachments.filename %>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][icon]" value="<%- attachments.icon %>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<%- attachments.subtype %>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<%- attachments.type %>" />
+
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '<%- attachments.id %>' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<?php echo isset( $attachment->filename ) ? $attachment->filename : '<%- attachments.filename %>' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][icon]" value="<?php echo isset( $attachment->icon ) ? $attachment->icon : '<%- attachments.icon %>' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<?php echo isset( $attachment->subtype ) ? $attachment->subtype : '<%- attachments.subtype %>' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<?php echo isset( $attachment->type ) ? $attachment->type : '<%- attachments.type %>' ; ?>" />
                 </div>
             <?php
         }
@@ -588,6 +613,8 @@ if ( !class_exists( 'Attachments' ) ) :
             // passed authentication, proceed with save
             $attachments_meta = $_POST['attachments'];
 
+            error_log( print_r($attachments_meta,true) );
+
             // final data store
             $attachments = array();
 
@@ -603,7 +630,29 @@ if ( !class_exists( 'Attachments' ) ) :
             $attachments = json_encode( $attachments );
 
             // we're going to wipe out any existing Attachments meta (because we'll put it back)
-            update_post_meta( $post_id, '_attachments', $attachments );
+            update_post_meta( $post_id, $this->meta_key, $attachments );
+        }
+
+
+
+        function get_attachments( $instance, $post_id = null )
+        {
+            global $post;
+
+            if( !is_object( $post ) && isset( $_GET['post'] ) )
+            {
+                $post = (object) array( 'ID' => intval( $_GET['post'] ) );
+            }
+            else
+            {
+                return;
+            }
+
+            $post_id = ( is_null( $post_id ) ) ? $post->ID : intval( $post_id );
+
+            $attachments = json_decode( get_post_meta( $post_id, $this->meta_key, true ) );
+
+            return ( isset( $attachments->$instance ) ) ? $attachments->$instance : false;
         }
 
     }
