@@ -211,11 +211,27 @@ if ( !class_exists( 'Attachments' ) ) :
 
                                             // set our attributes to the template
                                             attachment.attributes.attachment_uid = attachments_uniqid( 'attachmentsjs' );
+
+                                            // only thumbnails have sizes which is what we're on the hunt for
+                                            if(attachments_isset(attachment.attributes.sizes)){
+                                                // use the thumbnail
+                                                attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
+                                            }else if(attachments_isset(attachment.attributes.icon)){
+                                                // use the icon
+                                                attachment.attributes.attachment_thumb = attachment.attributes.icon;
+                                            }else{
+                                                // there's nothing to use...
+                                                attachment.attributes.attachment_thumb = '';
+                                            }
+
                                             var templateData = attachment.attributes;
 
                                             // append the template
                                             $element.find('.attachments-container').append(template(templateData));
                                         });
+
+                                        // clear our selection
+                                        selection.clear();
 
                                         // close out the frame
                                         frame.close();
@@ -557,14 +573,21 @@ if ( !class_exists( 'Attachments' ) ) :
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<?php echo isset( $attachment->subtype ) ? $attachment->subtype : '<%- attachments.subtype %>' ; ?>" />
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<?php echo isset( $attachment->type ) ? $attachment->type : '<%- attachments.type %>' ; ?>" />
 
-                    <?php
+                    <div class="attachment-thumbnail">
+                        <?php
+                            $thumbnail = isset( $attachment->id ) ? wp_get_attachment_image_src( $attachment->id, 'thumbnail', true ) : false;
 
-                        foreach( $this->instances[$instance]['fields'] as $field )
-                            $field_ref = $this->create_attachment_field( $instance, $field, $attachment );
+                            $image = $thumbnail ? $thumbnail[0] : '<%- attachments.attachment_thumb %>';
+                        ?>
+                        <img src="<?php echo $image; ?>" alt="Thumbnail" />
+                    </div>
 
-
-
-                    ?>
+                    <div class="attachments-fields">
+                        <?php
+                            foreach( $this->instances[$instance]['fields'] as $field )
+                                $field_ref = $this->create_attachment_field( $instance, $field, $attachment );
+                        ?>
+                    </div>
 
                 </div>
             <?php
