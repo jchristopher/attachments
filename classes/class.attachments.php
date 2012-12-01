@@ -55,14 +55,16 @@ if ( !class_exists( 'Attachments' ) ) :
             // include our fields
             $this->fields = $this->get_field_types();
 
-            // register our instances
-            $this->register();
-            // TODO: determine how to flag whether or not user wants default instance
-            // TODO: only register if user wants
-
             // hook into WP
             add_action( 'admin_enqueue_scripts',    array( $this, 'assets' ) );
 
+            // register our default instances
+            $this->register();
+
+            // register our user-defined instances
+            add_action( 'init',                     array( $this, 'do_actions' ) );
+
+            // determine which instances apply to the current post type
             add_action( 'init',                     array( $this, 'set_instances_for_current_post_type' ) );
 
             add_action( 'add_meta_boxes',           array( $this, 'meta_box_init' ) );
@@ -70,6 +72,14 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'admin_footer',             array( $this, 'admin_footer' ) );
 
             add_action( 'save_post',                array( $this, 'save' ) );
+        }
+
+
+
+        function do_actions()
+        {
+            // facilitate user-defined instance registration
+            do_action( 'attachments_register', $this );
         }
 
 
@@ -188,7 +198,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
                         frame = wp.media( options );
 
-                        frame.get('library').set( 'filterable', 'uploaded' );
+                        // frame.get('library').set( 'filterable', 'uploaded' );
 
                         frame.toolbar.on( 'activate:select', function() {
                             frame.toolbar.view().set({
@@ -425,7 +435,7 @@ if ( !class_exists( 'Attachments' ) ) :
             }
 
             // make sure the instance name is proper
-            $instance           = str_replace( '-', '_', sanitize_title( $name ) );
+            $instance = str_replace( '-', '_', sanitize_title( $name ) );
 
             // register the fields
             if( isset( $params['fields'] ) && is_array( $params['fields'] ) && count( $params['fields'] ) )
@@ -485,20 +495,21 @@ if ( !class_exists( 'Attachments' ) ) :
             global $post;
 
             // TODO: Retrieving the post_type at this point is ugly to say the least. This needs major cleanup.
-            if( !$post_type = get_post_type() )
+            if( empty( $post->ID ) && isset( $_GET['post_type'] ) )
             {
-                if( empty( $post->ID ) && isset( $_GET['post_type'] ) )
-                {
-                    $post_type = str_replace( '-', '_', sanitize_title( $_GET['post_type'] ) ); // TODO: Better sanitization
-                }
-                elseif( !empty( $post->ID ) )
-                {
-                    $post_type = get_post_type( $post->ID );
-                }
-                else
-                {
-                    $post_type = 'post';
-                }
+                $post_type = str_replace( '-', '_', sanitize_title( $_GET['post_type'] ) ); // TODO: Better sanitization
+            }
+            elseif( !empty( $post->ID ) )
+            {
+                $post_type = get_post_type( $post->ID );
+            }
+            elseif( isset( $_GET['post'] ) )
+            {
+                $post_type = get_post_type( intval( $_GET['post'] ) );
+            }
+            else
+            {
+                $post_type = 'post';
             }
 
             return $post_type;
@@ -714,16 +725,19 @@ if ( !class_exists( 'Attachments' ) ) :
         {
             global $post;
 
-            if( !is_object( $post ) && isset( $_GET['post'] ) )
+            if( is_null( $post_id ) && is_object( $post ) && isset( $post->ID ) )
             {
-                $post = (object) array( 'ID' => intval( $_GET['post'] ) );
+                $post_id = $post->ID;
+            }
+            elseif( isset( $_GET['post'] ) )
+            {
+                $post_id = intval( $_GET['post'] );
             }
             else
             {
+                // no post ID, nothing to do...
                 return;
             }
-
-            $post_id = ( is_null( $post_id ) ) ? $post->ID : intval( $post_id );
 
             $attachments_raw = json_decode( get_post_meta( $post_id, $this->meta_key, true ) );
 
@@ -781,4 +795,4 @@ if ( !class_exists( 'Attachments' ) ) :
 
 endif; // class_exists check
 
-$attachments = new Attachments();
+new Attachments();
