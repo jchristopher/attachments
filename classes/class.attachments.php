@@ -21,18 +21,22 @@ if ( !class_exists( 'Attachments' ) ) :
 
     class Attachments {
 
-        public $version;                    // stores Attachments' version number
-        public $url;                        // stores Attachments' URL
-        public $dir;                        // stores Attachments' directory
-        public $instances;                  // all registered Attachments instances
-        public $instances_for_post_type;    // instance names that apply to the current post type
-        public $fields;                     // stores all registered field types
-
-        // what WordPress considers to be valid file types
-        public $valid_filetypes = array( 'image', 'video', 'text', 'audio', 'application' );
-
-        // our meta key
-        public $meta_key = '_attachments';
+        private $version;                   // stores Attachments' version number
+        private $url;                       // stores Attachments' URL
+        private $dir;                       // stores Attachments' directory
+        private $instances;                 // all registered Attachments instances
+        private $instances_for_post_type;   // instance names that apply to the current post type
+        private $fields;                    // stores all registered field types
+        private $attachments;               // stores all of the Attachments for the given instance
+        private $attachments_ref = 0;       // flags where a get() loop last did it's thing
+        private $meta_key = '_attachments'; // our meta key
+        private $valid_filetypes = array(   // what WordPress considers to be valid file types
+                    'image',
+                    'video',
+                    'text',
+                    'audio',
+                    'application'
+                );
 
 
 
@@ -41,7 +45,7 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function __construct()
+        function __construct( $instance = 'attachments', $post_id = null )
         {
             // establish our environment variables
             $this->version  = '3.0';
@@ -72,10 +76,45 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'admin_footer',             array( $this, 'admin_footer' ) );
 
             add_action( 'save_post',                array( $this, 'save' ) );
+
+            $this->attachments = $this->get_attachments( $instance, $post_id );
         }
 
 
 
+        /**
+         * Returns whether or not the current object has any Attachments
+         *
+         * @since 3.0
+         */
+        function exist()
+        {
+            return !empty( $this->attachments );
+        }
+
+
+
+        /**
+         * Returns the next Attachment for the current object and increments the index
+         *
+         * @since 3.0
+         */
+        function get()
+        {
+            if( !count( $this->attachments ) || $this->attachments_ref >= count( $this->attachments ) )
+                return false;
+
+            $this->attachments_ref++;
+            return $this->attachments[$this->attachments_ref-1];
+        }
+
+
+
+        /**
+         * Fires all of our actions
+         *
+         * @since 3.0
+         */
         function do_actions()
         {
             // facilitate user-defined instance registration
@@ -312,14 +351,11 @@ if ( !class_exists( 'Attachments' ) ) :
 
                     // determine it's class
                     $classes = get_declared_classes();
-                    if( $classes_before !== $classes )
-                    {
-                        // the field's class is last in line
-                        $field_class = end( $classes );
+                    // the field's class is last in line
+                    $field_class = end( $classes );
 
-                        // create our link using our new field class
-                        $field_types[$type] = $field_class;
-                    }
+                    // create our link using our new field class
+                    $field_types[$type] = $field_class;
                 }
             }
 
@@ -550,6 +586,7 @@ if ( !class_exists( 'Attachments' ) ) :
                 $value  = ( isset( $attachment->fields->$name ) ) ? $attachment->fields->$name : null;
 
                 $field  = new $this->fields[$type]( $name, $label, $value );
+                $field->value = $field->format_value_for_input( $field->value );
             }
 
             // does this field already have a unique ID?
@@ -590,6 +627,11 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
+        /**
+         * Outputs all the necessary markup for an Attachment
+         *
+         * @since 3.0
+         */
         function create_attachment( $instance, $attachment = null )
         {
             ?>
@@ -663,6 +705,11 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
+        /**
+         * Saves our Attachments metadata when the post is saved
+         *
+         * @since 3.0
+         */
         function save( $post_id )
         {
             // is the user logged in?
@@ -721,6 +768,11 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
+        /**
+         * Retrieves all Attachments for the submitted instance and post ID
+         *
+         * @since 3.0
+         */
         function get_attachments( $instance = '', $post_id = null )
         {
             global $post;
@@ -751,7 +803,6 @@ if ( !class_exists( 'Attachments' ) ) :
                     {
                         foreach( $attachment->fields as $key => $value )
                         {
-
                             // loop through the instance fields to get the type
                             $type = '';
                             foreach( $this->instances[$instance]['fields'] as $field )
@@ -765,14 +816,8 @@ if ( !class_exists( 'Attachments' ) ) :
 
                             if( isset( $this->fields[$type] ) )
                             {
-                                // instantiate a new field of this type
-                                $tmp_field = new $this->fields[$type]();
-
-                                // we need to first decode the html entities that were encoded for the save
+                                // we need to decode the html entities that were encoded for the save
                                 $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES );
-
-                                // run the formatting function
-                                $attachment->fields->$key = $tmp_field->format_value_for_input( $value );
                             }
                             else
                             {
