@@ -45,7 +45,7 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function __construct( $instance = 'attachments', $post_id = null )
+        function __construct( $instance = null, $post_id = null )
         {
             // establish our environment variables
             $this->version  = '3.0';
@@ -77,7 +77,8 @@ if ( !class_exists( 'Attachments' ) ) :
 
             add_action( 'save_post',                array( $this, 'save' ) );
 
-            $this->attachments = $this->get_attachments( $instance, $post_id );
+            if( !is_null( $instance ) )
+                $this->attachments = $this->get_attachments( $instance, $post_id );
         }
 
 
@@ -189,7 +190,7 @@ if ( !class_exists( 'Attachments' ) ) :
             <div id="attachments-<?php echo $instance->name; ?>">
                 <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
                 <?php if( !empty( $instance->note ) ) : ?>
-                    <div class="attachments-note"><?php echo apply_filters( 'the_content', $intsance->note ); ?></div>
+                    <div class="attachments-note"><?php echo $instance->note; ?></div>
                 <?php endif; ?>
                 <div class="attachments-container attachments-<?php echo $instance->name; ?>">
                     <?php
@@ -586,27 +587,32 @@ if ( !class_exists( 'Attachments' ) ) :
                 $value  = ( isset( $attachment->fields->$name ) ) ? $attachment->fields->$name : null;
 
                 $field  = new $this->fields[$type]( $name, $label, $value );
-                $field->value = $field->format_value_for_input( $field->value );
+                $field->Pvalue = $field->format_value_for_input( $field->value );
+
+                // does this field already have a unique ID?
+                $uid = ( isset( $attachment->uid ) ) ? $attachment->uid : null;
+
+                // TODO: make sure we've got a registered instance
+                $field->set_field_instance( $instance, $field );
+                $field->set_field_identifiers( $field, $uid );
+                $field->set_field_type( $type );
+
+                ?>
+                <div class="attachments-attachment-field attachments-attachment-field-<?php echo $instance; ?> attachments-attachment-field-<?php echo $field->type; ?> attachment-field-<?php echo $field->name; ?>">
+                    <div class="attachment-label attachment-label-<?php echo $instance; ?>">
+                        <label for="<?php echo $field->field_id; ?>"><?php echo $field->label; ?></label>
+                    </div>
+                    <div class="attachment-field attachment-field-<?php echo $instance; ?>">
+                        <?php echo $this->create_field( $instance, $field ); ?>
+                    </div>
+                </div>
+            <?php
+            }
+            else
+            {
+                $field = false;
             }
 
-            // does this field already have a unique ID?
-            $uid = ( isset( $attachment->uid ) ) ? $attachment->uid : null;
-
-            // TODO: make sure we've got a registered instance
-            $field->set_field_instance( $instance, $field );
-            $field->set_field_identifiers( $field, $uid );
-            $field->set_field_type( $type );
-
-            ?>
-            <div class="attachments-attachment-field attachments-attachment-field-<?php echo $instance; ?> attachments-attachment-field-<?php echo $field->type; ?> attachment-field-<?php echo $field->name; ?>">
-                <div class="attachment-label attachment-label-<?php echo $instance; ?>">
-                    <label for="<?php echo $field->field_id; ?>"><?php echo $field->label; ?></label>
-                </div>
-                <div class="attachment-field attachment-field-<?php echo $instance; ?>">
-                    <?php echo $this->create_field( $instance, $field ); ?>
-                </div>
-            </div>
-        <?php
             return $field;
         }
 
@@ -804,24 +810,27 @@ if ( !class_exists( 'Attachments' ) ) :
                         foreach( $attachment->fields as $key => $value )
                         {
                             // loop through the instance fields to get the type
-                            $type = '';
-                            foreach( $this->instances[$instance]['fields'] as $field )
+                            if( isset( $this->instances[$instance]['fields'] ) )
                             {
-                                if( isset( $field['name'] ) && $field['name'] == $key )
+                                $type = '';
+                                foreach( $this->instances[$instance]['fields'] as $field )
                                 {
-                                    $type = isset( $field['type'] ) ? $field['type'] : false;
-                                    break;
+                                    if( isset( $field['name'] ) && $field['name'] == $key )
+                                    {
+                                        $type = isset( $field['type'] ) ? $field['type'] : false;
+                                        break;
+                                    }
                                 }
-                            }
 
-                            if( isset( $this->fields[$type] ) )
-                            {
-                                // we need to decode the html entities that were encoded for the save
-                                $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES );
-                            }
-                            else
-                            {
-                                $attachments_raw->$instance->fields[$key] = false;
+                                if( isset( $this->fields[$type] ) )
+                                {
+                                    // we need to decode the html entities that were encoded for the save
+                                    $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES );
+                                }
+                                else
+                                {
+                                    $attachments_raw->$instance->fields[$key] = false;
+                                }
                             }
                         }
                     }
