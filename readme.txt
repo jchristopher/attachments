@@ -50,6 +50,11 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 == Screenshots ==
 
+1. An Attachments meta box sitting below the content editor
+2. Direct integration with WordPress 3.5+ Media
+3. Attach multiple files at once
+4. Custom fields for each Attachment
+5. Drag and drop to sort
 
 == Changelog ==
 
