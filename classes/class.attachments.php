@@ -29,8 +29,10 @@ if ( !class_exists( 'Attachments' ) ) :
         private $fields;                    // stores all registered field types
         private $attachments;               // stores all of the Attachments for the given instance
 
-        private $attachments_ref    = 0;                // flags where a get() loop last did it's thing
-        private $meta_key           = '_attachments';   // our meta key
+        private $image_sizes        = array( 'full' );  // store all registered image sizes
+        private $default_instance   = true;             // use the default instance?
+        private $attachments_ref    = -1;               // flags where a get() loop last did it's thing
+        private $meta_key           = 'attachments';    // our meta key
         private $valid_filetypes    = array(            // what WordPress considers to be valid file types
                     'image',
                     'video',
@@ -48,6 +50,8 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function __construct( $instance = null, $post_id = null )
         {
+            global $_wp_additional_image_sizes;
+
             // establish our environment variables
             $this->version  = '3.0';
             $this->url      = ATTACHMENTS_URL;
@@ -57,17 +61,17 @@ if ( !class_exists( 'Attachments' ) ) :
             include_once( ATTACHMENTS_DIR . 'upgrade.php' );
             include_once( ATTACHMENTS_DIR . '/classes/class.field.php' );
 
+            // set our image sizes
+            $this->image_sizes = array_merge( $this->image_sizes, get_intermediate_image_sizes() );
+
             // include our fields
             $this->fields = $this->get_field_types();
 
             // hook into WP
             add_action( 'admin_enqueue_scripts',    array( $this, 'assets' ) );
 
-            // register our default instances
-            $this->register();
-
             // register our user-defined instances
-            add_action( 'init',                     array( $this, 'do_actions' ) );
+            add_action( 'init',                     array( $this, 'do_actions_filters' ) );
 
             // determine which instances apply to the current post type
             add_action( 'init',                     array( $this, 'set_instances_for_current_post_type' ) );
@@ -103,11 +107,166 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function get()
         {
+            $this->attachments_ref++;
+
             if( !count( $this->attachments ) || $this->attachments_ref >= count( $this->attachments ) )
                 return false;
 
-            $this->attachments_ref++;
-            return $this->attachments[$this->attachments_ref-1];
+            return $this->attachments[$this->attachments_ref];
+        }
+
+
+
+        /**
+         * Returns an appropriate <img /> for the current Attachment if it's an image
+         *
+         * @since 3.0
+         */
+        function image( $size = 'thumbnail' )
+        {
+            // do we have our meta yet?
+            if( !isset( $this->attachments[$this->attachments_ref]->meta ) )
+                $this->attachments[$this->attachments_ref]->meta = wp_get_attachment_metadata( $this->attachments[$this->attachments_ref]->id );
+
+            // is it an image?
+            if( !isset( $this->attachments[$this->attachments_ref]->meta['sizes'] ) )
+                return false;
+
+            // do we have the requested size?
+            if( !in_array( $size, $this->image_sizes ) )
+                return false;
+
+            $asset          = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, $size );
+            $image_src      = $asset[0];
+            $image_width    = $asset[1];
+            $image_height   = $asset[2];
+            $image_alt      = get_post_meta( $this->attachments[$this->attachments_ref]->id, '_wp_attachment_image_alt', true );
+
+            $image = '<img src="' . $image_src . '" width="' . $image_width . '" height="' . $image_height . '" alt="' . $image_alt . '" />';
+
+            return $image;
+        }
+
+
+
+        /**
+         * Returns the URL for the current Attachment if it's an image
+         *
+         * @since 3.0
+         */
+        function src( $size = 'thumbnail' )
+        {
+            // do we have our meta yet?
+            if( !isset( $this->attachments[$this->attachments_ref]->meta ) )
+                $this->attachments[$this->attachments_ref]->meta = wp_get_attachment_metadata( $this->attachments[$this->attachments_ref]->id );
+
+            // is it an image?
+            if( !isset( $this->attachments[$this->attachments_ref]->meta['sizes'] ) )
+                return false;
+
+            // do we have the requested size?
+            if( !in_array( $size, $this->image_sizes ) )
+                return false;
+
+            $asset          = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, $size );
+            $image_src      = $asset[0];
+
+            return $image_src;
+        }
+
+
+
+        /**
+         * Returns the formatted filesize of the current Attachment
+         *
+         * @since 3.0
+         */
+        function filesize()
+        {
+            if( !isset( $this->attachments[$this->attachments_ref]->id ) )
+                return false;
+
+            $url        = wp_get_attachment_url( $this->attachments[$this->attachments_ref]->id );
+            $uploads    = wp_upload_dir();
+            $file_path  = str_replace( $uploads['baseurl'], $uploads['basedir'], $url );
+
+            $formatted = '0 bytes';
+            if( file_exists( $file_path ) )
+            {
+                $formatted = size_format( @filesize( $file_path ) );
+            }
+            return $formatted;
+        }
+
+
+
+        /**
+         * Returns the type of the current Attachment
+         *
+         * @since 3.0
+         */
+        function type()
+        {
+            if( !isset( $this->attachments[$this->attachments_ref]->id ) )
+                return false;
+
+            $attachment_mime = explode( '/', get_post_mime_type( $this->attachments[$this->attachments_ref]->id ) );
+            return isset( $attachment_mime[0] ) ? $attachment_mime[0] : null;
+        }
+
+
+
+        /**
+         * Returns the subtype of the current Attachment
+         *
+         * @since 3.0
+         */
+        function subtype()
+        {
+            if( !isset( $this->attachments[$this->attachments_ref]->id ) )
+                return false;
+
+            $attachment_mime = explode( '/', get_post_mime_type( $this->attachments[$this->attachments_ref]->id ) );
+            return isset( $attachment_mime[1] ) ? $attachment_mime[1] : null;
+        }
+
+
+
+        /**
+         * Returns the id of the current Attachment
+         *
+         * @since 3.0
+         */
+        function id()
+        {
+            return isset( $this->attachments[$this->attachments_ref]->id ) ? $this->attachments[$this->attachments_ref]->id : null;
+        }
+
+
+
+        /**
+         * Returns the URL for the current Attachment
+         *
+         * @since 3.0
+         */
+        function url()
+        {
+            if( !isset( $this->attachments[$this->attachments_ref]->id ) )
+                return false;
+
+            return wp_get_attachment_url( $this->attachments[$this->attachments_ref]->id );
+        }
+
+
+
+        /**
+         * Returns the field value for the submitted field name
+         *
+         * @since 3.0
+         */
+        function field( $name = 'title' )
+        {
+            return isset( $this->attachments[$this->attachments_ref]->fields->$name ) ? $this->attachments[$this->attachments_ref]->fields->$name : false;
         }
 
 
@@ -117,8 +276,19 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function do_actions()
+        function do_actions_filters()
         {
+            // allow user to disable the default instance
+            $this->default_instance = apply_filters( 'attachments_disable_default_instance', $this->default_instance );
+
+            // in case we no longer have a bool
+            if( !is_bool( $this->default_instance ) )
+                $this->default_instance = false;
+
+            // implement our default instance if appropriate
+            if( $this->default_instance )
+                $this->register();
+
             // facilitate user-defined instance registration
             do_action( 'attachments_register', $this );
         }
@@ -654,7 +824,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         if( isset( $attachment->id ) )
                         {
                             // we'll just use the full size since that's what Media in 3.5 uses
-                            $attachment_meta        = wp_get_attachment_metadata( $attachment->id, true );
+                            $attachment_meta        = wp_get_attachment_metadata( $attachment->id );
 
                             // only images return the 'file' key
                             if( !isset( $attachment_meta['file'] ))
