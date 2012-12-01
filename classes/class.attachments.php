@@ -359,12 +359,10 @@ if ( !class_exists( 'Attachments' ) ) :
             ?>
 
             <div id="attachments-<?php echo $instance->name; ?>">
-                <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
                 <?php if( !empty( $instance->note ) ) : ?>
                     <div class="attachments-note"><?php echo $instance->note; ?></div>
                 <?php endif; ?>
-                <div class="attachments-container attachments-<?php echo $instance->name; ?>">
-                    <?php
+                <div class="attachments-container attachments-<?php echo $instance->name; ?>"><?php
                         if( isset( $instance->attachments ) && !empty( $instance->attachments ) )
                         {
                             foreach( $instance->attachments as $attachment )
@@ -376,7 +374,9 @@ if ( !class_exists( 'Attachments' ) ) :
                                 $this->create_attachment( $instance->name, $attachment );
                             }
                         }
-                    ?>
+                    ?></div>
+                <div class="attachments-invoke-wrapper">
+                    <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
                 </div>
             </div>
             <script type="text/javascript">
