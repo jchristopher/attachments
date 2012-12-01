@@ -65,7 +65,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
         function html( $field )
         {
         ?>
-            <input type="text" name="<?php echo $field->field_name; ?>" id="<?php echo $field->field_id; ?>" class="attachments attachments-field attachments-field-<?php echo $field->field_name; ?> attachments-field-<?php echo $field->field_id; ?>" value="<?php echo $field->value; ?>" />
+            <input type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" value="<?php esc_attr_e( $field->value ); ?>" />
         <?php
         }
 

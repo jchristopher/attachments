@@ -683,7 +683,22 @@ if ( !class_exists( 'Attachments' ) ) :
             {
                 // loop through each Attachment of this instance
                 foreach( $instance_attachments as $key => $attachment )
+                {
+                    // since we're using JSON for storage in the database, we need
+                    // to make sure that characters are encoded that would otherwise
+                    // break the JSON
+                    if( isset( $attachment['fields'] ) && is_array( $attachment['fields'] ) )
+                    {
+
+                        foreach( $attachment['fields'] as $key => $field_value )
+                        {
+                            // slashes were already added so we're going to strip them and encode ourselves
+                            $attachment['fields'][$key] = htmlspecialchars( stripslashes( $field_value ), ENT_QUOTES );
+                        }
+                    }
+
                     $attachments[$instance][] = $attachment;
+                }
             }
 
             // we're going to store JSON
@@ -695,7 +710,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
-        function get_attachments( $instance, $post_id = null )
+        function get_attachments( $instance = '', $post_id = null )
         {
             global $post;
 
@@ -710,9 +725,56 @@ if ( !class_exists( 'Attachments' ) ) :
 
             $post_id = ( is_null( $post_id ) ) ? $post->ID : intval( $post_id );
 
-            $attachments = json_decode( get_post_meta( $post_id, $this->meta_key, true ) );
+            $attachments_raw = json_decode( get_post_meta( $post_id, $this->meta_key, true ) );
 
-            return ( isset( $attachments->$instance ) ) ? $attachments->$instance : false;
+            // we need to decode the fields (that were encoded during save) and run them through
+            // their format_value_for_input as defined in it's class
+            if( isset( $attachments_raw->$instance ) )
+            {
+                foreach( $attachments_raw->$instance as $attachment )
+                {
+                    if( is_object( $attachment->fields ) )
+                    {
+                        foreach( $attachment->fields as $key => $value )
+                        {
+
+                            // loop through the instance fields to get the type
+                            $type = '';
+                            foreach( $this->instances[$instance]['fields'] as $field )
+                            {
+                                if( isset( $field['name'] ) && $field['name'] == $key )
+                                {
+                                    $type = isset( $field['type'] ) ? $field['type'] : false;
+                                    break;
+                                }
+                            }
+
+                            if( isset( $this->fields[$type] ) )
+                            {
+                                // instantiate a new field of this type
+                                $tmp_field = new $this->fields[$type]();
+
+                                // we need to first decode the html entities that were encoded for the save
+                                $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES );
+
+                                // run the formatting function
+                                $attachment->fields->$key = $tmp_field->format_value_for_input( $value );
+                            }
+                            else
+                            {
+                                $attachments_raw->$instance->fields[$key] = false;
+                            }
+                        }
+                    }
+                    $attachments[] = $attachment;
+                }
+            }
+            else
+            {
+                $attachments = false;
+            }
+
+            return $attachments;
         }
 
     }
