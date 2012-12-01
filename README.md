@@ -143,14 +143,19 @@ You can also retrieve various attributes of the current Attachment using these u
 
 ## Screenshots
 
+##### An Attachments meta box sitting below the content editor
 ![An Attachments meta box sitting below the content editor](http://mondaybynoon.com/wp-content/uploads/attachments-1.png)
 
+##### Direct integration with WordPress 3.5+ Media
 ![Direct integration with WordPress 3.5+ Media](http://mondaybynoon.com/wp-content/uploads/attachments-2.png)
 
+##### Attach multiple files at once
 ![Attach multiple files at once](http://mondaybynoon.com/wp-content/uploads/attachments-3.png)
 
+##### Custom fields for each Attachment
 ![Custom fields for each Attachment](http://mondaybynoon.com/wp-content/uploads/attachments-4.png)
 
+##### Drag and drop to sort
 ![Drag and drop to sort](http://mondaybynoon.com/wp-content/uploads/attachments-5.png)
 
 ## Frequently Asked Questions
