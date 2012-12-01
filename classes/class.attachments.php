@@ -28,9 +28,10 @@ if ( !class_exists( 'Attachments' ) ) :
         private $instances_for_post_type;   // instance names that apply to the current post type
         private $fields;                    // stores all registered field types
         private $attachments;               // stores all of the Attachments for the given instance
-        private $attachments_ref = 0;       // flags where a get() loop last did it's thing
-        private $meta_key = '_attachments'; // our meta key
-        private $valid_filetypes = array(   // what WordPress considers to be valid file types
+
+        private $attachments_ref    = 0;                // flags where a get() loop last did it's thing
+        private $meta_key           = '_attachments';   // our meta key
+        private $valid_filetypes    = array(            // what WordPress considers to be valid file types
                     'image',
                     'video',
                     'text',
@@ -647,15 +648,26 @@ if ( !class_exists( 'Attachments' ) ) :
                     <?php $array_flag = ( isset( $attachment->uid ) ) ? $attachment->uid : '{{ attachments.attachment_uid }}'; ?>
 
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '{{ attachments.id }}' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][icon]" value="<?php echo isset( $attachment->icon ) ? $attachment->icon : '{{ attachments.icon }}' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<?php echo isset( $attachment->subtype ) ? $attachment->subtype : '{{ attachments.subtype }}' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<?php echo isset( $attachment->type ) ? $attachment->type : '{{ attachments.type }}' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][height]" value="<?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][width]" value="<?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?>" />
 
                     <?php
-                        // TODO: Should we just store the entire attributes object?
+                        // since attributes can change over time (image gets replaced, cropped, etc.) we'll pull that info
+                        if( isset( $attachment->id ) )
+                        {
+                            // we'll just use the full size since that's what Media in 3.5 uses
+                            $attachment_meta        = wp_get_attachment_metadata( $attachment->id, true );
+
+                            // only images return the 'file' key
+                            if( !isset( $attachment_meta['file'] ))
+                                $attachment_meta['file'] = get_attached_file( $attachment->id );
+
+                            $attachment->width      = isset( $attachment_meta['width'] ) ? $attachment_meta['width'] : null;
+                            $attachment->height     = isset( $attachment_meta['height'] ) ? $attachment_meta['height'] : null;
+                            $attachment->filename   = end( explode( "/", $attachment_meta['file'] ) );
+
+                            $attachment_mime        = explode( '/', get_post_mime_type( $attachment->id ) );
+                            $attachment->type       = isset( $attachment_mime[0] ) ? $attachment_mime[0] : null;
+                            $attachment->subtype    = isset( $attachment_mime[1] ) ? $attachment_mime[1] : null;
+                        }
                     ?>
 
                     <div class="attachment-meta media-sidebar">
@@ -669,7 +681,9 @@ if ( !class_exists( 'Attachments' ) ) :
                         </div>
                         <div class="attachment-details attachment-info details">
                             <div class="filename"><?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?></div>
-                            <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
+                            <?php if( isset( $attachment->type ) && $attachment->type == 'image' ) : ?>
+                                <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
+                            <?php endif; ?>
                             <div class="delete-attachment"><a href="#">Delete</a></div>
                         </div>
                     </div>
