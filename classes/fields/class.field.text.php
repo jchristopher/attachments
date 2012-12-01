@@ -27,4 +27,9 @@ class Attachments_Field_Text extends Attachments_Field implements Attachments_Fi
         return htmlspecialchars( $value, ENT_QUOTES );
     }
 
+    public function input_head()
+    {
+        return;
+    }
+
 }
