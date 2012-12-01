@@ -202,7 +202,7 @@ if ( !class_exists( 'Attachments' ) ) :
                                         if ( ! selection )
                                             return;
 
-                                        // compile our Underscore template
+                                        // compile our Underscore template using Mustache syntax
                                         _.templateSettings = {
                                             variable : 'attachments',
                                             interpolate : /\{\{(.+?)\}\}/g
@@ -232,6 +232,11 @@ if ( !class_exists( 'Attachments' ) ) :
 
                                             // append the template
                                             $element.find('.attachments-container').append(template(templateData));
+
+                                            // if it wasn't an image we need to ditch the dimensions
+                                            if(!attachments_isset(attachment.attributes.width)||!attachments_isset(attachment.attributes.height)){
+                                                $element.find('.attachments-attachment:last .dimensions').hide();
+                                            }
                                         });
 
                                         // clear our selection
@@ -247,6 +252,20 @@ if ( !class_exists( 'Attachments' ) ) :
                         // set the environment
                         frame.toolbar.mode('select');
                     });
+
+                    $element.on( 'click', '.delete-attachment a', function( event ) {
+
+                        var targetAttachment;
+
+                        event.preventDefault();
+
+                        targetAttachment = $(this).parents('.attachments-attachment');
+
+                        targetAttachment.slideUp(function(){
+                            targetAttachment.remove();
+                        });
+
+                    } );
 
                 });
             </script>
@@ -567,18 +586,31 @@ if ( !class_exists( 'Attachments' ) ) :
                     <?php $array_flag = ( isset( $attachment->uid ) ) ? $attachment->uid : '{{ attachments.attachment_uid }}'; ?>
 
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '{{ attachments.id }}' ; ?>" />
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?>" />
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][icon]" value="<?php echo isset( $attachment->icon ) ? $attachment->icon : '{{ attachments.icon }}' ; ?>" />
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][subtype]" value="<?php echo isset( $attachment->subtype ) ? $attachment->subtype : '{{ attachments.subtype }}' ; ?>" />
                     <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][type]" value="<?php echo isset( $attachment->type ) ? $attachment->type : '{{ attachments.type }}' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][filename]" value="<?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][height]" value="<?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?>" />
+                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][width]" value="<?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?>" />
 
-                    <div class="attachment-thumbnail">
+                    <?php
+                        // TODO: Should we just store the entire attributes object?
+                    ?>
+
+                    <div class="attachment-meta media-sidebar">
                         <?php
                             $thumbnail = isset( $attachment->id ) ? wp_get_attachment_image_src( $attachment->id, 'thumbnail', true ) : false;
 
                             $image = $thumbnail ? $thumbnail[0] : '{{ attachments.attachment_thumb }}';
                         ?>
-                        <img src="<?php echo $image; ?>" alt="Thumbnail" />
+                        <div class="attachment-thumbnail">
+                            <img src="<?php echo $image; ?>" alt="Thumbnail" />
+                        </div>
+                        <div class="attachment-details attachment-info details">
+                            <div class="filename"><?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?></div>
+                            <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
+                            <div class="delete-attachment"><a href="#">Delete</a></div>
+                        </div>
                     </div>
 
                     <div class="attachments-handle"><img src="<?php echo trailingslashit( $this->url ) . 'images/handle.gif'; ?>" alt="Handle" width="20" height="20" /></div>
@@ -638,14 +670,10 @@ if ( !class_exists( 'Attachments' ) ) :
             if( !current_user_can( 'edit_post', $post_id ) )
                 return $post_id;
 
-            // do we have any Attachments data?
-            if( !isset( $_POST['attachments'] ) )
-                return $post_id;
-
             // passed authentication, proceed with save
-            $attachments_meta = $_POST['attachments'];
 
-            error_log( print_r($attachments_meta,true) );
+            // if the user deleted all Attachments we won't have our key
+            $attachments_meta = isset( $_POST['attachments'] ) ? $_POST['attachments'] : array();
 
             // final data store
             $attachments = array();

@@ -83,7 +83,8 @@ jQuery(document).ready(function($){
         scroll: true,
         tolerance: 'intersect',
         axis: 'y',
-        containment: 'parent'
+        containment: 'parent',
+        handle: '.attachments-handle img'
     });
     $( '.attachments-container' ).disableSelection();
 });

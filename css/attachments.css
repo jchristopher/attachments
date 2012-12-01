@@ -21,26 +21,73 @@ a.attachments-invoke {
     min-height:125px;
     background:#f1f1f1;
     border:1px solid #cecece;
-    border-radius(2px);
-}
-
-.attachments-attachment .attachment-thumbnail {
-    position:absolute;
-    right:0;
-    top:0;
-    padding-top:37px;
-    padding-right:7px;
-}
-
-.attachments-attachment .attachment-thumbnail img {
-    display:block;
-    max-width:80px;
-    height:auto !important;
     border-radius:2px;
 }
 
+.attachments-attachment .attachment-meta {
+    /* Reset some WP defaults */
+    bottom:auto;
+    border:0;
+
+    /* Our styles */
+    position:absolute;
+    right:0;
+    top:0;
+    margin-top:32px;
+    width:225px;
+    overflow:hidden;
+    zoom:1;
+    padding:5px;
+    background:#fdfdfd;
+    border:1px solid #DFDFDF;
+    border:1px solid rgba(223,223,223,0.8);
+    border-radius:2px;
+}
+
+.attachments-attachment .attachment-meta .attachment-info {
+    /* Reset some WP defaults */
+    min-height:1px;
+    margin-bottom:0;
+    border-bottom:0;
+    box-shadow:none;
+    padding-bottom:0;
+}
+
+.attachments-attachment .attachment-meta .attachment-details {
+    width:135px;
+    float:right;
+    margin:0;
+    padding:0;
+}
+
+.attachments-attachment .attachment-meta .attachment-info .filename {
+    white-space:nowrap;
+    width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.attachments-attachment .attachment-meta .attachment-thumbnail {
+    width:80px;
+    float:left;
+}
+
+.attachments-attachment .attachment-meta .attachment-thumbnail img {
+    display:block;
+    max-width:100%;
+    height:auto !important;
+    max-height:80px;
+    border-radius:2px;
+    margin:0 auto;
+}
+
+.attachments-attachment .attachment-meta .attachment-actions {
+    width:130px;
+    float:right;
+}
+
 .attachments-fields {
-    margin-right:120px;
+    margin-right:250px;
     margin-left:40px;
     padding-top:10px;
 }
