@@ -851,9 +851,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         </div>
                         <div class="attachment-details attachment-info details">
                             <div class="filename"><?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?></div>
-                            <?php if( isset( $attachment->type ) && $attachment->type == 'image' ) : ?>
-                                <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
-                            <?php endif; ?>
+                            <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
                             <div class="delete-attachment"><a href="#">Delete</a></div>
                         </div>
                     </div>
