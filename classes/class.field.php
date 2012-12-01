@@ -13,7 +13,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
     interface Attachments_Field_Template
     {
         public function html( $field );
-        public function format_value_for_input( $value, $field );
+        public function format_value_for_input( $value, $field = null );
     }
 
     class Attachments_Field implements Attachments_Field_Template
@@ -62,14 +62,14 @@ if ( !class_exists( 'Attachments_Field' ) ) :
             $this->type = $field_type;
         }
 
-        function html( $field )
+        public function html( $field )
         {
         ?>
             <input type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" value="<?php esc_attr_e( $field->value ); ?>" />
         <?php
         }
 
-        function format_value_for_input( $value, $field = null )
+        public function format_value_for_input( $value, $field = null )
         {
             return $value;
         }
