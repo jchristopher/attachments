@@ -222,9 +222,22 @@ When Attachments is first activated, a default instance is created titled Attach
 1. Title
 1. Caption
 
+If you would like to *disable the default instance* (meta box titled 'Attachments' with a 'Title' and 'Caption' field) add the following to your `wp-config.php`:
+
+`<?php
+function my_disable_attachments_default_instance()
+{
+  return false;
+}
+
+add_filter( 'attachments_disable_default_instance', 'my_disable_attachments_default_instance' );`
+
+You may create instances with your own custom fields by using the `attachments_register` action. To create your own instance add the following to your theme's `functions.php` or your own plugin:
+
 You may create additional instances with custom fields by using the `attachments_register` action. To create your own instance add the following to your theme's `functions.php` or your own plugin:
 
-`function my_attachments( $attachments )
+`<?php
+function my_attachments( $attachments )
 {
   $args = array(
 
@@ -274,7 +287,8 @@ add_action( 'attachments_register', 'my_attachments' );`
 
 If you would like to **disable the default Attachments instance** add the following to your theme's `functions.php` or plugin:
 
-`function my_disable_attachments_default_instance()
+`<?php
+function my_disable_attachments_default_instance()
 {
   return false;
 }
