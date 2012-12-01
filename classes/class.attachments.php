@@ -693,7 +693,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         foreach( $attachment['fields'] as $key => $field_value )
                         {
                             // slashes were already added so we're going to strip them and encode ourselves
-                            $attachment['fields'][$key] = htmlspecialchars( stripslashes( $field_value ), ENT_QUOTES );
+                            $attachment['fields'][$key] = htmlentities( stripslashes( $field_value ), ENT_QUOTES );
                         }
                     }
 
