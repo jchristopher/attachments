@@ -227,7 +227,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         }
 
                         options = {
-                            title:   title,
+                            title: title,
                             <?php if( $instance->limit < 0 || $instance->limit > 1 ) : ?>
                                 multiple: true,
                             <?php endif; ?>
@@ -239,6 +239,8 @@ if ( !class_exists( 'Attachments' ) ) :
                         frame = wp.media( options );
 
                         // frame.get('library').set( 'filterable', 'uploaded' );
+
+                        // TODO: Implement file count limit
 
                         frame.toolbar.on( 'activate:select', function() {
                             frame.toolbar.view().set({
