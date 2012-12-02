@@ -77,7 +77,6 @@
             // we'll loop through the legacy Attachments and save them in the new format
             foreach( $post_attachments as $legacy_attachment )
             {
-
                 // convert to the new format
                 $converted_attachment = array( 'id' => $legacy_attachment['id'] );
 
@@ -129,35 +128,35 @@
 
     <div id="icon-options-general" class="icon32"><br /></div>
 
-    <h2><?php esc_html_e( 'Attachments', 'attachments' ); ?></h2>
+    <h2><?php _e( 'Attachments', 'attachments' ); ?></h2>
 
     <?php if( isset( $_GET['overview'] ) ) : ?>
 
         <div class="message updated" id="message">
-            <p><strong><?php esc_html_e( "Attachments has changed significantly since it's last update.", 'attachments' ); ?></strong> <?php esc_html_e( 'These changes', 'attachments' ); ?> <em><?php esc_html_e( 'will affect your themes and plugins', 'attachments' ); ?></em>.</p>
+            <p><?php _e( "<strong>Attachments has changed significantly since it's last update.</strong> These changes <em>will affect your themes and plugins</em>.", 'attachments' ); ?></p>
         </div>
 
-        <h4><?php esc_html_e( 'Immediate Reversal to Attachments 1.x', 'attachments' ); ?></h4>
+        <h4><?php _e( 'Immediate Reversal to Attachments 1.x', 'attachments' ); ?></h4>
 
-        <p><?php esc_html_e( 'If you would like to immediately', 'attachments' ); ?> <em><?php esc_html_e( 'revert to the old version of Attachments', 'attachments' ); ?></em> <?php esc_html_e( 'you may do so by downgrading the plugin install itself, or adding the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
+        <p><?php _e( 'If you would like to immediately <em>revert to the old version of Attachments</em> you may do so by downgrading the plugin install itself, or adding the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
 
         <pre><code>define( 'ATTACHMENTS_LEGACY', true );</code></pre>
 
-        <h2><?php esc_html_e( 'Overview of changes from Attachments 1.x', 'attachments' ); ?></h2>
+        <h2><?php _e( 'Overview of changes from Attachments 1.x', 'attachments' ); ?></h2>
 
-        <p><?php esc_html_e( "A lot has changed since Attachments 1.x. The entire codebase was rewritten to not only make better use of the stellar Media updates in WordPress 3.5, but to also facilitate some exciting features coming down the line. With this rewrite came significant changes to the way you will work with Attachments. One of the biggest changes in Attachments 3.0 is the ability to create multiple meta boxes of Attachments, each with any number of custom fields you define. By default, Attachments will re-implement the meta box you've been using until now, but", 'attachments' ); ?> <strong><?php esc_html_e( 'you will need to trigger a migration to the new format', 'attachments' ); ?></strong>.</p>
+        <p><?php _e( "A lot has changed since Attachments 1.x. The entire codebase was rewritten to not only make better use of the stellar Media updates in WordPress 3.5, but to also facilitate some exciting features coming down the line. With this rewrite came significant changes to the way you will work with Attachments. One of the biggest changes in Attachments 3.0 is the ability to create multiple meta boxes of Attachments, each with any number of custom fields you define. By default, Attachments will re-implement the meta box you've been using until now, but <strong>you will need to trigger a migration to the new format</strong>.", 'attachments' ); ?></p>
 
-        <h3><?php esc_html_e( 'Migrating Attachments 1.x data to Attachments 3.x', 'attachments' ); ?></h3>
+        <h3><?php _e( 'Migrating Attachments 1.x data to Attachments 3.x', 'attachments' ); ?></h3>
 
-        <p><?php esc_html_e( "If you have existing Attachments 1.x data and are using it, a migration script has been bundled here and you can use it below. If you would like to directly migrate from Attachments 1.x to Attachments 3.x you can use the defaults put in place and your data will be migrated to the new format quickly and easily. Alternatively, if you'd like to customize the fields you're using a bit, you can do that first and then adjust the migration parameters to map the old fields to your new ones.", 'attachments' ); ?></p>
+        <p><?php _e( "If you have existing Attachments 1.x data and are using it, a migration script has been bundled here and you can use it below. If you would like to directly migrate from Attachments 1.x to Attachments 3.x you can use the defaults put in place and your data will be migrated to the new format quickly and easily. Alternatively, if you'd like to customize the fields you're using a bit, you can do that first and then adjust the migration parameters to map the old fields to your new ones.", 'attachments' ); ?></p>
 
-        <h3><?php esc_html_e( 'Setting up Instances', 'attachments' ); ?></h3>
+        <h3><?php _e( 'Setting up Instances', 'attachments' ); ?></h3>
 
-        <p><?php esc_html_e( 'Attachments 3.0 ships with something called', 'attachments' ); ?> <em><?php esc_html_e( 'instances', 'attachments' ); ?></em>. <?php esc_html_e( 'An instance is equivalent to a meta box on an edit screen and it has a number of properties you can customize.', 'attachments' ); ?> <?php esc_html_e( 'Please read the', 'attachments' ); ?> <a href="https://github.com/jchristopher/attachments/blob/master/README.md#usage"><?php esc_html_e( 'Usage instructions', 'attachments' ); ?></a> <?php esc_html_e( 'for more information', 'attachments' ); ?>.</p>
+        <p><?php _e( 'Attachments 3.0 ships with what are called <em>instances</em>. An instance is equivalent to a meta box on an edit screen and it has a number of properties you can customize. Please read the README for more information.', 'attachments' ); ?> <a href="https://github.com/jchristopher/attachments/blob/master/README.md#usage"><?php _e( 'Additinoal instructions', 'attachments' ); ?>.</a></p>
 
-        <h3><?php esc_html_e( 'Retrieving Attachments in your theme', 'attachments' ); ?></h3>
+        <h3><?php _e( 'Retrieving Attachments in your theme', 'attachments' ); ?></h3>
 
-        <p><?php esc_html_e( 'As always has been the case with Attachments, editing your theme files is required. The syntax to do so has changed in Attachments 3.0.', 'attachments' ); ?> <?php esc_html_e( 'Please read the', 'attachments' ); ?> <a href="https://github.com/jchristopher/attachments/blob/master/README.md#usage"><?php esc_html_e( 'Usage instructions', 'attachments' ); ?></a> <?php esc_html_e( 'for more information', 'attachments' ); ?>.</p>
+        <p><?php _e( 'As always has been the case with Attachments, editing your theme files is required. The syntax to do so has changed in Attachments 3.0. Please read the', 'attachments' ); ?> <a href="https://github.com/jchristopher/attachments/blob/master/README.md#usage"><?php _e( 'Additinoal instructions', 'attachments' ); ?></a>.</p>
 
         <form action="options-general.php" method="get">
             <input type="hidden" name="page" value="attachments" />
@@ -184,8 +183,8 @@
                 case 1:
                     if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-1') ) wp_die( __( 'Invalid request', 'attachments' ) );
                     ?>
-                        <h3><?php esc_html_e( 'Migration Step 1', 'attachments' ); ?></h3>
-                        <p><?php esc_html_e( "In order to migrate Attachments 1.x data, you need to set which instance and fields in version 3.0+ you'd like to use:", 'attachments' ); ?></p>
+                        <h3><?php _e( 'Migration Step 1', 'attachments' ); ?></h3>
+                        <p><?php _e( "In order to migrate Attachments 1.x data, you need to set which instance and fields in version 3.0+ you'd like to use:", 'attachments' ); ?></p>
                         <form action="options-general.php" method="get">
                             <input type="hidden" name="page" value="attachments" />
                             <input type="hidden" name="migrate" value="2" />
@@ -194,29 +193,29 @@
                                 <tbody>
                                     <tr valign="top">
                                         <th scope="row">
-                                            <label for="attachments-instance"><?php esc_html_e( 'Attachments 3.x Instance', 'attachments' ); ?></label>
+                                            <label for="attachments-instance"><?php _e( 'Attachments 3.x Instance', 'attachments' ); ?></label>
                                         </th>
                                         <td>
                                             <input name="attachments-instance" id="attachments-instance" value="attachments" class="regular-text" />
-                                            <p class="description"><?php esc_html_e( 'The instance name you would like to use in the migration. Required.', 'attachments' ); ?></p>
+                                            <p class="description"><?php _e( 'The instance name you would like to use in the migration. Required.', 'attachments' ); ?></p>
                                         </td>
                                     </tr>
                                     <tr valign="top">
                                         <th scope="row">
-                                            <label for="attachments-title"><?php esc_html_e( 'Attachments 3.x Title', 'attachments' ); ?></label>
+                                            <label for="attachments-title"><?php _e( 'Attachments 3.x Title', 'attachments' ); ?></label>
                                         </th>
                                         <td>
                                             <input name="attachments-title" id="attachments-title" value="title" class="regular-text" />
-                                            <p class="description"><?php esc_html_e( 'The', 'attachments' ); ?> <code><?php esc_html_e( 'Title', 'attachments' ); ?></code> <?php esc_html_e( 'field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard.', 'attachments' ); ?></p>
+                                            <p class="description"><?php _e( 'The <code>Title</code> field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard.', 'attachments' ); ?></p>
                                         </td>
                                     </tr>
                                     <tr valign="top">
                                         <th scope="row">
-                                            <label for="attachments-caption"><?php esc_html_e( 'Attachments 3.x Caption', 'attachments' ); ?></label>
+                                            <label for="attachments-caption"><?php _e( 'Attachments 3.x Caption', 'attachments' ); ?></label>
                                         </th>
                                         <td>
                                             <input name="attachments-caption" id="attachments-caption" value="caption" class="regular-text" />
-                                            <p class="description"><?php esc_html_e( 'The', 'attachments' ); ?> <code><?php esc_html_e( 'Caption', 'attachments' ); ?></code> <?php esc_html_e( 'field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard.', 'attachments' ); ?></p>
+                                            <p class="description"><?php _e( 'The <code>Caption</code> field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard.', 'attachments' ); ?></p>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -233,8 +232,8 @@
 
                     $total = attachments_migrate( $_GET['attachments-instance'], $_GET['attachments-title'], $_GET['attachments-caption'] );
                     ?>
-                        <h3><?php esc_html_e( 'Migration Complete!', 'attachments' ); ?></h3>
-                        <p><?php esc_html_e( 'The migration has completed.', 'attachments' ); ?> <strong><?php echo $total; ?> <?php esc_html_e( 'record', 'attachments' ); ?><?php if( $total !== 1 ) : ?>s<?php endif; ?></strong> <?php if( $total !== 1 ) : ?><?php esc_html_e( 'have', 'attachments' ); ?><?php else: ?><?php esc_html_e( 'has', 'attachments' ); ?><?php endif; ?> <?php esc_html_e( 'been migrated', 'attachments' ); ?>.</p>
+                        <h3><?php _e( 'Migration Complete!', 'attachments' ); ?></h3>
+                        <p><?php _e( 'The migration has completed.', 'attachments' ); ?> <strong><?php _e( 'Migrated', 'attachments'); ?>: <?php echo $total; ?></strong>.</p>
                     <?php
 
                     // make sure the database knows the migration has run
@@ -246,13 +245,13 @@
         else
         { ?>
             <?php if( false == get_option( 'attachments_migrated' ) && $legacy->found_posts ) : ?>
-                <h2><?php esc_html_e( 'Migrate legacy Attachments', 'attachments' ); ?></h2>
-                <p><?php esc_html_e( 'Attachments has found records from version 1.x. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
-                <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php esc_html_e( 'Migrate legacy Attachments', 'attachments' ); ?></a></p>
+                <h2><?php _e( 'Migrate legacy Attachments', 'attachments' ); ?></h2>
+                <p><?php _e( 'Attachments has found records from version 1.x. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
+                <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy Attachments', 'attachments' ); ?></a></p>
             <?php elseif( true == get_option( 'attachments_migrated' ) ) : ?>
-                <p><?php esc_html_e( 'You have already migrated your legacy Attachments. No settings necessary!', 'attachments' ); ?></p>
+                <p><?php _e( 'You have already migrated your legacy Attachments. No settings necessary!', 'attachments' ); ?></p>
             <?php else: ?>
-                <p><?php esc_html_e( 'This settings screen is currently not in use.', 'attachments' ); ?></p>
+                <p><?php _e( 'This settings screen is currently not in use.', 'attachments' ); ?></p>
             <?php endif; ?>
         <?php }
 

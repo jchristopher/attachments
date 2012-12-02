@@ -643,8 +643,8 @@ if ( !class_exists( 'Attachments' ) ) :
             $params['label']        = esc_html( $params['label'] );
             $params['limit']        = intval( $params['limit'] );
             $params['note']         = esc_sql( $params['note'] );
-            $params['button_text']  = esc_html( $params['button_text'] );
-            $params['modal_text']   = esc_html( $params['modal_text'] );
+            $params['button_text']  = esc_attr( $params['button_text'] );
+            $params['modal_text']   = esc_attr( $params['modal_text'] );
 
             // make sure we've got valid filetypes
             if( is_array( $params['filetype'] ) )
@@ -866,7 +866,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         <div class="attachment-details attachment-info details">
                             <div class="filename"><?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?></div>
                             <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
-                            <div class="delete-attachment"><a href="#"><?php esc_html_e( 'Delete', 'attachments' ); ?></a></div>
+                            <div class="delete-attachment"><a href="#"><?php _e( 'Delete', 'attachments' ); ?></a></div>
                         </div>
                     </div>
 
@@ -1082,7 +1082,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             if( $this->has_outstanding_legacy_data() && ( isset( $_GET['page'] ) && $_GET['page'] !== 'attachments' || !isset( $_GET['page'] ) ) ) : ?>
                 <div class="message updated" id="message">
-                    <p><strong><?php esc_html_e( 'Attachments', 'attachments' ); ?> <?php echo $this->version; ?> <?php esc_html_e( 'has detected legacy Attachments data', 'attachments' ); ?>.</strong> <?php esc_html_e( 'A lot has changed since Attachments 1.x', 'attachments' ); ?>. <a href="options-general.php?page=attachments&amp;overview=1"><?php esc_html_e( 'Find out more', 'attachments' ); ?>.</a></p>
+                    <p><?php _e( '<strong>Attachments has detected legacy Attachments data.</strong> A lot has changed since Attachments 1.x.' ,'attachments' ); ?> <a href="options-general.php?page=attachments&amp;overview=1"><?php _e( 'Find out more', 'attachments' ); ?>.</a></p>
                 </div>
             <?php endif;
         }
