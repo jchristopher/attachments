@@ -164,7 +164,7 @@
             <input type="hidden" name="nonce" value="<?php echo wp_create_nonce( 'attachments-dismiss' ); ?>" />
 
             <p class="submit">
-                <input type="submit" name="submit" id="submit" class="button button-secondary" value="<?php esc_attr_e( 'Dismiss these notices permanently', 'attachments' ); ?>" />
+                <input type="submit" name="submit" id="submit" class="button button-secondary" value="<?php esc_attr_e( 'Dismiss these notices without migrating', 'attachments' ); ?>" />
             </p>
         </form>
 
