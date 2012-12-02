@@ -1,5 +1,8 @@
 <?php
 
+// Exit if accessed directly
+if( !defined( 'ABSPATH' ) ) exit;
+
 /**
  * Compares two array values with the same key "order"
  *

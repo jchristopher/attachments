@@ -1,4 +1,13 @@
 <?php
+
+    // Exit if accessed directly
+    if( !defined( 'ABSPATH' ) ) exit;
+
+    /**
+     * Migrate Attachments 1.x records to 3.0's format
+     *
+     * @since 3.0
+     */
     function attachments_migrate( $instance = null, $title = null, $caption = null )
     {
         // sanitize

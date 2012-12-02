@@ -10,6 +10,9 @@
  * @subpackage Main
  */
 
+// Exit if accessed directly
+if( !defined( 'ABSPATH' ) ) exit;
+
 // Declare our class
 if ( !class_exists( 'Attachments' ) ) :
 
@@ -99,6 +102,7 @@ if ( !class_exists( 'Attachments' ) ) :
             // with version 3 we'll be giving at least one admin notice
             add_action( 'admin_notices',              array( $this, 'admin_notice' ) );
 
+            // set our attachments if necessary
             if( !is_null( $instance ) )
                 $this->attachments = $this->get_attachments( $instance, $post_id );
         }
