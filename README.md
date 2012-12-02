@@ -22,19 +22,19 @@ Attachments allows you to simply append any number of items from your WordPress 
 1. Download the plugin and extract the files
 1. Upload `attachments` to your `~/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Implement Attachments in your theme's `functions.php` or your own plugin (see **Usage**)
-1. Update your templates where applicable (see **Usage**)
+1. Implement Attachments in your theme's `functions.php` or your own plugin (see **[Usage](#usage)**)
+1. Update your templates where applicable (see **[Usage](#usage)**)
 
 ## Upgrade Notice
 
-<dl>
-<dt>3.0</dt>
-<dd><p><strong>You will need to update your theme files that use Attachments 3.0</strong>. Version 1.x of Attachments has been *fully deprecated* but is still available. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your wp-config.php:</p>
+#### 3.0
+**You will need to update your theme files that use Attachments 3.0**. Version 1.x of Attachments has been *fully deprecated* but is still available. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your wp-config.php:
 
-<pre><code>define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments</code></pre>
+```php
+define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments
+```
 
-<p>Version 3 is a <strong>major</strong> rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.</p></dd>
-</dl>
+Version 3 is a **major** rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
 
 ## Usage
 
@@ -46,13 +46,7 @@ When Attachments is first activated, a default instance is created titled Attach
 If you would like to *disable the default instance* (meta box titled 'Attachments' with a 'Title' and 'Caption' field) add the following to your `wp-config.php`:
 
 ```php
-<?php
-function my_disable_attachments_default_instance()
-{
-  return false;
-}
-
-add_filter( 'attachments_disable_default_instance', 'my_disable_attachments_default_instance' );
+define( 'ATTACHMENTS_DEFAULT_INSTANCE', false );
 ```
 
 You may create instances with your own custom fields by using the `attachments_register` action. To create your own instance add the following to your theme's `functions.php` or your own plugin:
@@ -101,7 +95,7 @@ function my_attachments( $attachments )
       ),
     ),
 
-);
+  );
 
   $attachments->register( 'my_attachments', $args ); // unique instance name
 }
@@ -189,19 +183,19 @@ You can also retrieve various attributes of the current Attachment directly usin
 
 #### Attachments isn't showing up on my edit screens
 
-You will need to tell Attachments which instances you'd like to use. Please reference the **Usage** instructions.
+You will need to tell Attachments which instances you'd like to use. Please reference the **[Usage](#usage)** instructions.
 
 #### Attachments are not showing up in my theme
 
-You will need to edit your theme files where applicable. Please reference the **Usage** instructions.
+You will need to edit your theme files where applicable. Please reference the **[Usage](#usage)** instructions.
 
 #### How do I disable the default Attachments meta box?
 
-You will need to edit your Attachments configuration. Please reference the **Usage** instructions.
+You will need to edit your Attachments configuration. Please reference the **[Usage](#usage)** instructions.
 
 #### How do I change the fields for each Attachment?
 
-You will need to edit your Attachments configuration. Please reference the **Usage** instructions.
+You will need to edit your Attachments configuration. Please reference the **[Usage](#usage)** instructions.
 
 #### Where are uploads saved?
 
@@ -222,7 +216,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
     <dd> Configuration now takes place within your theme or a plugin</dd>
     <dd> Multiple meta boxes! You can segment groups of Attachments with new instances, each unique</dd>
     <dd> Dynamic fields! You can manipulate which fields each instance uses</dd>
-    <dd> File type limits. Limit which files are available to Attachments (e.g. images, audio, video, all)</dd>
+    <dd> File type limits. Limit which files are available to Attachments (e.g. images, audio, video)</dd>
 
 </dl>
 

@@ -65,7 +65,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 * Configuration now takes place within your theme or a plugin
 * Multiple meta boxes! You can segment groups of Attachments with new instances, each unique
 * Dynamic fields! You can manipulate which fields each instance uses
-* File type limits. Limit which files are available to Attachments (e.g. images, audio, video, all)
+* File type limits. Limit which files are available to Attachments (e.g. images, audio, video)
 
 = 1.6.2.1 =
 * Fixed an issue with Handlebars in Firefox
@@ -229,13 +229,7 @@ When Attachments is first activated, a default instance is created titled Attach
 
 If you would like to *disable the default instance* (meta box titled 'Attachments' with a 'Title' and 'Caption' field) add the following to your `wp-config.php`:
 
-`<?php
-function my_disable_attachments_default_instance()
-{
-  return false;
-}
-
-add_filter( 'attachments_disable_default_instance', 'my_disable_attachments_default_instance' );`
+`define( 'ATTACHMENTS_DEFAULT_INSTANCE', false );`
 
 You may create instances with your own custom fields by using the `attachments_register` action. To create your own instance add the following to your theme's `functions.php` or your own plugin:
 
@@ -283,7 +277,7 @@ function my_attachments( $attachments )
       ),
     ),
 
-);
+  );
 
   $attachments->register( 'my_attachments', $args ); // unique instance name
 }

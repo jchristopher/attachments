@@ -104,104 +104,6 @@ if ( !class_exists( 'Attachments' ) ) :
         }
 
 
-        function has_outstanding_legacy_data()
-        {
-            if(
-               // migration has not taken place and we have legacy data
-               ( false == get_option( 'attachments_migrated' ) && !empty( $this->legacy ) )
-
-               &&
-
-               // we're not intentionally ignoring the message
-               ( false == get_option( 'attachments_ignore_migration' ) )
-            )
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
-        function admin_notice()
-        {
-
-            if( $this->has_outstanding_legacy_data() && ( isset( $_GET['page'] ) && $_GET['page'] !== 'attachments' || !isset( $_GET['page'] ) ) ) : ?>
-                <div class="message updated" id="message">
-                    <p><strong>Attachments <?php echo $this->version; ?> has detected legacy Attachments data.</strong> A lot has changed since Attachments 1.x. <a href="options-general.php?page=attachments&amp;overview=1">Find out more.</a></p>
-                </div>
-            <?php endif;
-        }
-
-
-        function admin_pointer( $hook_suffix )
-        {
-
-            // Assume pointer shouldn't be shown
-            $enqueue_pointer_script_style = false;
-
-            // Get array list of dismissed pointers for current user and convert it to array
-            $dismissed_pointers = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
-
-            // Check if our pointer is not among dismissed ones
-            if( !in_array( 'attachments_upgrade_pointer', $dismissed_pointers ) ) {
-                $enqueue_pointer_script_style = true;
-
-                // Add footer scripts using callback function
-                add_action( 'admin_print_footer_scripts', array( $this, 'pointer_update' ) );
-            }
-
-            // Enqueue pointer CSS and JS files, if needed
-            if( $enqueue_pointer_script_style ) {
-                wp_enqueue_style( 'wp-pointer' );
-                wp_enqueue_script( 'wp-pointer' );
-            }
-        }
-
-
-        function pointer_update()
-        {
-            $pointer_content  = "<h3>". __( esc_attr( 'Attachments 3.0 brings big changes!' ), 'attachments' ) ."</h3>";
-            $pointer_content .= "<p>". __( esc_attr( 'It is very important that you take a few minutes to see what has been updated. The changes will affect your themes/plugins.' ), 'attachments' ) ."</p>";
-            ?>
-
-            <script type="text/javascript">
-            jQuery(document).ready( function($) {
-                $('#message a').pointer({
-                    content:'<?php echo $pointer_content; ?>',
-                    position:{
-                        edge:'top',
-                        align:'center'
-                    },
-                    pointerWidth:350,
-                    close:function() {
-                        $.post( ajaxurl, {
-                            pointer: 'attachments_upgrade_pointer',
-                            action: 'dismiss-wp-pointer'
-                        });
-                    }
-                }).pointer('open');
-            });
-            </script>
-            <?php
-        }
-
-
-
-        function admin_page()
-        {
-            add_options_page( 'Settings', 'Attachments', 'manage_options', 'attachments', array( $this, 'options_page' ) );
-        }
-
-
-        function options_page()
-        {
-            include_once( ATTACHMENTS_DIR . '/views/options.php' );
-        }
-
-
 
         /**
          * Returns whether or not the current object has any Attachments
@@ -393,15 +295,8 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function do_actions_filters()
         {
-            // allow user to disable the default instance
-            $this->default_instance = apply_filters( 'attachments_disable_default_instance', $this->default_instance );
-
-            // in case we no longer have a bool
-            if( !is_bool( $this->default_instance ) )
-                $this->default_instance = false;
-
             // implement our default instance if appropriate
-            if( $this->default_instance )
+            if( !defined( 'ATTACHMENTS_DEFAULT_INSTANCE' ) )
                 $this->register();
 
             // facilitate user-defined instance registration
@@ -1142,6 +1037,139 @@ if ( !class_exists( 'Attachments' ) ) :
             }
 
             return $attachments;
+        }
+
+
+
+        /**
+         * Determines whether or not there is 'active' legacy data the user may not know about
+         *
+         * @since 3.0
+         */
+        function has_outstanding_legacy_data()
+        {
+            if(
+               // migration has not taken place and we have legacy data
+               ( false == get_option( 'attachments_migrated' ) && !empty( $this->legacy ) )
+
+               &&
+
+               // we're not intentionally ignoring the message
+               ( false == get_option( 'attachments_ignore_migration' ) )
+            )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+
+        /**
+         * Outputs a WordPress message to notify user of legacy data
+         *
+         * @since 3.0
+         */
+        function admin_notice()
+        {
+
+            if( $this->has_outstanding_legacy_data() && ( isset( $_GET['page'] ) && $_GET['page'] !== 'attachments' || !isset( $_GET['page'] ) ) ) : ?>
+                <div class="message updated" id="message">
+                    <p><strong>Attachments <?php echo $this->version; ?> has detected legacy Attachments data.</strong> A lot has changed since Attachments 1.x. <a href="options-general.php?page=attachments&amp;overview=1">Find out more.</a></p>
+                </div>
+            <?php endif;
+        }
+
+
+
+        /**
+         * Implements our WordPress pointer if necessary
+         *
+         * @since 3.0
+         */
+        function admin_pointer( $hook_suffix )
+        {
+
+            // Assume pointer shouldn't be shown
+            $enqueue_pointer_script_style = false;
+
+            // Get array list of dismissed pointers for current user and convert it to array
+            $dismissed_pointers = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
+
+            // Check if our pointer is not among dismissed ones
+            if( !in_array( 'attachments_upgrade_pointer', $dismissed_pointers ) ) {
+                $enqueue_pointer_script_style = true;
+
+                // Add footer scripts using callback function
+                add_action( 'admin_print_footer_scripts', array( $this, 'pointer_update' ) );
+            }
+
+            // Enqueue pointer CSS and JS files, if needed
+            if( $enqueue_pointer_script_style ) {
+                wp_enqueue_style( 'wp-pointer' );
+                wp_enqueue_script( 'wp-pointer' );
+            }
+        }
+
+
+
+        /**
+         * Pointer that calls attention to legacy data
+         *
+         * @since 3.0
+         */
+        function pointer_update()
+        {
+            $pointer_content  = "<h3>". __( esc_attr( 'Attachments 3.0 brings big changes!' ), 'attachments' ) ."</h3>";
+            $pointer_content .= "<p>". __( esc_attr( 'It is very important that you take a few minutes to see what has been updated. The changes will affect your themes/plugins.' ), 'attachments' ) ."</p>";
+            ?>
+
+            <script type="text/javascript">
+            jQuery(document).ready( function($) {
+                $('#message a').pointer({
+                    content:'<?php echo $pointer_content; ?>',
+                    position:{
+                        edge:'top',
+                        align:'center'
+                    },
+                    pointerWidth:350,
+                    close:function() {
+                        $.post( ajaxurl, {
+                            pointer: 'attachments_upgrade_pointer',
+                            action: 'dismiss-wp-pointer'
+                        });
+                    }
+                }).pointer('open');
+            });
+            </script>
+            <?php
+        }
+
+
+
+        /**
+         * Callback to implement our Settings page
+         *
+         * @since 3.0
+         */
+        function admin_page()
+        {
+            add_options_page( 'Settings', 'Attachments', 'manage_options', 'attachments', array( $this, 'options_page' ) );
+        }
+
+
+
+        /**
+         * Callback to output our Settings page markup
+         *
+         * @since 3.0
+         */
+        function options_page()
+        {
+            include_once( ATTACHMENTS_DIR . '/views/options.php' );
         }
 
     }
