@@ -862,7 +862,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         <div class="attachment-details attachment-info details">
                             <div class="filename"><?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?></div>
                             <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
-                            <div class="delete-attachment"><a href="#">Delete</a></div>
+                            <div class="delete-attachment"><a href="#"><?php esc_html_e( 'Delete', 'attachments' ); ?></a></div>
                         </div>
                     </div>
 
@@ -1078,7 +1078,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             if( $this->has_outstanding_legacy_data() && ( isset( $_GET['page'] ) && $_GET['page'] !== 'attachments' || !isset( $_GET['page'] ) ) ) : ?>
                 <div class="message updated" id="message">
-                    <p><strong>Attachments <?php echo $this->version; ?> has detected legacy Attachments data.</strong> A lot has changed since Attachments 1.x. <a href="options-general.php?page=attachments&amp;overview=1">Find out more.</a></p>
+                    <p><strong><?php esc_html_e( 'Attachments', 'attachments' ); ?> <?php echo $this->version; ?> <?php esc_html_e( 'has detected legacy Attachments data', 'attachments' ); ?>.</strong> <?php esc_html_e( 'A lot has changed since Attachments 1.x', 'attachments' ); ?>. <a href="options-general.php?page=attachments&amp;overview=1"><?php esc_html_e( 'Find out more', 'attachments' ); ?>.</a></p>
                 </div>
             <?php endif;
         }
@@ -1123,8 +1123,8 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function pointer_update()
         {
-            $pointer_content  = "<h3>". __( esc_attr( 'Attachments 3.0 brings big changes!' ), 'attachments' ) ."</h3>";
-            $pointer_content .= "<p>". __( esc_attr( 'It is very important that you take a few minutes to see what has been updated. The changes will affect your themes/plugins.' ), 'attachments' ) ."</p>";
+            $pointer_content  = "<h3>". __( esc_html( 'Attachments 3.0 brings big changes!' ), 'attachments' ) ."</h3>";
+            $pointer_content .= "<p>". __( esc_html( 'It is very important that you take a few minutes to see what has been updated. The changes will affect your themes/plugins.' ), 'attachments' ) ."</p>";
             ?>
 
             <script type="text/javascript">
@@ -1157,7 +1157,7 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function admin_page()
         {
-            add_options_page( 'Settings', 'Attachments', 'manage_options', 'attachments', array( $this, 'options_page' ) );
+            add_options_page( 'Settings', __( 'Attachments', 'attachments' ), 'manage_options', 'attachments', array( $this, 'options_page' ) );
         }
 
 
