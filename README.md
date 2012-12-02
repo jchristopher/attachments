@@ -4,6 +4,15 @@ This is a WordPress plugin. [Official download available on WordPress Extend](ht
 
 Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types
 
+* [Description](#description)
+* [Installation](#installation)
+* **[Upgrade Notice](#upgrade-notice)** *Pay specific attention if upgrading from a version before 3.0*
+* [Usage](#usage)
+* [Screenshots](#screenshots)
+* [Frequently Asked Questions](#frequently-asked-questions)
+* [Changelog](#changelog)
+* [Roadmap](#roadmap)
+
 ## Description
 
 Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types. This plugin *does not* directly interact with your theme, you will need to edit your template files.
@@ -15,6 +24,17 @@ Attachments allows you to simply append any number of items from your WordPress 
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Implement Attachments in your theme's `functions.php` or your own plugin (see **Usage**)
 1. Update your templates where applicable (see **Usage**)
+
+## Upgrade Notice
+
+<dl>
+<dt>3.0</dt>
+<dd><p><strong>You will need to update your theme files that use Attachments 3.0</strong>. Version 1.x of Attachments has been *fully deprecated* but is still available. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your wp-config.php:</p>
+
+<pre><code>define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments</code></pre>
+
+<p>Version 3 is a <strong>major</strong> rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.</p></dd>
+</dl>
 
 ## Usage
 
@@ -89,19 +109,7 @@ function my_attachments( $attachments )
 add_action( 'attachments_register', 'my_attachments' );
 ```
 
-If you would like to **disable the default Attachments instance** add the following to your theme's `functions.php` or plugin:
-
-```php
-<?php
-function my_disable_attachments_default_instance()
-{
-  return false;
-}
-
-add_filter( 'attachments_disable_default_instance', 'my_disable_attachments_default_instance' );
-```
-
-Once your instances are set up and working, you'll also need to edit your theme's template files to pull the data to the front end. To retrieve the Attachments for the current post:
+Once your instances are set up and working, you'll also need to edit your theme's template files to pull the data to the front end. To retrieve the Attachments for the current post, add this within The Loop:
 
 ```php
 <?php $attachments = new Attachments( 'attachments' ); /* pass the instance name */ ?>
@@ -117,10 +125,29 @@ Once your instances are set up and working, you'll also need to edit your theme'
 <?php endif; ?>
 ```
 
-You can also retrieve various attributes of the current Attachment using these utility functions:
+If you want to get the Attachments for a post **outside The Loop**, add a second parameter with the post ID when instantiating Attachments:
 
 ```php
-<?php $attachments = new Attachments( 'attachments' ); /* pass the instance name */ ?>
+<?php
+  // retrieve all Attachments for the 'attachments' instance of post 123
+  $attachments = new Attachments( 'attachments', 123 );
+?>
+<?php if( $attachments->exist() ) : ?>
+  <h3>Attachments</h3>
+  <ul>
+    <?php while( $attachment = $attachments->get() ) : ?>
+      <li>
+        <pre><?php print_r( $attachment ); ?></pre>
+      </li>
+    <?php endwhile; ?>
+  </ul>
+<?php endif; ?>
+```
+
+You can also retrieve various attributes of the current Attachment directly using these utility functions:
+
+```php
+<?php $attachments = new Attachments( 'attachments' ); ?>
 <?php if( $attachments->exist() ) : ?>
   <h3>Attachments</h3>
   <ul>
@@ -197,17 +224,6 @@ Attachments uses WordPress' built in Media library for uploads and storage.
     <dd> Dynamic fields! You can manipulate which fields each instance uses</dd>
     <dd> File type limits. Limit which files are available to Attachments (e.g. images, audio, video, all)</dd>
 
-</dl>
-
-## Upgrade Notice
-
-<dl>
-<dt>3.0</dt>
-<dd><p><strong>You will need to update your theme files that use Attachments 3.0</strong>. Version 1.x of Attachments has been *fully deprecated* but is still available. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your wp-config.php:</p>
-
-<pre><code>define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments</code></pre>
-
-<p>Version 3 is a <strong>major</strong> rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.</p></dd>
 </dl>
 
 ## Roadmap

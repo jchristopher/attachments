@@ -290,19 +290,26 @@ function my_attachments( $attachments )
 
 add_action( 'attachments_register', 'my_attachments' );`
 
-If you would like to **disable the default Attachments instance** add the following to your theme's `functions.php` or plugin:
-
-`<?php
-function my_disable_attachments_default_instance()
-{
-  return false;
-}
-
-add_filter( 'attachments_disable_default_instance', 'my_disable_attachments_default_instance' );`
-
-Once your instances are set up and working, you'll also need to edit your theme's template files to pull the data to the front end. To retrieve the Attachments for the current post:
+Once your instances are set up and working, you'll also need to edit your theme's template files to pull the data to the front end. To retrieve the Attachments for the current post, add this within The Loop:
 
 `<?php $attachments = new Attachments( 'attachments' ); /* pass the instance name */ ?>
+<?php if( $attachments->exist() ) : ?>
+  <h3>Attachments</h3>
+  <ul>
+    <?php while( $attachment = $attachments->get() ) : ?>
+      <li>
+        <pre><?php print_r( $attachment ); ?></pre>
+      </li>
+    <?php endwhile; ?>
+  </ul>
+<?php endif; ?>`
+
+If you want to get the Attachments for a post **outside The Loop**, add a second parameter with the post ID when instantiating Attachments:
+
+`<?php
+  // retrieve all Attachments for the 'attachments' instance of post 123
+  $attachments = new Attachments( 'attachments', 123 );
+?>
 <?php if( $attachments->exist() ) : ?>
   <h3>Attachments</h3>
   <ul>

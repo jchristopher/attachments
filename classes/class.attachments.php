@@ -82,8 +82,23 @@ if ( !class_exists( 'Attachments' ) ) :
 
             add_action( 'save_post',                array( $this, 'save' ) );
 
+            add_action( 'admin_menu',               array( $this, 'admin_page' ) );
+
             if( !is_null( $instance ) )
                 $this->attachments = $this->get_attachments( $instance, $post_id );
+        }
+
+
+
+        function admin_page()
+        {
+            add_options_page( 'Settings', 'Attachments', 'manage_options', 'attachments', array( $this, 'options_page' ) );
+        }
+
+
+        function options_page()
+        {
+            include_once( ATTACHMENTS_DIR . '/views/options.php' );
         }
 
 
