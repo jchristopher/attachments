@@ -109,7 +109,7 @@
     {
         if( !wp_verify_nonce( $_GET['nonce'], 'attachments-dismiss') ) wp_die( 'Invalid request' );
 
-        update_option( 'attachments_ignore_migration', true );
+        add_option( 'attachments_ignore_migration', true, '', 'no' );
     }
 ?>
 
@@ -225,7 +225,7 @@
                     <?php
 
                     // make sure the database knows the migration has run
-                    update_option( 'attachments_migrated', true );
+                    add_option( 'attachments_migrated', true, '', 'no' );
 
                     break;
             }

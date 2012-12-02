@@ -61,6 +61,17 @@ if ( !class_exists( 'Attachments' ) ) :
             include_once( ATTACHMENTS_DIR . 'upgrade.php' );
             include_once( ATTACHMENTS_DIR . '/classes/class.field.php' );
 
+            // deal with our legacy issues if the user hasn't dismissed or migrated already
+            if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
+            {
+                $legacy         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
+                $this->legacy   = empty( $legacy->found_posts ) ? false : true;
+            }
+            else
+            {
+                $this->legacy   = false;
+            }
+
             // set our image sizes
             $this->image_sizes = array_merge( $this->image_sizes, get_intermediate_image_sizes() );
 
@@ -68,54 +79,113 @@ if ( !class_exists( 'Attachments' ) ) :
             $this->fields = $this->get_field_types();
 
             // hook into WP
-            add_action( 'admin_enqueue_scripts',    array( $this, 'assets' ) );
+            add_action( 'admin_enqueue_scripts',      array( $this, 'assets' ) );
+            add_action( 'admin_enqueue_scripts',      array( $this, 'admin_pointer' ) );
 
             // register our user-defined instances
-            add_action( 'init',                     array( $this, 'do_actions_filters' ) );
+            add_action( 'init',                       array( $this, 'do_actions_filters' ) );
 
             // determine which instances apply to the current post type
-            add_action( 'init',                     array( $this, 'set_instances_for_current_post_type' ) );
+            add_action( 'init',                       array( $this, 'set_instances_for_current_post_type' ) );
 
-            add_action( 'add_meta_boxes',           array( $this, 'meta_box_init' ) );
+            add_action( 'add_meta_boxes',             array( $this, 'meta_box_init' ) );
 
-            add_action( 'admin_footer',             array( $this, 'admin_footer' ) );
+            add_action( 'admin_footer',               array( $this, 'admin_footer' ) );
 
-            add_action( 'save_post',                array( $this, 'save' ) );
+            add_action( 'save_post',                  array( $this, 'save' ) );
 
-            add_action( 'admin_menu',               array( $this, 'admin_page' ) );
+            add_action( 'admin_menu',                 array( $this, 'admin_page' ) );
 
             // with version 3 we'll be giving at least one admin notice
-            add_action( 'admin_notices',            array( $this, 'admin_notice' ) );
+            add_action( 'admin_notices',              array( $this, 'admin_notice' ) );
 
             if( !is_null( $instance ) )
                 $this->attachments = $this->get_attachments( $instance, $post_id );
         }
 
 
+        function has_outstanding_legacy_data()
+        {
+            if(
+               // migration has not taken place and we have legacy data
+               ( false == get_option( 'attachments_migrated' ) && !empty( $this->legacy ) )
+
+               &&
+
+               // we're not intentionally ignoring the message
+               ( false == get_option( 'attachments_ignore_migration' ) )
+            )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         function admin_notice()
         {
-            $legacy = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
 
-            if(
-                // migration has not taken place and we have legacy data
-                ( false == get_option( 'attachments_migrated' ) && $legacy->found_posts )
-
-                &&
-
-                // we're not ignoring the message
-                ( false == get_option( 'attachments_ignore_migration' ) )
-
-                &&
-
-                // page var is set and page var == attachments, or it's not set
-                ( isset( $_GET['page'] ) && $_GET['page'] !== 'attachments' || !isset( $_GET['page'] ) )
-
-            ) : ?>
+            if( $this->has_outstanding_legacy_data() && ( isset( $_GET['page'] ) && $_GET['page'] !== 'attachments' || !isset( $_GET['page'] ) ) ) : ?>
                 <div class="message updated" id="message">
                     <p><strong>Attachments <?php echo $this->version; ?> has detected legacy Attachments data.</strong> A lot has changed since Attachments 1.x. <a href="options-general.php?page=attachments&amp;overview=1">Find out more.</a></p>
                 </div>
             <?php endif;
+        }
+
+
+        function admin_pointer( $hook_suffix )
+        {
+
+            // Assume pointer shouldn't be shown
+            $enqueue_pointer_script_style = false;
+
+            // Get array list of dismissed pointers for current user and convert it to array
+            $dismissed_pointers = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
+
+            // Check if our pointer is not among dismissed ones
+            if( !in_array( 'attachments_upgrade_pointer', $dismissed_pointers ) ) {
+                $enqueue_pointer_script_style = true;
+
+                // Add footer scripts using callback function
+                add_action( 'admin_print_footer_scripts', array( $this, 'pointer_update' ) );
+            }
+
+            // Enqueue pointer CSS and JS files, if needed
+            if( $enqueue_pointer_script_style ) {
+                wp_enqueue_style( 'wp-pointer' );
+                wp_enqueue_script( 'wp-pointer' );
+            }
+        }
+
+
+        function pointer_update()
+        {
+            $pointer_content  = "<h3>". __( esc_attr( 'Attachments 3.0 brings big changes!' ), 'attachments' ) ."</h3>";
+            $pointer_content .= "<p>". __( esc_attr( 'It is very important that you take a few minutes to see what has been updated. The changes will affect your themes/plugins.' ), 'attachments' ) ."</p>";
+            ?>
+
+            <script type="text/javascript">
+            jQuery(document).ready( function($) {
+                $('#message a').pointer({
+                    content:'<?php echo $pointer_content; ?>',
+                    position:{
+                        edge:'top',
+                        align:'center'
+                    },
+                    pointerWidth:350,
+                    close:function() {
+                        $.post( ajaxurl, {
+                            pointer: 'attachments_upgrade_pointer',
+                            action: 'dismiss-wp-pointer'
+                        });
+                    }
+                }).pointer('open');
+            });
+            </script>
+            <?php
         }
 
 
