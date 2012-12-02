@@ -233,8 +233,6 @@ If you would like to *disable the default instance* (meta box titled 'Attachment
 
 You may create instances with your own custom fields by using the `attachments_register` action. To create your own instance add the following to your theme's `functions.php` or your own plugin:
 
-You may create additional instances with custom fields by using the `attachments_register` action. To create your own instance add the following to your theme's `functions.php` or your own plugin:
-
 `<?php
 function my_attachments( $attachments )
 {
