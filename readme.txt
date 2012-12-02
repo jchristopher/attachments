@@ -217,8 +217,13 @@ Planned feature additions include:
 
 * Additional field type: textarea
 * Additional field type: WYSIWYG
+* Additional field type: checkbox
+* Additional field type: radio
+* Additional field type: select
 * User-defined limiting the number of Attachments per instance
-* User-defined custom fields
+* User-defined custom field types
+* Shortcode(s)
+* Output templates
 
 == Usage ==
 
