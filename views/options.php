@@ -71,6 +71,9 @@
 
             $existing_attachments = json_decode( $existing_attachments[0] );
 
+            if( !is_object( $existing_attachments ) )
+                $existing_attachments = new stdClass();
+
             // we'll loop through the legacy Attachments and save them in the new format
             foreach( $post_attachments as $legacy_attachment )
             {

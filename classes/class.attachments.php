@@ -423,7 +423,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
                         frame = wp.media( options );
 
-                        // frame.get('library').set( 'filterable', 'uploaded' );
+                        frame.state('library').set( 'filterable', 'uploaded' );
 
                         // TODO: Implement file count limit
 
