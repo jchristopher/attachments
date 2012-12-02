@@ -84,8 +84,38 @@ if ( !class_exists( 'Attachments' ) ) :
 
             add_action( 'admin_menu',               array( $this, 'admin_page' ) );
 
+            // with version 3 we'll be giving at least one admin notice
+            add_action( 'admin_notices',            array( $this, 'admin_notice' ) );
+
             if( !is_null( $instance ) )
                 $this->attachments = $this->get_attachments( $instance, $post_id );
+        }
+
+
+
+        function admin_notice()
+        {
+            $legacy = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
+
+            if(
+                // migration has not taken place and we have legacy data
+                ( false == get_option( 'attachments_migrated' ) && $legacy->found_posts )
+
+                &&
+
+                // we're not ignoring the message
+                ( false == get_option( 'attachments_ignore_migration' ) )
+
+                &&
+
+                // page var is set and page var == attachments, or it's not set
+                ( isset( $_GET['page'] ) && $_GET['page'] !== 'attachments' || !isset( $_GET['page'] ) )
+
+            ) : ?>
+                <div class="message updated" id="message">
+                    <p><strong>Attachments <?php echo $this->version; ?> has detected legacy Attachments data.</strong> A lot has changed since Attachments 1.x. <a href="options-general.php?page=attachments&amp;overview=1">Find out more.</a></p>
+                </div>
+            <?php endif;
         }
 
 
