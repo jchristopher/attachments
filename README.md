@@ -231,5 +231,6 @@ Planned feature additions include:
 * Additional field type: select
 * User-defined limiting the number of Attachments per instance
 * User-defined custom field types
+* Additional hooks/actions from top to bottom
 * Shortcode(s)
 * Output templates
