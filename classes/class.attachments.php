@@ -374,7 +374,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             <div id="attachments-<?php echo $instance->name; ?>">
                 <?php if( !empty( $instance->note ) ) : ?>
-                    <div class="attachments-note"><?php echo $instance->note; ?></div>
+                    <div class="attachments-note"><?php echo apply_filters( 'the_content', $instance->note ); ?></div>
                 <?php endif; ?>
                 <div class="attachments-container attachments-<?php echo $instance->name; ?>"><?php
                         if( isset( $instance->attachments ) && !empty( $instance->attachments ) )
@@ -405,12 +405,13 @@ if ( !class_exists( 'Attachments' ) ) :
 
                         event.preventDefault();
 
+                        // if the frame already exists, open it
                         if ( frame ) {
                             frame.open();
                             return;
                         }
 
-
+                        // set our seetings
                         frame = wp.media({
 
                             title: title,
@@ -430,6 +431,7 @@ if ( !class_exists( 'Attachments' ) ) :
                             }
                         });
 
+                        // set up our select handler
                         frame.on( 'select', function() {
                             selection = frame.state().get('selection');
                             if ( ! selection )
@@ -472,6 +474,9 @@ if ( !class_exists( 'Attachments' ) ) :
                                 }
                             });
                         });
+
+                        // open the frame
+                        frame.open();
 
                     });
 
@@ -1089,7 +1094,7 @@ if ( !class_exists( 'Attachments' ) ) :
             $dismissed_pointers = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
 
             // Check if our pointer is not among dismissed ones
-            if( !in_array( 'attachments_upgrade_pointer', $dismissed_pointers ) ) {
+            if( $this->legacy && !in_array( 'attachments_upgrade_pointer', $dismissed_pointers ) ) {
                 $enqueue_pointer_script_style = true;
 
                 // Add footer scripts using callback function
