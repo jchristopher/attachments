@@ -398,7 +398,6 @@ if ( !class_exists( 'Attachments' ) ) :
                     var $element     = $('#attachments-<?php echo esc_attr( $instance->name ); ?>'),
                         title        = '<?php echo __( esc_attr( $instance->label ) ); ?>',
                         button       = '<?php echo __( esc_attr( $instance->modal_text ) ); ?>',
-                        Attachment   = wp.media.model.Attachment,
                         frame;
 
                     $element.on( 'click', '.attachments-invoke', function( event ) {
@@ -411,83 +410,69 @@ if ( !class_exists( 'Attachments' ) ) :
                             return;
                         }
 
-                        options = {
+
+                        frame = wp.media({
+
                             title: title,
+
                             <?php if( $instance->limit < 0 || $instance->limit > 1 ) : ?>
                                 multiple: true,
                             <?php endif; ?>
+
                             library: {
                                 type: '<?php echo esc_attr( implode( ",", $instance->filetype ) ); ?>'
+                            },
+
+                            // Customize the submit button.
+                            button: {
+                                // Set the text of the button.
+                                text: button
                             }
-                        };
+                        });
 
-                        frame = wp.media( options );
+                        frame.on( 'select', function() {
+                            selection = frame.state().get('selection');
+                            if ( ! selection )
+                                return;
 
-                        frame.state('library').set( 'filterable', 'uploaded' );
+                            // compile our Underscore template using Mustache syntax
+                            _.templateSettings = {
+                                variable : 'attachments',
+                                interpolate : /\{\{(.+?)\}\}/g
+                            }
 
-                        // TODO: Implement file count limit
+                            var template = _.template($('script#tmpl-attachments-<?php echo $instance->name; ?>').html());
 
-                        frame.toolbar.on( 'activate:select', function() {
-                            frame.toolbar.view().set({
-                                select: {
-                                    style: 'primary',
-                                    text:  button,
+                            // loop through the selected files
+                            selection.each( function( attachment ) {
 
-                                    click: function() {
-                                        var selection = frame.state().get('selection');
+                                // set our attributes to the template
+                                attachment.attributes.attachment_uid = attachments_uniqid( 'attachmentsjs' );
 
-                                        if ( ! selection )
-                                            return;
+                                // only thumbnails have sizes which is what we're on the hunt for
+                                if(attachments_isset(attachment.attributes.sizes)){
+                                    // use the thumbnail
+                                    attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
+                                }else if(attachments_isset(attachment.attributes.icon)){
+                                    // use the icon
+                                    attachment.attributes.attachment_thumb = attachment.attributes.icon;
+                                }else{
+                                    // there's nothing to use...
+                                    attachment.attributes.attachment_thumb = '';
+                                }
 
-                                        // compile our Underscore template using Mustache syntax
-                                        _.templateSettings = {
-                                            variable : 'attachments',
-                                            interpolate : /\{\{(.+?)\}\}/g
-                                        }
+                                var templateData = attachment.attributes;
 
-                                        var template = _.template($('script#tmpl-attachments-<?php echo $instance->name; ?>').html());
+                                // append the template
+                                $element.find('.attachments-container').append(template(templateData));
 
-                                        // loop through the selected files
-                                        selection.each( function( attachment ) {
-
-                                            // set our attributes to the template
-                                            attachment.attributes.attachment_uid = attachments_uniqid( 'attachmentsjs' );
-
-                                            // only thumbnails have sizes which is what we're on the hunt for
-                                            if(attachments_isset(attachment.attributes.sizes)){
-                                                // use the thumbnail
-                                                attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
-                                            }else if(attachments_isset(attachment.attributes.icon)){
-                                                // use the icon
-                                                attachment.attributes.attachment_thumb = attachment.attributes.icon;
-                                            }else{
-                                                // there's nothing to use...
-                                                attachment.attributes.attachment_thumb = '';
-                                            }
-
-                                            var templateData = attachment.attributes;
-
-                                            // append the template
-                                            $element.find('.attachments-container').append(template(templateData));
-
-                                            // if it wasn't an image we need to ditch the dimensions
-                                            if(!attachments_isset(attachment.attributes.width)||!attachments_isset(attachment.attributes.height)){
-                                                $element.find('.attachments-attachment:last .dimensions').hide();
-                                            }
-                                        });
-
-                                        // clear our selection
-                                        selection.clear();
-
-                                        // close out the frame
-                                        frame.close();
-                                    }
+                                // if it wasn't an image we need to ditch the dimensions
+                                if(!attachments_isset(attachment.attributes.width)||!attachments_isset(attachment.attributes.height)){
+                                    $element.find('.attachments-attachment:last .dimensions').hide();
                                 }
                             });
                         });
 
-                        // set the environment
-                        frame.toolbar.mode('select');
                     });
 
                     $element.on( 'click', '.delete-attachment a', function( event ) {
