@@ -249,10 +249,19 @@
                 <p><?php _e( 'Attachments has found records from version 1.x. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
                 <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy Attachments', 'attachments' ); ?></a></p>
             <?php elseif( true == get_option( 'attachments_migrated' ) ) : ?>
-                <p><?php _e( 'You have already migrated your legacy Attachments. No settings necessary!', 'attachments' ); ?></p>
-            <?php else: ?>
-                <p><?php _e( 'This settings screen is currently not in use.', 'attachments' ); ?></p>
+                <p><?php _e( 'You have already migrated your legacy Attachments.', 'attachments' ); ?></p>
             <?php endif; ?>
+            <h2><?php _e( 'Revert to version 1.x', 'attachments' ); ?></h2>
+            <p><?php _e( 'If you would like to forcefully revert to the 1.x version branch of Attachments, add the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
+            <p><code>define( 'ATTACHMENTS_LEGACY', true );</code></p>
+            <h2><?php _e( 'Meta box customization', 'attachments' ); ?></h2>
+            <p><?php _e( 'By default, Attachments implements a single meta box on Posts and Pages with two fields. You can disable this default instance by adding the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
+            <p><code>define( 'ATTACHMENTS_DEFAULT_INSTANCE', false );</code></p>
+            <p><?php _e( "Your Attachments meta box(es) can be customized by adding the following to your theme's", 'attachments' ); ?> <code>functions.php</code>:</p>
+            <script src="https://gist.github.com/4217475.js"> </script>
+            <h2><?php _e( 'Using Attachments data in your theme', 'attachments' ); ?></h2>
+            <p><?php _e( "Attachments does not directly integrate with your theme out of the box, you will need to edit your theme's template files where appropriate. You can add the following within The Loop to retrieve all Attachments data for the current post:", 'attachments' ); ?></p>
+            <script src="https://gist.github.com/4217483.js"> </script>
         <?php }
 
     ?>
