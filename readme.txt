@@ -251,7 +251,7 @@ function my_attachments( $attachments )
     'post_type'     => array( 'post', 'page' ),
 
     // allowed file type(s) (array) (image|video|text|audio|application)
-    'filetype'      => null  // no filetype limit
+    'filetype'      => null,  // no filetype limit
 
     // include a note within the meta box (string)
     'note'          => 'Attach files here!',
