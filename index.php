@@ -32,7 +32,7 @@ if( !version_compare( PHP_VERSION, '5.2', '>=' ) && IS_ADMIN && ( !defined( 'DOI
 else
 {
 
-    if( ( defined( 'ATTACHMENTS_LEGACY' ) && ATTACHMENTS_LEGACY === true ) || version_compare( $wp_version, '3.5.beta3', '<=' ) )
+    if( ( defined( 'ATTACHMENTS_LEGACY' ) && ATTACHMENTS_LEGACY === true ) || version_compare( $wp_version, '3.5', '<=' ) )
     {
         // load deprecated version of Attachments
         require_once 'deprecated/attachments.php';
