@@ -1094,11 +1094,11 @@ if ( !class_exists( 'Attachments' ) ) :
             $dismissed_pointers = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
 
             // Check if our pointer is not among dismissed ones
-            if( $this->legacy && !in_array( 'attachments_upgrade_pointer', $dismissed_pointers ) ) {
+            if( $this->legacy && !in_array( 'attachments_legacy', $dismissed_pointers ) ) {
                 $enqueue_pointer_script_style = true;
 
                 // Add footer scripts using callback function
-                add_action( 'admin_print_footer_scripts', array( $this, 'pointer_update' ) );
+                add_action( 'admin_print_footer_scripts', array( $this, 'pointer_legacy' ) );
             }
 
             // Enqueue pointer CSS and JS files, if needed
@@ -1115,7 +1115,7 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function pointer_update()
+        function pointer_legacy()
         {
             $pointer_content  = "<h3>". __( esc_html( 'Attachments 3.0 brings big changes!' ), 'attachments' ) ."</h3>";
             $pointer_content .= "<p>". __( esc_html( 'It is very important that you take a few minutes to see what has been updated. The changes will affect your themes/plugins.' ), 'attachments' ) ."</p>";
@@ -1132,7 +1132,7 @@ if ( !class_exists( 'Attachments' ) ) :
                     pointerWidth:350,
                     close:function() {
                         $.post( ajaxurl, {
-                            pointer: 'attachments_upgrade_pointer',
+                            pointer: 'attachments_legacy',
                             action: 'dismiss-wp-pointer'
                         });
                     }
