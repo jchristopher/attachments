@@ -245,6 +245,12 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
+	<dt>3.0.2</dt>
+	<dd>Fixed an issue where some HTML entities were not properly stored</dd>
+
+	<dt>3.0.1</dt>
+	<dd>Fixed an issue where legacy mode was always enabled</dd>
+
     <dt>3.0</dt>
     <dd> <strong>Major</strong> rewrite. After three years of development, Attachments has been rewritten to make
           even better use of what WordPress has to offer</dd>
