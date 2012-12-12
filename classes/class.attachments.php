@@ -970,20 +970,23 @@ if ( !class_exists( 'Attachments' ) ) :
         function get_attachments( $instance = '', $post_id = null )
         {
             global $post;
-
-            if( is_null( $post_id ) && is_object( $post ) && isset( $post->ID ) )
-            {
-                $post_id = $post->ID;
-            }
-            elseif( isset( $_GET['post'] ) )
-            {
-                $post_id = intval( $_GET['post'] );
-            }
-            else
-            {
-                // no post ID, nothing to do...
-                return;
-            }
+            
+			if (is_null($post_id))
+			{	
+				if( is_null( $post_id ) && is_object( $post ) && isset( $post->ID ) )
+				{
+					$post_id = $post->ID;
+				}
+				elseif( isset( $_GET['post'] ) )
+				{
+					$post_id = intval( $_GET['post'] );
+				}
+				else
+				{
+					// no post ID, nothing to do...
+					return;
+				}
+			}
 
             $attachments_raw = json_decode( get_post_meta( $post_id, $this->meta_key, true ) );
 
