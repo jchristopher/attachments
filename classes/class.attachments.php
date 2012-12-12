@@ -945,7 +945,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         foreach( $attachment['fields'] as $key => $field_value )
                         {
                             // slashes were already added so we're going to strip them and encode ourselves
-                            $attachment['fields'][$key] = htmlentities( stripslashes( $field_value ), ENT_QUOTES );
+                            $attachment['fields'][$key] = htmlentities( stripslashes( $field_value ), ENT_QUOTES, 'UTF-8' );
                         }
                     }
 
@@ -1013,7 +1013,7 @@ if ( !class_exists( 'Attachments' ) ) :
                                 if( isset( $this->fields[$type] ) )
                                 {
                                     // we need to decode the html entities that were encoded for the save
-                                    $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES );
+                                    $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES, 'UTF-8' );
                                 }
                                 else
                                 {
