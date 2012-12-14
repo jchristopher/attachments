@@ -245,11 +245,15 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
-	<dt>3.0.2</dt>
-	<dd>Fixed an issue where some HTML entities were not properly stored</dd>
+    <dt>3.0.3</dt>
+    <dd>Fixed an issue that prevented defining a post ID when retrieving Attachments outside The Loop</dd>
+    <dd>Cleaned up potential PHP warning when Attachments were requested for a post that had none</dd>
 
-	<dt>3.0.1</dt>
-	<dd>Fixed an issue where legacy mode was always enabled</dd>
+    <dt>3.0.2</dt>
+    <dd>Fixed an issue where some HTML entities were not properly stored</dd>
+
+    <dt>3.0.1</dt>
+    <dd>Fixed an issue where legacy mode was always enabled</dd>
 
     <dt>3.0</dt>
     <dd> <strong>Major</strong> rewrite. After three years of development, Attachments has been rewritten to make

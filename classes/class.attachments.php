@@ -971,7 +971,12 @@ if ( !class_exists( 'Attachments' ) ) :
         {
             global $post;
 
-            if( is_null( $post_id ) && is_object( $post ) && isset( $post->ID ) )
+            // if a post id was passed, we'll use it
+            if( !is_null( $post_id ) )
+            {
+                $post_id = intval( $post_id );
+            }
+            elseif( is_null( $post_id ) && is_object( $post ) && isset( $post->ID ) )
             {
                 $post_id = $post->ID;
             }
@@ -985,7 +990,9 @@ if ( !class_exists( 'Attachments' ) ) :
                 return;
             }
 
-            $attachments_raw = json_decode( get_post_meta( $post_id, $this->meta_key, true ) );
+            // grab our JSON and decode it
+            $attachments_json   = get_post_meta( $post_id, $this->meta_key, true );
+            $attachments_raw    = is_string( $attachments_json ) ? json_decode( $attachments_json ) : false;
 
             // we need to decode the fields (that were encoded during save) and run them through
             // their format_value_for_input as defined in it's class
