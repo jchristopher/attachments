@@ -56,7 +56,7 @@ if ( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-            $this->version  = '3.0';
+            $this->version  = '3.0.5';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -438,7 +438,9 @@ if ( !class_exists( 'Attachments' ) ) :
 
                         // set up our select handler
                         attachmentsframe.on( 'select', function() {
+	
                             selection = attachmentsframe.state().get('selection');
+
                             if ( ! selection )
                                 return;
 
@@ -456,16 +458,15 @@ if ( !class_exists( 'Attachments' ) ) :
                                 // set our attributes to the template
                                 attachment.attributes.attachment_uid = attachments_uniqid( 'attachmentsjs' );
 
+                                // by default use the generic icon
+                                attachment.attributes.attachment_thumb = attachment.attributes.icon;
+
                                 // only thumbnails have sizes which is what we're on the hunt for
-                                if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
-                                    // use the thumbnail
-                                    attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
-                                }else if(attachments_isset(attachment.attributes.icon)){
-                                    // use the icon
-                                    attachment.attributes.attachment_thumb = attachment.attributes.icon;
-                                }else{
-                                    // there's nothing to use...
-                                    attachment.attributes.attachment_thumb = '';
+                                if(attachments_isset(attachment.attributes.sizes)){
+                                    if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
+                                        // use the thumbnail
+                                        attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
+                                    }
                                 }
 
                                 var templateData = attachment.attributes;
@@ -631,11 +632,6 @@ if ( !class_exists( 'Attachments' ) ) :
             // sanitize
             if( !is_array( $params['post_type'] ) )
                 $params['post_type'] = array( $params['post_type'] );   // we always want an array
-
-            // sometimes developers use dashes in CPT names; bad news bears
-            foreach( $params['post_type'] as $key => $post_type )
-                $params['post_type'][$key] = str_replace( '-', '_', $post_type );
-            
 
             if( !is_array( $params['filetype'] ) )
                 $params['filetype'] = array( $params['filetype'] );     // we always want an array

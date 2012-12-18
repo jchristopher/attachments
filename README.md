@@ -245,6 +245,10 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
+    <dt>3.0.5</dt>
+    <dd>Fixed a regression in handling Custom Post Type names that would too aggressively interfere with instance regustration</dd>
+    <dd>Fixed an issue when working with non-image Attachments</dd>
+
     <dt>3.0.4</dt>
     <dd>Fixed an issue that prevented the choosing of a Featured Image for a Custom Post Type if Attachments was activated</dd>
     <dd>Attachments now only enqueues its assets on edit screens that actually utilize Attachments</dd>
