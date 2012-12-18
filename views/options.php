@@ -231,10 +231,15 @@
                     if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-2') ) wp_die( __( 'Invalid request', 'attachments' ) );
 
                     $total = attachments_migrate( $_GET['attachments-instance'], $_GET['attachments-title'], $_GET['attachments-caption'] );
+                    
+                    if( false == get_option( 'attachments_migrated' ) ) :
                     ?>
                         <h3><?php _e( 'Migration Complete!', 'attachments' ); ?></h3>
                         <p><?php _e( 'The migration has completed.', 'attachments' ); ?> <strong><?php _e( 'Migrated', 'attachments'); ?>: <?php echo $total; ?></strong>.</p>
-                    <?php
+                    <?php else : ?>
+                        <h3><?php _e( 'Migration Already Run!', 'attachments' ); ?></h3>
+                        <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
+                    <?php endif;
 
                     // make sure the database knows the migration has run
                     add_option( 'attachments_migrated', true, '', 'no' );

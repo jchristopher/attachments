@@ -82,14 +82,14 @@ if ( !class_exists( 'Attachments' ) ) :
             $this->fields = $this->get_field_types();
 
             // hook into WP
-            add_action( 'admin_enqueue_scripts',      array( $this, 'assets' ) );
-            add_action( 'admin_enqueue_scripts',      array( $this, 'admin_pointer' ) );
+            add_action( 'admin_enqueue_scripts',      array( $this, 'assets' ), 999, 1 );
+            add_action( 'admin_enqueue_scripts',      array( $this, 'admin_pointer' ), 999 );
 
             // register our user-defined instances
             add_action( 'init',                       array( $this, 'do_actions_filters' ) );
 
             // determine which instances apply to the current post type
-            add_action( 'init',                       array( $this, 'set_instances_for_current_post_type' ) );
+            add_action( 'init',                       array( $this, 'set_instances_for_current_post_type' ), 999 );
 
             add_action( 'add_meta_boxes',             array( $this, 'meta_box_init' ) );
 
@@ -316,16 +316,21 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function assets( $hook )
         {
+            global $post;
+            
             // we only want our assets on edit screens
             if( !empty( $this->instances_for_post_type ) && 'edit.php' != $hook && 'post.php' != $hook && 'post-new.php' != $hook )
                 return;
+                
+            // we only want to enqueue if appropriate
+            if( empty( $this->instances_for_post_type ) )
+                return;
 
-            wp_enqueue_media();
+            $post_id = isset( $post->ID ) ? $post->ID : null;
+            wp_enqueue_media( array( 'post' => $post_id ) );
 
             wp_enqueue_style( 'attachments', trailingslashit( $this->url ) . 'css/attachments.css', null, $this->version, 'screen' );
 
-            wp_enqueue_script( 'underscore' );
-            wp_enqueue_script( 'backbone' );
             wp_enqueue_script( 'attachments', trailingslashit( $this->url ) . 'js/attachments.js', array( 'jquery', 'jquery-ui-sortable' ), $this->version, true );
         }
 
@@ -398,7 +403,7 @@ if ( !class_exists( 'Attachments' ) ) :
                     var $element     = $('#attachments-<?php echo esc_attr( $instance->name ); ?>'),
                         title        = '<?php echo __( esc_attr( $instance->label ) ); ?>',
                         button       = '<?php echo __( esc_attr( $instance->modal_text ) ); ?>',
-                        frame;
+                        attachmentsframe;
 
                     $element.on( 'click', '.attachments-invoke', function( event ) {
                         var options, attachment;
@@ -406,13 +411,13 @@ if ( !class_exists( 'Attachments' ) ) :
                         event.preventDefault();
 
                         // if the frame already exists, open it
-                        if ( frame ) {
-                            frame.open();
+                        if ( attachmentsframe ) {
+                            attachmentsframe.open();
                             return;
                         }
 
                         // set our seetings
-                        frame = wp.media({
+                        attachmentsframe = wp.media({
 
                             title: title,
 
@@ -432,8 +437,8 @@ if ( !class_exists( 'Attachments' ) ) :
                         });
 
                         // set up our select handler
-                        frame.on( 'select', function() {
-                            selection = frame.state().get('selection');
+                        attachmentsframe.on( 'select', function() {
+                            selection = attachmentsframe.state().get('selection');
                             if ( ! selection )
                                 return;
 
@@ -452,7 +457,7 @@ if ( !class_exists( 'Attachments' ) ) :
                                 attachment.attributes.attachment_uid = attachments_uniqid( 'attachmentsjs' );
 
                                 // only thumbnails have sizes which is what we're on the hunt for
-                                if(attachments_isset(attachment.attributes.sizes)){
+                                if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
                                     // use the thumbnail
                                     attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
                                 }else if(attachments_isset(attachment.attributes.icon)){
@@ -476,7 +481,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         });
 
                         // open the frame
-                        frame.open();
+                        attachmentsframe.open();
 
                     });
 
@@ -626,6 +631,11 @@ if ( !class_exists( 'Attachments' ) ) :
             // sanitize
             if( !is_array( $params['post_type'] ) )
                 $params['post_type'] = array( $params['post_type'] );   // we always want an array
+
+            // sometimes developers use dashes in CPT names; bad news bears
+            foreach( $params['post_type'] as $key => $post_type )
+                $params['post_type'][$key] = str_replace( '-', '_', $post_type );
+            
 
             if( !is_array( $params['filetype'] ) )
                 $params['filetype'] = array( $params['filetype'] );     // we always want an array

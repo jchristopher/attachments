@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,13 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.0.4 =
+* Fixed an issue that prevented the choosing of a Featured Image for a Custom Post Type if Attachments was activated
+* Attachments now only enqueues its assets on edit screens that actually utilize Attachments
+* Fixed a potential JavaScript error triggered when a 'thumbnail' image size was not available
+* Prevented incorrect usage of dashes used in CPT names for post_type argument when registering Attachments instances (fixes an integration issue with WP e-Commerce)
+* Prevented re-running of migration process to avoid duplicates (e.g. on browser reload)
 
 = 3.0.3 =
 * Fixed an issue that prevented defining a post ID when retrieving Attachments outside The Loop
@@ -381,7 +388,7 @@ You can also retrieve various attributes of the current Attachment using these u
         Source: <?php echo $attachments->src( 'full' ); ?><br />
         Size: <?php echo $attachments->filesize(); ?><br />
         Title Field: <?php echo $attachments->field( 'title' ); ?><br />
-        Caption Field: Name: <?php echo $attachments->field( 'caption' ); ?>
+        Caption Field: <?php echo $attachments->field( 'caption' ); ?>
       </li>
     <?php endwhile; ?>
   </ul>

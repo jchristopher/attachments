@@ -44,7 +44,7 @@ The idea behind Attachments is to give developers the ability to directly associ
         Source: <?php echo $attachments->src( 'full' ); ?><br />
         Size: <?php echo $attachments->filesize(); ?><br />
         Title Field: <?php echo $attachments->field( 'title' ); ?><br />
-        Caption Field: Name: <?php echo $attachments->field( 'caption' ); ?>
+        Caption Field: <?php echo $attachments->field( 'caption' ); ?>
       </li>
     <?php endwhile; ?>
   </ul>
@@ -244,6 +244,13 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 ## Changelog
 
 <dl>
+
+    <dt>3.0.4</dt>
+    <dd>Fixed an issue that prevented the choosing of a Featured Image for a Custom Post Type if Attachments was activated</dd>
+    <dd>Attachments now only enqueues its assets on edit screens that actually utilize Attachments</dd>
+    <dd>Fixed a potential JavaScript error triggered when a 'thumbnail' image size was not available</dd>
+    <dd>Prevented incorrect usage of dashes used in CPT names for post_type argument when registering Attachments instances (fixes an integration issue with WP e-Commerce)</dd>
+    <dd>Prevented re-running of migration process to avoid duplicates (e.g. on browser reload)</dd>
 
     <dt>3.0.3</dt>
     <dd>Fixed an issue that prevented defining a post ID when retrieving Attachments outside The Loop</dd>
