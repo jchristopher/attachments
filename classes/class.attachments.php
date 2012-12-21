@@ -547,7 +547,8 @@ if ( !class_exists( 'Attachments' ) ) :
         function get_field_types()
         {
             $field_types = array(
-                'text' => ATTACHMENTS_DIR . 'classes/fields/class.field.text.php'
+                'text'      => ATTACHMENTS_DIR . 'classes/fields/class.field.text.php',
+                'textarea'  => ATTACHMENTS_DIR . 'classes/fields/class.field.textarea.php',
             );
 
             // support custom field types
