@@ -246,6 +246,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
+    <dt>3.0.7</dt>
+    <dd>Proper sanitization of Custom Post Type names (as WordPress does it)</dd>
+
     <dt>3.0.6</dt>
     <dd>Fixed a possible JavaScript error if an Attachment that's an image doesn't have a proper thumbnail URL</dd>
     <dd>Added a total() method that will return the number of Attachments for the current instance</dd>

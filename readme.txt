@@ -29,6 +29,7 @@ The idea behind Attachments is to give developers the ability to directly associ
 `<?php $attachments = new Attachments( 'attachments' ); /* pass the instance name */ ?>
 <?php if( $attachments->exist() ) : ?>
   <h3>Attachments</h3>
+  <p>Total Attachments: <?php echo $attachments->total(); ?></p>
   <ul>
     <?php while( $attachments->get() ) : ?>
       <li>
@@ -93,6 +94,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.0.7 =
+* Proper sanitization of Custom Post Type names (as WordPress does it)
 
 = 3.0.6 =
 * Fixed a possible JavaScript error if an Attachment that's an image doesn't have a proper thumbnail URL
