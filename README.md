@@ -252,6 +252,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
     <dd>When requesting the image() for a non-image Attachment, the WordPress-defined icon will be returned</dd>
     <dd>Added an icon() method that will return the WordPress-defined icon for the Attachment</dd>
     <dd>Cleaned up a PHP Warning when trying to save for an undefined field type</dd>
+    <dd>Fixed an issue where template tags would be output for non-image Attachments after saving</dd>
 
     <dt>3.0.5</dt>
     <dd>Fixed a regression in handling Custom Post Type names that would too aggressively interfere with instance regustration</dd>

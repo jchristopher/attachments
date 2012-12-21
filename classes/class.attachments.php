@@ -685,6 +685,13 @@ if ( !class_exists( 'Attachments' ) ) :
                 }
             }
 
+            // print_r($params['post_type']);
+            // WordPress sanitizes post type names, so we will do
+            foreach( $params['post_type'] as $key => $post_type )
+                $params['post_type'][$key] = str_replace( '-', '_', sanitize_key( $post_type ) );
+
+            // print_r($params['post_type']);
+
             // make sure the instance name is proper
             $instance = str_replace( '-', '_', sanitize_title( $name ) );
 
@@ -892,7 +899,9 @@ if ( !class_exists( 'Attachments' ) ) :
                         </div>
                         <div class="attachment-details attachment-info details">
                             <div class="filename"><?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?></div>
-                            <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
+                            <?php if( ( isset( $attachment->id ) && isset( $attachment->width ) ) || !isset( $attachment->id ) ) : ?>
+                                <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
+                            <?php endif; ?>
                             <div class="delete-attachment"><a href="#"><?php _e( 'Delete', 'attachments' ); ?></a></div>
                         </div>
                     </div>
