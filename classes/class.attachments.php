@@ -56,7 +56,7 @@ if ( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-            $this->version  = '3.0.5';
+            $this->version  = '3.0.6';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -122,6 +122,18 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
         /**
+         * Returns the number of Attachments
+         *
+         * @since 3.0.6
+         */
+        function total()
+        {
+            return count( $this->attachments );
+        }
+
+
+
+        /**
          * Returns the next Attachment for the current object and increments the index
          *
          * @since 3.0
@@ -139,25 +151,56 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
         /**
-         * Returns an appropriate <img /> for the current Attachment if it's an image
+         * Returns the asset (array) for the current Attachment
          *
-         * @since 3.0
+         * @since 3.0.6
          */
-        function image( $size = 'thumbnail' )
+        function asset( $size = 'thumbnail' )
         {
             // do we have our meta yet?
             if( !isset( $this->attachments[$this->attachments_ref]->meta ) )
                 $this->attachments[$this->attachments_ref]->meta = wp_get_attachment_metadata( $this->attachments[$this->attachments_ref]->id );
 
             // is it an image?
-            if( !isset( $this->attachments[$this->attachments_ref]->meta['sizes'] ) )
-                return false;
+            if(
+                isset( $this->attachments[$this->attachments_ref]->meta['sizes'] ) &&  // is it an image?
+                in_array( $size, $this->image_sizes ) )                                // do we have the right size?
+            {
+                $asset = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, $size );
+            }
+            else
+            {
+                // either it's not an image or we don't have the proper size, so we'll use the icon
+                $asset = $this->icon();
+            }
 
-            // do we have the requested size?
-            if( !in_array( $size, $this->image_sizes ) )
-                return false;
+            return $asset;
+        }
 
-            $asset          = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, $size );
+
+
+        /**
+         * Returns the icon (array) for the current Attachment
+         *
+         * @since 3.0.6
+         */
+        function icon()
+        {
+            $asset = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, null, true );
+            return $asset;
+        }
+
+
+
+        /**
+         * Returns an appropriate <img /> for the current Attachment if it's an image
+         *
+         * @since 3.0
+         */
+        function image( $size = 'thumbnail' )
+        {
+            $asset = $this->asset( $size );
+
             $image_src      = $asset[0];
             $image_width    = $asset[1];
             $image_height   = $asset[2];
@@ -177,22 +220,8 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function src( $size = 'thumbnail' )
         {
-            // do we have our meta yet?
-            if( !isset( $this->attachments[$this->attachments_ref]->meta ) )
-                $this->attachments[$this->attachments_ref]->meta = wp_get_attachment_metadata( $this->attachments[$this->attachments_ref]->id );
-
-            // is it an image?
-            if( !isset( $this->attachments[$this->attachments_ref]->meta['sizes'] ) )
-                return false;
-
-            // do we have the requested size?
-            if( !in_array( $size, $this->image_sizes ) )
-                return false;
-
-            $asset          = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, $size );
-            $image_src      = $asset[0];
-
-            return $image_src;
+            $asset = $this->asset( $size );
+            return $asset[0];
         }
 
 
@@ -317,11 +346,11 @@ if ( !class_exists( 'Attachments' ) ) :
         function assets( $hook )
         {
             global $post;
-            
+
             // we only want our assets on edit screens
             if( !empty( $this->instances_for_post_type ) && 'edit.php' != $hook && 'post.php' != $hook && 'post-new.php' != $hook )
                 return;
-                
+
             // we only want to enqueue if appropriate
             if( empty( $this->instances_for_post_type ) )
                 return;
@@ -438,7 +467,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
                         // set up our select handler
                         attachmentsframe.on( 'select', function() {
-	
+
                             selection = attachmentsframe.state().get('selection');
 
                             if ( ! selection )
@@ -463,9 +492,11 @@ if ( !class_exists( 'Attachments' ) ) :
 
                                 // only thumbnails have sizes which is what we're on the hunt for
                                 if(attachments_isset(attachment.attributes.sizes)){
-                                    if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
-                                        // use the thumbnail
-                                        attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
+	                                if(attachments_isset(attachment.attributes.sizes.thumbnail)){
+                                        if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
+                                            // use the thumbnail
+                                            attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
+                                        }
                                     }
                                 }
 
@@ -1030,7 +1061,8 @@ if ( !class_exists( 'Attachments' ) ) :
                                 }
                                 else
                                 {
-                                    $attachments_raw->$instance->fields[$key] = false;
+                                    // the type doesn't exist
+                                    $attachment->fields->$key = false;
                                 }
                             }
                         }

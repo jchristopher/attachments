@@ -94,6 +94,13 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 == Changelog ==
 
+= 3.0.6 =
+* Fixed a possible JavaScript error if an Attachment that's an image doesn't have a proper thumbnail URL
+* Added a total() method that will return the number of Attachments for the current instance
+* When requesting the image() for a non-image Attachment, the WordPress-defined icon will be returned
+* Added an icon() method that will return the WordPress-defined icon for the Attachment
+* Cleaned up a PHP Warning when trying to save for an undefined field type
+
 = 3.0.5 =
 * Fixed a regression in handling Custom Post Type names that would too aggressively interfere with instance regustration
 * Fixed an issue when working with non-image Attachments
@@ -381,6 +388,7 @@ You can also retrieve various attributes of the current Attachment using these u
 `<?php $attachments = new Attachments( 'attachments' ); /* pass the instance name */ ?>
 <?php if( $attachments->exist() ) : ?>
   <h3>Attachments</h3>
+  <p>Total Attachments: <?php echo $attachments->total(); ?></p>
   <ul>
     <?php while( $attachments->get() ) : ?>
       <li>

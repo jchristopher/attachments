@@ -180,6 +180,7 @@ You can also retrieve various attributes of the current Attachment directly usin
 <?php $attachments = new Attachments( 'attachments' ); ?>
 <?php if( $attachments->exist() ) : ?>
   <h3>Attachments</h3>
+  <p>Total Attachments: <?php echo $attachments->total(); ?></p>
   <ul>
     <?php while( $attachments->get() ) : ?>
       <li>
@@ -244,6 +245,13 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 ## Changelog
 
 <dl>
+
+    <dt>3.0.6</dt>
+    <dd>Fixed a possible JavaScript error if an Attachment that's an image doesn't have a proper thumbnail URL</dd>
+    <dd>Added a total() method that will return the number of Attachments for the current instance</dd>
+    <dd>When requesting the image() for a non-image Attachment, the WordPress-defined icon will be returned</dd>
+    <dd>Added an icon() method that will return the WordPress-defined icon for the Attachment</dd>
+    <dd>Cleaned up a PHP Warning when trying to save for an undefined field type</dd>
 
     <dt>3.0.5</dt>
     <dd>Fixed a regression in handling Custom Post Type names that would too aggressively interfere with instance regustration</dd>
