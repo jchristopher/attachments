@@ -40,7 +40,7 @@ The idea behind Attachments is to give developers the ability to directly associ
         Source: <?php echo $attachments->src( 'full' ); ?><br />
         Size: <?php echo $attachments->filesize(); ?><br />
         Title Field: <?php echo $attachments->field( 'title' ); ?><br />
-        Caption Field: Name: <?php echo $attachments->field( 'caption' ); ?>
+        Caption Field: <?php echo $attachments->field( 'caption' ); ?>
       </li>
     <?php endwhile; ?>
   </ul>
