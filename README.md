@@ -106,27 +106,36 @@ function my_attachments( $attachments )
     // include a note within the meta box (string)
     'note'          => 'Attach files here!',
 
-    // text for 'Attach' button (string)
+    // text for 'Attach' button in meta box (string)
     'button_text'   => __( 'Attach Files', 'attachments' ),
 
     // text for modal 'Attach' button (string)
     'modal_text'    => __( 'Attach', 'attachments' ),
 
-    // fields for this instance (array)
+    /**
+     * Fields for the instance are stored in an array. Each field consists of
+     * an array with three keys: name, type, label.
+     *
+     * name  - (string) The field name used. No special characters.
+     * type  - (string) The registered field type.
+     *                  Fields available: text, textarea
+     * label - (string) The label displayed for the field.
+     */
+
     'fields'        => array(
       array(
         'name'  => 'title',                          // unique field name
-        'type'  => 'text',                           // registered field type (field available in 3.0: text)
+        'type'  => 'text',                           // registered field type
         'label' => __( 'Title', 'attachments' ),     // label to display
       ),
       array(
         'name'  => 'caption',                        // unique field name
-        'type'  => 'text',                           // registered field type (field available in 3.0: text)
+        'type'  => 'textarea',                       // registered field type
         'label' => __( 'Caption', 'attachments' ),   // label to display
       ),
       array(
         'name'  => 'copyright',                      // unique field name
-        'type'  => 'text',                           // registered field type (field available in 3.0: text)
+        'type'  => 'text',                           // registered field type
         'label' => __( 'Copyright', 'attachments' ), // label to display
       ),
     ),
@@ -246,6 +255,10 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
+    <dt>3.0.8</dt>
+    <dd>Fixed an issue in Firefox where you weren't able to focus inputs unless you clicked their label</dd>
+    <dd>New field: textarea</dd>
+
     <dt>3.0.7</dt>
     <dd>Proper sanitization of Custom Post Type names (as WordPress does it)</dd>
 
@@ -293,7 +306,6 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 Planned feature additions include:
 
-* Additional field type: textarea
 * Additional field type: WYSIWYG
 * Additional field type: checkbox
 * Additional field type: radio

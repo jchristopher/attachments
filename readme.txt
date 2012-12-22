@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 3.0.7
+Stable tag: 3.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,10 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.0.8 =
+* Fixed an issue in Firefox where you weren't able to focus inputs unless you clicked their label
+* New field: textarea
 
 = 3.0.7 =
 * Proper sanitization of Custom Post Type names (as WordPress does it)
@@ -284,7 +288,6 @@ Attachments are now stored in such a way that removes an in-place limitation on 
 
 Planned feature additions include:
 
-* Additional field type: textarea
 * Additional field type: WYSIWYG
 * Additional field type: checkbox
 * Additional field type: radio
@@ -309,6 +312,7 @@ If you would like to *disable the default instance* (meta box titled 'Attachment
 You may create instances with your own custom fields by using the `attachments_register` action. To create your own instance add the following to your theme's `functions.php` or your own plugin:
 
 `<?php
+
 function my_attachments( $attachments )
 {
   $args = array(
@@ -325,27 +329,36 @@ function my_attachments( $attachments )
     // include a note within the meta box (string)
     'note'          => 'Attach files here!',
 
-    // text for 'Attach' button (string)
+    // text for 'Attach' button in meta box (string)
     'button_text'   => __( 'Attach Files', 'attachments' ),
 
     // text for modal 'Attach' button (string)
     'modal_text'    => __( 'Attach', 'attachments' ),
 
-    // fields for this instance (array)
+    /**
+     * Fields for the instance are stored in an array. Each field consists of
+     * an array with three keys: name, type, label.
+     *
+     * name  - (string) The field name used. No special characters.
+     * type  - (string) The registered field type.
+     *                  Fields available: text, textarea
+     * label - (string) The label displayed for the field.
+     */
+
     'fields'        => array(
       array(
         'name'  => 'title',                          // unique field name
-        'type'  => 'text',                           // registered field type (field available in 3.0: text)
+        'type'  => 'text',                           // registered field type
         'label' => __( 'Title', 'attachments' ),     // label to display
       ),
       array(
         'name'  => 'caption',                        // unique field name
-        'type'  => 'text',                           // registered field type (field available in 3.0: text)
+        'type'  => 'textarea',                       // registered field type
         'label' => __( 'Caption', 'attachments' ),   // label to display
       ),
       array(
         'name'  => 'copyright',                      // unique field name
-        'type'  => 'text',                           // registered field type (field available in 3.0: text)
+        'type'  => 'text',                           // registered field type
         'label' => __( 'Copyright', 'attachments' ), // label to display
       ),
     ),
