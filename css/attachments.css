@@ -5,10 +5,22 @@ a.attachments-invoke {
 
 .attachments-attachment {
     position:relative;
-    overflow:hidden;
-    zoom:1;
     padding:5px 0 25px;
     border-bottom:1px solid #e7e7e7;
+}
+
+.attachments-attachment:before,
+.attachments-attachment:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.attachments-attachment:after {
+    clear: both;
+}
+
+.attachments-attachment {
+    *zoom: 1;
 }
 
 .attachments-attachment:first-of-type {
@@ -70,13 +82,25 @@ a.attachments-invoke {
     top:0;
     margin-top:36px;
     width:225px;
-    overflow:hidden;
-    zoom:1;
     padding:5px;
     background:#fdfdfd;
     border:1px solid #DFDFDF;
     border:1px solid rgba(223,223,223,0.8);
     border-radius:2px;
+}
+
+.attachments-attachment .attachment-meta:before,
+.attachments-attachment .attachment-meta:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.attachments-attachment .attachment-meta:after {
+    clear: both;
+}
+
+.attachments-attachment {
+    *zoom: 1;
 }
 
 .attachments-attachment:first-of-type .attachment-meta {
@@ -132,9 +156,17 @@ a.attachments-invoke {
 }
 
 .attachments-fields .attachments-attachment-field {
-    overflow:hidden;
-    zoom:1;
     padding:8px 0;
+}
+
+.attachments-fields .attachments-attachment-field:before,
+.attachments-fields .attachments-attachment-field:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.attachments-fields .attachments-attachment-field:after {
+    clear: both;
 }
 
 .attachments-fields label {
