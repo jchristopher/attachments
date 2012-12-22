@@ -86,5 +86,4 @@ jQuery(document).ready(function($){
         containment: 'parent',
         handle: '.attachments-handle img'
     });
-    $( '.attachments-container' ).disableSelection();
 });
