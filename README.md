@@ -255,6 +255,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
+    <dt>3.0.8.1</dt>
+    <dt>Better storage of special characters for PHP 5.4+</dt>
+
     <dt>3.0.8</dt>
     <dd>Fixed an issue in Firefox where you weren't able to focus inputs unless you clicked their label</dd>
     <dd>New field: textarea</dd>
