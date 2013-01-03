@@ -14,7 +14,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
     {
         public function html( $field );
         public function format_value_for_input( $value, $field = null );
-        public function input_head();
+        public function assets( $field );
     }
 
     class Attachments_Field implements Attachments_Field_Template
@@ -75,7 +75,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
             return $value;
         }
 
-        public function input_head()
+        public function assets( $field )
         {
             return;
         }

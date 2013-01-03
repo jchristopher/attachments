@@ -549,6 +549,7 @@ if ( !class_exists( 'Attachments' ) ) :
             $field_types = array(
                 'text'      => ATTACHMENTS_DIR . 'classes/fields/class.field.text.php',
                 'textarea'  => ATTACHMENTS_DIR . 'classes/fields/class.field.textarea.php',
+                'wysiwyg'   => ATTACHMENTS_DIR . 'classes/fields/class.field.wysiwyg.php',
             );
 
             // support custom field types
@@ -808,7 +809,7 @@ if ( !class_exists( 'Attachments' ) ) :
                 $value  = ( isset( $attachment->fields->$name ) ) ? $attachment->fields->$name : null;
 
                 $field  = new $this->fields[$type]( $name, $label, $value );
-                $field->Pvalue = $field->format_value_for_input( $field->value );
+                $field->value = $field->format_value_for_input( $field->value );
 
                 // does this field already have a unique ID?
                 $uid = ( isset( $attachment->uid ) ) ? $attachment->uid : null;
@@ -817,6 +818,9 @@ if ( !class_exists( 'Attachments' ) ) :
                 $field->set_field_instance( $instance, $field );
                 $field->set_field_identifiers( $field, $uid );
                 $field->set_field_type( $type );
+
+                // dump out our field-specific assets
+                $field->assets( $field );
 
                 ?>
                 <div class="attachments-attachment-field attachments-attachment-field-<?php echo $instance; ?> attachments-attachment-field-<?php echo $field->type; ?> attachment-field-<?php echo $field->name; ?>">
@@ -990,8 +994,24 @@ if ( !class_exists( 'Attachments' ) ) :
 
                         foreach( $attachment['fields'] as $key => $field_value )
                         {
-                            // slashes were already added so we're going to strip them and encode ourselves
-                            $attachment['fields'][$key] = htmlentities( stripslashes( $field_value ), ENT_QUOTES, 'UTF-8' );
+                            // take care of our returns
+                            $field_value = str_replace( "\r\n", "\n", $field_value );
+                            $field_value = str_replace( "\r", "\n", $field_value );
+
+                            // we dont want to strip out our newlines so we're going to flag them
+                            $field_value = str_replace("\n", "%%ATTACHMENTS_NEWLINE%%", $field_value );
+
+                            // slashes were already added so we're going to strip them
+                            $field_value = stripslashes( $field_value );
+
+                            // put back our newlines
+                            $field_value = str_replace("%%ATTACHMENTS_NEWLINE%%", "\\n", $field_value );
+
+                            // encode the whole thing
+                            $field_value = htmlentities( $field_value, ENT_QUOTES, 'UTF-8' );
+
+                            // encode things properly
+                            $attachment['fields'][$key] = $field_value;
                         }
                     }
 
