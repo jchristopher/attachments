@@ -255,6 +255,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
+    <dt>3.0.9</dt>
+    <dd>Fixed an issue where special characters would break title/caption fields during migration</dd>
+
     <dt>3.0.8.2</dt>
     <dd>Fixed a CSS issue with only one text field</dd>
 

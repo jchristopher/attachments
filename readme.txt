@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 3.0.8.2
+Stable tag: 3.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.0.9 =
+* Fixed an issue where special characters would break title/caption fields during migration
 
 = 3.0.8.2 =
 * Fixed a CSS issue with only one text field
