@@ -83,10 +83,10 @@
                 // fields are technically optional so we'll add those separately
                 // we're also going to encode them in the same way the main class does
                 if( $title )
-                    $converted_attachment['fields'][$title] = htmlentities( stripslashes( $legacy_attachment['title'] ), ENT_QUOTES );
+                    $converted_attachment['fields'][$title] = htmlentities( stripslashes( $legacy_attachment['title'] ), ENT_QUOTES, 'UTF-8' );
 
                 if( $caption )
-                    $converted_attachment['fields'][$caption] = htmlentities( stripslashes( $legacy_attachment['caption'] ), ENT_QUOTES );
+                    $converted_attachment['fields'][$caption] = htmlentities( stripslashes( $legacy_attachment['caption'] ), ENT_QUOTES, 'UTF-8' );
 
                 // check to see if the existing Attachments have our target instance
                 if( !isset( $existing_attachments->$instance ) )
@@ -104,7 +104,7 @@
             }
 
             // we're done! let's save everything in our new format
-            $existing_attachments = json_encode( $existing_attachments );
+            $existing_attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $attachments );
 
             // save it to the database
             update_post_meta( $query->post->ID, 'attachments', $existing_attachments );
@@ -231,7 +231,7 @@
                     if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-2') ) wp_die( __( 'Invalid request', 'attachments' ) );
 
                     $total = attachments_migrate( $_GET['attachments-instance'], $_GET['attachments-title'], $_GET['attachments-caption'] );
-                    
+
                     if( false == get_option( 'attachments_migrated' ) ) :
                     ?>
                         <h3><?php _e( 'Migration Complete!', 'attachments' ); ?></h3>
