@@ -31,6 +31,8 @@ if ( !class_exists( 'Attachments' ) ) :
         private $instances_for_post_type;   // instance names that apply to the current post type
         private $fields;                    // stores all registered field types
         private $attachments;               // stores all of the Attachments for the given instance
+        private $legacy;                    // whether or not there is legacy Attachments data
+        private $legacy_pro;                // whether or not there is legacy Attachment Pro data
 
         private $image_sizes        = array( 'full' );  // store all registered image sizes
         private $default_instance   = true;             // use the default instance?
@@ -64,16 +66,7 @@ if ( !class_exists( 'Attachments' ) ) :
             include_once( ATTACHMENTS_DIR . 'upgrade.php' );
             include_once( ATTACHMENTS_DIR . '/classes/class.field.php' );
 
-            // deal with our legacy issues if the user hasn't dismissed or migrated already
-            if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
-            {
-                $legacy         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
-                $this->legacy   = empty( $legacy->found_posts ) ? false : true;
-            }
-            else
-            {
-                $this->legacy   = false;
-            }
+            $this->check_for_legacy_data();
 
             // set our image sizes
             $this->image_sizes = array_merge( $this->image_sizes, get_intermediate_image_sizes() );
@@ -105,6 +98,33 @@ if ( !class_exists( 'Attachments' ) ) :
             // set our attachments if necessary
             if( !is_null( $instance ) )
                 $this->attachments = $this->get_attachments( $instance, $post_id );
+        }
+
+
+
+        function check_for_legacy_data()
+        {
+            // deal with our legacy issues if the user hasn't dismissed or migrated already
+            if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
+            {
+                $legacy         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
+                $this->legacy   = empty( $legacy->found_posts ) ? false : true;
+            }
+            else
+            {
+                $this->legacy   = false;
+            }
+
+            // deal with our legacy Pro issues if the user hasn't dismissed or migrated already
+            if( false == get_option( 'attachments_pro_migrated' ) && false == get_option( 'attachments_pro_ignore_migration' ) )
+            {
+                $legacy_pro         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments_pro' );
+                $this->legacy_pro   = empty( $legacy_pro->found_posts ) ? false : true;
+            }
+            else
+            {
+                $this->legacy_pro   = false;
+            }
         }
 
 

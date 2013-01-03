@@ -175,6 +175,9 @@
         // check for any legacy Attachments
         $legacy = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
 
+        // check for any legacy Attachments Pro Attachments
+        $legacy_pro = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments_pro' );
+
         // check to see if we're migrating
         if( isset( $_GET['migrate'] ) )
         {
@@ -231,7 +234,7 @@
                     if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-2') ) wp_die( __( 'Invalid request', 'attachments' ) );
 
                     $total = attachments_migrate( $_GET['attachments-instance'], $_GET['attachments-title'], $_GET['attachments-caption'] );
-                    
+
                     if( false == get_option( 'attachments_migrated' ) ) :
                     ?>
                         <h3><?php _e( 'Migration Complete!', 'attachments' ); ?></h3>
@@ -247,15 +250,151 @@
                     break;
             }
         }
+        else if( isset( $_GET['migrate_pro'] ) )
+        {
+            switch( intval( $_GET['migrate_pro'] ) )
+            {
+                case 1:
+                    if( !wp_verify_nonce( $_GET['nonce'], 'attachments-pro-migrate-1') ) wp_die( __( 'Invalid request', 'attachments' ) );
+
+                    $existing_pro_instances = get_option( '_iti_apro_settings' );
+                    ?>
+                        <h3><?php _e( 'Migration Step 1', 'attachments' ); ?></h3>
+
+                        <?php if( is_array( $existing_pro_instances['positions'] ) && count( $existing_pro_instances['positions'] ) ) : ?>
+
+                            <p><?php _e( "The following Attachments Pro instances have been found.", 'attachments' ); ?></p>
+
+                            <ol>
+                                <?php foreach( $existing_pro_instances['positions'] as $pro_instance ) : ?>
+                                    <li><?php echo $pro_instance['label']; ?></li>
+                                <?php endforeach; ?>
+                            </ol>
+
+                            <p><?php _e( "Please copy the following to your theme's <code>functions.php</code> to implement them in Attachments:", 'attachments' ); ?></p>
+
+                            <?php
+
+$attachments_instances_snippet = '<?php
+function my_attachments( $attachments )
+{
+';
+
+                                foreach( $existing_pro_instances['positions'] as $pro_instance )
+                                {
+                                    // get post types
+
+
+                                    // get file type limits if applicable
+                                    $file_type_limit = 'null';
+
+$attachments_instances_snippet .= '    /**
+     * ' . $pro_instance['label'] . '
+     */
+
+    $args = array(
+
+      // title of the meta box (string)
+      "label"         => "' . $pro_instance['label'] . '",
+
+      // all post types to utilize (string|array)
+      "post_type"     => array( "post", "page" ),
+
+      // allowed file type(s) (array) (image|video|text|audio|application)
+      "filetype"      => ' . $file_type_limit . ',
+
+      // include a note within the meta box (string)
+      "note"          => "' . $pro_instance['description'] . '",
+
+      // text for "Attach" button in meta box (string)
+      "button_text"   => __( "Attach Files" ),
+
+      // text for modal "Attach" button (string)
+      "modal_text"    => __( "Attach" ),
+
+';
+
+// parse the fields
+if( is_array( $pro_instance['fields'] ) && count( $pro_instance['fields'] ) )
+{
+$attachments_instances_snippet .= '      "fields"        => array(';
+    foreach( $pro_instance['fields'] as $field )
+    {
+        $field_name = str_replace( '-', '_', sanitize_title( $field['label'] ) );
+$attachments_instances_snippet .= '
+        array(
+            "name"  => "' . $field_name . '",
+            "type"  => "' . $field['type'] . '",
+            "label" => __( "' . $field['label'] . '" ),
+        ),
+';
+    }
+$attachments_instances_snippet .= "      ),\n";
+}
+$attachments_instances_snippet .= '
+    );
+
+    $attachments->register( "' . $pro_instance['name'] . '", $args );
+
+
+';
+                                } // end instance foreach
+
+$attachments_instances_snippet .= '}
+
+add_action( "attachments_register", "my_attachments" );
+';
+
+                            ?>
+
+                            <pre id="attachments-pro-instances"><code><?php echo htmlentities( $attachments_instances_snippet ); ?></code></pre>
+
+                        <?php else: ?>
+
+                            <p><?php echo _e( "<strong>ERROR:</strong> No Attachments Pro instances found.", 'attachments' ); ?></p>
+
+                        <?php endif; ?>
+
+
+                        <pre><?php print_r( $existing_pro_instances['positions'] ); ?></pre>
+
+                        <form action="options-general.php" method="get">
+                            <input type="hidden" name="page" value="attachments" />
+                            <input type="hidden" name="migrate_pro" value="2" />
+                            <input type="hidden" name="nonce" value="<?php echo wp_create_nonce( 'attachments-pro-migrate-2' ); ?>" />
+                            <table class="form-table">
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                            <p><?php _e( "When you have added the above snippet to your theme's <code>functions.php</code>, please proceed with the data migration:", 'attachments' ); ?></p>
+                            <p class="submit">
+                                <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Start Data Migration', 'attachments' ); ?>" />
+                            </p>
+                        </form>
+                    <?php
+                    break;
+            }
+        }
         else
         { ?>
+
             <?php if( false == get_option( 'attachments_migrated' ) && $legacy->found_posts ) : ?>
-                <h2><?php _e( 'Migrate legacy Attachments', 'attachments' ); ?></h2>
+                <h2><?php _e( 'Migrate legacy Attachments data', 'attachments' ); ?></h2>
                 <p><?php _e( 'Attachments has found records from version 1.x. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
-                <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy Attachments', 'attachments' ); ?></a></p>
+                <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy data', 'attachments' ); ?></a></p>
             <?php elseif( true == get_option( 'attachments_migrated' ) ) : ?>
-                <p><?php _e( 'You have already migrated your legacy Attachments.', 'attachments' ); ?></p>
+                <p><?php _e( 'You have already migrated your legacy Attachments data.', 'attachments' ); ?></p>
             <?php endif; ?>
+
+            <?php if( false == get_option( 'attachments_pro_migrated' ) && $legacy_pro->found_posts ) : ?>
+                <h2><?php _e( 'Migrate legacy Attachments Pro data', 'attachments' ); ?></h2>
+                <p><?php _e( 'Attachments has found records from Attachments Pro. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
+                <p><a href="?page=attachments&amp;migrate_pro=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-pro-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy data', 'attachments' ); ?></a></p>
+            <?php elseif( true == get_option( 'attachments_pro_migrated' ) ) : ?>
+                <p><?php _e( 'You have already migrated your legacy Attachments Pro data.', 'attachments' ); ?></p>
+            <?php endif; ?>
+
             <h2><?php _e( 'Revert to version 1.x', 'attachments' ); ?></h2>
             <p><?php _e( 'If you would like to forcefully revert to the 1.x version branch of Attachments, add the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
             <p><code>define( 'ATTACHMENTS_LEGACY', true );</code></p>
