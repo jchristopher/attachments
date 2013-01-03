@@ -189,8 +189,21 @@ if ( !class_exists( 'Attachments' ) ) :
             $asset = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, null, true );
             return $asset;
         }
+        
+        
 
-
+        /**
+         * Returns the original title
+         *
+         * @since 3.0.8.2
+         */
+        function title()
+        {
+            $asset = get_the_title( $this->attachments[$this->attachments_ref]->id );
+            return $asset;
+        }
+        
+        
 
         /**
          * Returns an appropriate <img /> for the current Attachment if it's an image
