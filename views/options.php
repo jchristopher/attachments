@@ -22,6 +22,8 @@
         include_once( ATTACHMENTS_DIR . '/deprecated/get-attachments.php' );
 
         // grab all of the posts we need to migrate
+        // TODO: this will not retrieve posts that have exclude_from_search = true
+        // TODO: make this reusable elsewhere
         $query = new WP_Query( 'post_type=any&post_status=any&posts_per_page=-1&meta_key=_attachments' );
 
         $count = 0;
@@ -173,6 +175,8 @@
     <?php
 
         // check for any legacy Attachments
+        // TODO: this will not retrieve posts that have exclude_from_search = true
+        // TODO: make this reusable elsewhere
         $legacy = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
 
         // check to see if we're migrating

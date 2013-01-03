@@ -84,6 +84,12 @@ jQuery(document).ready(function($){
         tolerance: 'intersect',
         axis: 'y',
         containment: 'parent',
-        handle: '.attachments-handle img'
+        handle: '.attachments-handle img',
+        start: function(event, ui) {
+            $(document).trigger('attachments/sortable_start');
+        },
+        stop: function(event, ui) {
+            $(document).trigger('attachments/sortable_stop');
+        },
     });
 });

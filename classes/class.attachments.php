@@ -56,7 +56,7 @@ if ( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-            $this->version  = '3.0.9';
+            $this->version  = '3.1';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -67,6 +67,8 @@ if ( !class_exists( 'Attachments' ) ) :
             // deal with our legacy issues if the user hasn't dismissed or migrated already
             if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
             {
+                // TODO: this will not retrieve posts that have exclude_from_search = true
+                // TODO: make this reusable elsewhere
                 $legacy         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
                 $this->legacy   = empty( $legacy->found_posts ) ? false : true;
             }
@@ -101,6 +103,8 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // with version 3 we'll be giving at least one admin notice
             add_action( 'admin_notices',              array( $this, 'admin_notice' ) );
+
+            add_action( 'admin_print_footer_scripts', array( $this, 'field_assets' ) );
 
             // set our attachments if necessary
             if( !is_null( $instance ) )
@@ -406,7 +410,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             ?>
 
-            <div id="attachments-<?php echo $instance->name; ?>">
+            <div id="attachments-<?php echo $instance->name; ?>" class="attachments-parent-container">
                 <?php if( !empty( $instance->note ) ) : ?>
                     <div class="attachments-note"><?php echo apply_filters( 'the_content', $instance->note ); ?></div>
                 <?php endif; ?>
@@ -504,6 +508,8 @@ if ( !class_exists( 'Attachments' ) ) :
 
                                 // append the template
                                 $element.find('.attachments-container').append(template(templateData));
+
+                                $('body').trigger('attachments/new');
 
                                 // if it wasn't an image we need to ditch the dimensions
                                 if(!attachments_isset(attachment.attributes.width)||!attachments_isset(attachment.attributes.height)){
@@ -819,9 +825,6 @@ if ( !class_exists( 'Attachments' ) ) :
                 $field->set_field_identifiers( $field, $uid );
                 $field->set_field_type( $type );
 
-                // dump out our field-specific assets
-                $field->assets( $field );
-
                 ?>
                 <div class="attachments-attachment-field attachments-attachment-field-<?php echo $instance; ?> attachments-attachment-field-<?php echo $field->type; ?> attachment-field-<?php echo $field->name; ?>">
                     <div class="attachment-label attachment-label-<?php echo $instance; ?>">
@@ -921,6 +924,33 @@ if ( !class_exists( 'Attachments' ) ) :
 
                 </div>
             <?php
+        }
+
+
+
+        function field_assets()
+        {
+            // all metaboxes have been put in place, we can now determine which field assets need to be included
+
+            // first we'll get a list of the field types on screen
+            $fieldtypes = array();
+            foreach( $this->instances_for_post_type as $instance )
+            {
+                foreach( $this->instances[$instance]['fields'] as $field )
+                {
+                    $fieldtypes[] = $field['type'];
+                }
+            }
+
+            // we only want to dump out assets once for each field type
+            $fieldtypes = array_unique( $fieldtypes );
+
+            // loop through and dump out all the assets
+            foreach( $fieldtypes as $fieldtype )
+            {
+                $field = new $this->fields[$fieldtype];
+                $field->assets();
+            }
         }
 
 
