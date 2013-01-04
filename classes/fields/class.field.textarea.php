@@ -27,7 +27,7 @@ class Attachments_Field_Textarea extends Attachments_Field implements Attachment
         return $value;
     }
 
-    public function assets( $field = null )
+    public function assets()
     {
         return;
     }

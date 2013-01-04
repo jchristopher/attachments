@@ -28,7 +28,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field implements Attachments
     <?php
     }
 
-    function assets( $field = null )
+    function assets()
     {
         if( 'true' == get_user_meta( get_current_user_id(), 'rich_editing', true ) ) :
         ?>
