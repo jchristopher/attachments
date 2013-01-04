@@ -91,7 +91,7 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'init',                       array( $this, 'do_actions_filters' ) );
 
             // determine which instances apply to the current post type
-            add_action( 'init',                       array( $this, 'set_instances_for_current_post_type' ), 999 );
+            add_action( 'init',                       array( $this, 'set_instances_for_current_post_type' ) );
 
             add_action( 'add_meta_boxes',             array( $this, 'meta_box_init' ) );
 
@@ -1131,6 +1131,11 @@ if ( !class_exists( 'Attachments' ) ) :
                                     // the type doesn't exist
                                     $attachment->fields->$key = false;
                                 }
+                            }
+                            else
+                            {
+                                // this was a theme file request, just grab it
+                                $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES, 'UTF-8' );
                             }
                         }
                     }
