@@ -250,6 +250,11 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
+    <dt>3.1.3</dt>
+    <dd>Fixed a potential issue with the WYSIWYG field not working on CPT without editor support</dd>
+    <dd>Field assets are less aggressive and only fire when necessary</dd>
+    <dd>Reorganized the migration process a bit in prep for Attachments Pro support</dd>
+
     <dt>3.1.2</dt>
     <dd>Fixed a regression that prevented successful migration of legacy Attachments data</dd>
 
