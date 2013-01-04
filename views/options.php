@@ -106,7 +106,7 @@
             }
 
             // we're done! let's save everything in our new format
-            $existing_attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $attachments );
+            $existing_attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $existing_attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $existing_attachments );
 
             // save it to the database
             update_post_meta( $query->post->ID, 'attachments', $existing_attachments );
