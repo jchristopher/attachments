@@ -22,6 +22,8 @@
         include_once( ATTACHMENTS_DIR . '/deprecated/get-attachments.php' );
 
         // grab all of the posts we need to migrate
+        // TODO: this will not retrieve posts that have exclude_from_search = true
+        // TODO: make this reusable elsewhere
         $query = new WP_Query( 'post_type=any&post_status=any&posts_per_page=-1&meta_key=_attachments' );
 
         $count = 0;
@@ -83,10 +85,10 @@
                 // fields are technically optional so we'll add those separately
                 // we're also going to encode them in the same way the main class does
                 if( $title )
-                    $converted_attachment['fields'][$title] = htmlentities( stripslashes( $legacy_attachment['title'] ), ENT_QUOTES );
+                    $converted_attachment['fields'][$title] = htmlentities( stripslashes( $legacy_attachment['title'] ), ENT_QUOTES, 'UTF-8' );
 
                 if( $caption )
-                    $converted_attachment['fields'][$caption] = htmlentities( stripslashes( $legacy_attachment['caption'] ), ENT_QUOTES );
+                    $converted_attachment['fields'][$caption] = htmlentities( stripslashes( $legacy_attachment['caption'] ), ENT_QUOTES, 'UTF-8' );
 
                 // check to see if the existing Attachments have our target instance
                 if( !isset( $existing_attachments->$instance ) )
@@ -104,7 +106,7 @@
             }
 
             // we're done! let's save everything in our new format
-            $existing_attachments = json_encode( $existing_attachments );
+            $existing_attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $attachments );
 
             // save it to the database
             update_post_meta( $query->post->ID, 'attachments', $existing_attachments );
@@ -173,6 +175,8 @@
     <?php
 
         // check for any legacy Attachments
+        // TODO: this will not retrieve posts that have exclude_from_search = true
+        // TODO: make this reusable elsewhere
         $legacy = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
 
         // check for any legacy Attachments Pro Attachments

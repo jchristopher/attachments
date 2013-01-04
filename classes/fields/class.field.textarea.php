@@ -22,12 +22,12 @@ class Attachments_Field_Textarea extends Attachments_Field implements Attachment
     <?php
     }
 
-    function format_value_for_input( $value, $field = null  )
+    function format_value_for_input( $value, $field = null )
     {
-        return htmlspecialchars( $value, ENT_QUOTES );
+        return $value;
     }
 
-    public function input_head()
+    public function assets( $field = null )
     {
         return;
     }

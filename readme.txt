@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 3.0.8.2
+Stable tag: 3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,14 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.1 =
+* New field: wysiwyg
+* Fields will now properly respect line breaks
+* Fields will now properly return HTML instead of escaped HTML
+
+= 3.0.9 =
+* Fixed an issue where special characters would break title/caption fields during migration
 
 = 3.0.8.2 =
 * Fixed a CSS issue with only one text field
@@ -294,7 +302,6 @@ Attachments are now stored in such a way that removes an in-place limitation on 
 
 Planned feature additions include:
 
-* Additional field type: WYSIWYG
 * Additional field type: checkbox
 * Additional field type: radio
 * Additional field type: select
@@ -347,7 +354,7 @@ function my_attachments( $attachments )
      *
      * name  - (string) The field name used. No special characters.
      * type  - (string) The registered field type.
-     *                  Fields available: text, textarea
+     *                  Fields available: text, textarea, wysiwyg
      * label - (string) The label displayed for the field.
      */
 
@@ -359,13 +366,8 @@ function my_attachments( $attachments )
       ),
       array(
         'name'  => 'caption',                        // unique field name
-        'type'  => 'textarea',                       // registered field type
+        'type'  => 'wysiwyg',                        // registered field type
         'label' => __( 'Caption', 'attachments' ),   // label to display
-      ),
-      array(
-        'name'  => 'copyright',                      // unique field name
-        'type'  => 'text',                           // registered field type
-        'label' => __( 'Copyright', 'attachments' ), // label to display
       ),
     ),
 
