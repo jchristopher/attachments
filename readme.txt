@@ -97,6 +97,8 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 = 3.1 =
 * New field: wysiwyg
+* Fields will now properly respect line breaks
+* Fields will now properly return HTML instead of escaped HTML
 
 = 3.0.9 =
 * Fixed an issue where special characters would break title/caption fields during migration
@@ -364,13 +366,8 @@ function my_attachments( $attachments )
       ),
       array(
         'name'  => 'caption',                        // unique field name
-        'type'  => 'textarea',                       // registered field type
+        'type'  => 'wysiwyg',                        // registered field type
         'label' => __( 'Caption', 'attachments' ),   // label to display
-      ),
-      array(
-        'name'  => 'copyright',                      // unique field name
-        'type'  => 'text',                           // registered field type
-        'label' => __( 'Copyright', 'attachments' ), // label to display
       ),
     ),
 
