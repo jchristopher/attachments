@@ -6,7 +6,7 @@
   * Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
   * Author:      Jonathan Christopher
   * Author URI:  http://mondaybynoon.com/
-  * Version:     3.1.1
+  * Version:     3.1.2
   * Text Domain: attachments
   * Domain Path: /languages/
   * License:     GPLv2 or later

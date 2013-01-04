@@ -1,5 +1,4 @@
 <?php
-
     if( isset( $_GET['dismiss'] ) )
     {
         if( !wp_verify_nonce( $_GET['nonce'], 'attachments-dismiss') ) wp_die( __( 'Invalid request', 'attachments' ) );
