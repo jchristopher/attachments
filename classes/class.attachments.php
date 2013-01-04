@@ -31,9 +31,9 @@ if ( !class_exists( 'Attachments' ) ) :
         private $instances_for_post_type;   // instance names that apply to the current post type
         private $fields;                    // stores all registered field types
         private $attachments;               // stores all of the Attachments for the given instance
-        private $legacy;                    // whether or not there is legacy Attachments data
-        private $legacy_pro;                // whether or not there is legacy Attachment Pro data
 
+        private $legacy             = false;            // whether or not there is legacy Attachments data
+        private $legacy_pro         = false;            // whether or not there is legacy Attachment Pro data
         private $image_sizes        = array( 'full' );  // store all registered image sizes
         private $default_instance   = true;             // use the default instance?
         private $attachments_ref    = -1;               // flags where a get() loop last did it's thing
@@ -97,7 +97,7 @@ if ( !class_exists( 'Attachments' ) ) :
             // with version 3 we'll be giving at least one admin notice
             add_action( 'admin_notices',              array( $this, 'admin_notice' ) );
 
-            add_action( 'admin_print_footer_scripts', array( $this, 'field_assets' ) );
+            add_action( 'admin_print_footer_scripts', array( $this, 'field_assets' ), 999, 1 );
 
             // set our attachments if necessary
             if( !is_null( $instance ) )
@@ -116,27 +116,44 @@ if ( !class_exists( 'Attachments' ) ) :
             // deal with our legacy issues if the user hasn't dismissed or migrated already
             if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
             {
-                // TODO: this will not retrieve posts that have exclude_from_search = true
-                // TODO: make this reusable elsewhere
-                $legacy         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
-                $this->legacy   = empty( $legacy->found_posts ) ? false : true;
-            }
-            else
-            {
-                $this->legacy   = false;
+                $legacy_attachments_settings = get_option( 'attachments_settings' );
+
+                if( $legacy_attachments_settings && is_array( $legacy_attachments_settings['post_types'] ) && count( $legacy_attachments_settings['post_types'] ) )
+                {
+                    // we have legacy settings, so we're going to use the post types
+                    // that Attachments is currently utilizing
+
+                    // the keys are the actual CPT names, so we need those
+                    foreach( $legacy_attachments_settings['post_types'] as $post_type => $value )
+                        if( $value )
+                            $post_types[] = $post_type;
+
+                    // set up our WP_Query args to grab anything with legacy data
+                    $args = array(
+                            'post_type'         => isset( $post_types ) ? $post_types : array(),
+                            'post_status'       => 'any',
+                            'posts_per_page'    => 1,
+                            'meta_key'          => '_attachments',
+                        );
+
+                    $legacy         = new WP_Query( $args );
+                    $this->legacy   = empty( $legacy->found_posts ) ? false : true;
+                }
             }
 
             // deal with our legacy Pro issues if the user hasn't dismissed or migrated already
             if( false == get_option( 'attachments_pro_migrated' ) && false == get_option( 'attachments_pro_ignore_migration' ) )
             {
-                // TODO: this will not retrieve posts that have exclude_from_search = true
-                // TODO: make this reusable elsewhere
-                $legacy_pro         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments_pro' );
+                // set up our WP_Query args to grab anything (really anything) with legacy data
+                $args = array(
+                        'post_type'         => get_post_types(),
+                        'post_status'       => 'any',
+                        'posts_per_page'    => 1,
+                        'meta_key'          => '_attachments_pro',
+                    );
+
+                $legacy_pro         = new WP_Query( $args );
                 $this->legacy_pro   = empty( $legacy_pro->found_posts ) ? false : true;
-            }
-            else
-            {
-                $this->legacy_pro   = false;
             }
         }
 
@@ -965,8 +982,14 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
-        function field_assets()
+        function field_assets( $hook )
         {
+            global $post;
+
+            // we only want to enqueue if appropriate
+            if( empty( $this->instances_for_post_type ) )
+                return;
+
             // all metaboxes have been put in place, we can now determine which field assets need to be included
 
             // first we'll get a list of the field types on screen

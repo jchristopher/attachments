@@ -14,7 +14,20 @@ class Attachments_Field_WYSIWYG extends Attachments_Field implements Attachments
     {
         parent::__construct( $name, $label, $value );
 
-        add_filter( 'wp_default_editor', array( $this, 'wp_default_editor' ) );
+        add_filter( 'wp_default_editor',    array( $this, 'wp_default_editor' ) );
+        add_action('admin_head',            array( $this, 'admin_head' ) );
+    }
+
+    function admin_head()
+    {
+        global $post;
+
+        // ensure we've got TinyMCE to work with
+        $has_editor = post_type_supports( $post->post_type, 'editor' );
+        add_post_type_support( $post->post_type, 'editor' );
+
+        if( !$has_editor )
+            echo '<style type="text/css">#poststuff .postarea { display: none; }</style>';
     }
 
     function html( $field )
@@ -57,6 +70,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field implements Attachments
                             var input_id = $(this).attr('id');
 
                             // create wysiwyg
+
                             tinyMCE.settings.theme_advanced_buttons2 += ',code';
                             tinyMCE.settings.wpautop = false;
                             tinyMCE.execCommand('mceAddControl', false, input_id);

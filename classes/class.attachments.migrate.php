@@ -34,15 +34,33 @@ class AttachmentsMigrate extends Attachments
         // we need our deprecated functions
         include_once( ATTACHMENTS_DIR . '/deprecated/get-attachments.php' );
 
-        // grab all of the posts we need to migrate
-        // TODO: this will not retrieve posts that have exclude_from_search = true
-        // TODO: make this reusable elsewhere
-        $query = new WP_Query( 'post_type=any&post_status=any&posts_per_page=-1&meta_key=_attachments' );
+        $legacy_attachments_settings = get_option( 'attachments_settings' );
+
+        if( $legacy_attachments_settings && is_array( $legacy_attachments_settings['post_types'] ) && count( $legacy_attachments_settings['post_types'] ) )
+        {
+            // we have legacy settings, so we're going to use the post types
+            // that Attachments is currently utilizing
+
+            // the keys are the actual CPT names, so we need those
+            foreach( $legacy_attachments_settings['post_types'] as $post_type => $value )
+                if( $value )
+                    $post_types[] = $post_type;
+
+            // set up our WP_Query args to grab anything with legacy data
+            $args = array(
+                    'post_type'         => isset( $post_types ) ? $post_types : array(),
+                    'post_status'       => 'any',
+                    'posts_per_page'    => -1,
+                    'meta_key'          => '_attachments',
+                );
+
+            $query = new WP_Query( $args );
+        }
 
         $count = 0;
 
         // loop through each post
-        while( $query->have_posts() )
+        if( $query ) { while( $query->have_posts() )
         {
             // set up postdata
             $query->the_post();
@@ -126,13 +144,18 @@ class AttachmentsMigrate extends Attachments
 
             // increment our counter
             $count++;
-        }
+        } }
 
         return $count;
     }
 
 
 
+    /**
+     * Step 1 of the migration process. Allows the user to define the target instance and field names.
+     *
+     * @since 3.2
+     */
     function prepare_migration()
     {
         if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-1') ) wp_die( __( 'Invalid request', 'attachments' ) );
@@ -183,6 +206,11 @@ class AttachmentsMigrate extends Attachments
 
 
 
+    /**
+     * Step 2 of the migration process. Validates migration requests and fires the migration method.
+     *
+     * @since 3.2
+     */
     function init_migration()
     {
         if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-2') )

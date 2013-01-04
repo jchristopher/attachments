@@ -6,8 +6,10 @@
 
     if( isset( $_GET['dismiss'] ) )
     {
-        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-dismiss') ) wp_die( __( 'Invalid request', 'attachments' ) );
+        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-dismiss') )
+            wp_die( __( 'Invalid request', 'attachments' ) );
 
+        // set our flag that the user wants to ignore the migration message
         add_option( 'attachments_ignore_migration', true, '', 'no' );
     }
 ?>
