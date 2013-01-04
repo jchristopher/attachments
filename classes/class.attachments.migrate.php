@@ -8,12 +8,12 @@ if( !defined( 'ABSPATH' ) ) exit;
 *
 * @since 3.2
 */
-class AttachmentsMigrate
+class AttachmentsMigrate extends Attachments
 {
 
     function __construct()
     {
-        # code...
+        parent::__construct();
     }
 
     /**
@@ -130,4 +130,77 @@ class AttachmentsMigrate
 
         return $count;
     }
+
+
+
+    function prepare_migration()
+    {
+        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-1') ) wp_die( __( 'Invalid request', 'attachments' ) );
+        ?>
+            <h3><?php _e( 'Migration Step 1', 'attachments' ); ?></h3>
+            <p><?php _e( "In order to migrate Attachments 1.x data, you need to set which instance and fields in version 3.0+ you'd like to use:", 'attachments' ); ?></p>
+            <form action="options-general.php" method="get">
+                <input type="hidden" name="page" value="attachments" />
+                <input type="hidden" name="migrate" value="2" />
+                <input type="hidden" name="nonce" value="<?php echo wp_create_nonce( 'attachments-migrate-2' ); ?>" />
+                <table class="form-table">
+                    <tbody>
+                        <tr valign="top">
+                            <th scope="row">
+                                <label for="attachments-instance"><?php _e( 'Attachments 3.x Instance', 'attachments' ); ?></label>
+                            </th>
+                            <td>
+                                <input name="attachments-instance" id="attachments-instance" value="attachments" class="regular-text" />
+                                <p class="description"><?php _e( 'The instance name you would like to use in the migration. Required.', 'attachments' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row">
+                                <label for="attachments-title"><?php _e( 'Attachments 3.x Title', 'attachments' ); ?></label>
+                            </th>
+                            <td>
+                                <input name="attachments-title" id="attachments-title" value="title" class="regular-text" />
+                                <p class="description"><?php _e( 'The <code>Title</code> field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard.', 'attachments' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row">
+                                <label for="attachments-caption"><?php _e( 'Attachments 3.x Caption', 'attachments' ); ?></label>
+                            </th>
+                            <td>
+                                <input name="attachments-caption" id="attachments-caption" value="caption" class="regular-text" />
+                                <p class="description"><?php _e( 'The <code>Caption</code> field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard.', 'attachments' ); ?></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="submit">
+                    <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Start Migration', 'attachments' ); ?>" />
+                </p>
+            </form>
+        <?php
+    }
+
+
+
+    function init_migration()
+    {
+        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-2') )
+            wp_die( __( 'Invalid request', 'attachments' ) );
+
+        $total = $this->migrate( $_GET['attachments-instance'], $_GET['attachments-title'], $_GET['attachments-caption'] );
+
+        if( false == get_option( 'attachments_migrated' ) ) :
+        ?>
+            <h3><?php _e( 'Migration Complete!', 'attachments' ); ?></h3>
+            <p><?php _e( 'The migration has completed.', 'attachments' ); ?> <strong><?php _e( 'Migrated', 'attachments'); ?>: <?php echo $total; ?></strong>.</p>
+        <?php else : ?>
+            <h3><?php _e( 'Migration has already Run!', 'attachments' ); ?></h3>
+            <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
+        <?php endif;
+
+        // make sure the database knows the migration has run
+        add_option( 'attachments_migrated', true, '', 'no' );
+    }
+
 }

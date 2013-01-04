@@ -1,4 +1,9 @@
 <?php
+
+    // instantiate our migration class
+    include_once( ATTACHMENTS_DIR . '/classes/class.attachments.migrate.php' );
+    $migrator = new AttachmentsMigrate();
+
     if( isset( $_GET['dismiss'] ) )
     {
         if( !wp_verify_nonce( $_GET['nonce'], 'attachments-dismiss') ) wp_die( __( 'Invalid request', 'attachments' ) );
@@ -54,88 +59,17 @@
     <?php endif; ?>
 
     <?php
-
-        // check for any legacy Attachments
-        // TODO: this will not retrieve posts that have exclude_from_search = true
-        // TODO: make this reusable elsewhere
-        $legacy = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
-
-        // check for any legacy Attachments Pro Attachments
-        $legacy_pro = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments_pro' );
-
         // check to see if we're migrating
         if( isset( $_GET['migrate'] ) )
         {
             switch( intval( $_GET['migrate'] ) )
             {
                 case 1:
-                    if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-1') ) wp_die( __( 'Invalid request', 'attachments' ) );
-                    ?>
-                        <h3><?php _e( 'Migration Step 1', 'attachments' ); ?></h3>
-                        <p><?php _e( "In order to migrate Attachments 1.x data, you need to set which instance and fields in version 3.0+ you'd like to use:", 'attachments' ); ?></p>
-                        <form action="options-general.php" method="get">
-                            <input type="hidden" name="page" value="attachments" />
-                            <input type="hidden" name="migrate" value="2" />
-                            <input type="hidden" name="nonce" value="<?php echo wp_create_nonce( 'attachments-migrate-2' ); ?>" />
-                            <table class="form-table">
-                                <tbody>
-                                    <tr valign="top">
-                                        <th scope="row">
-                                            <label for="attachments-instance"><?php _e( 'Attachments 3.x Instance', 'attachments' ); ?></label>
-                                        </th>
-                                        <td>
-                                            <input name="attachments-instance" id="attachments-instance" value="attachments" class="regular-text" />
-                                            <p class="description"><?php _e( 'The instance name you would like to use in the migration. Required.', 'attachments' ); ?></p>
-                                        </td>
-                                    </tr>
-                                    <tr valign="top">
-                                        <th scope="row">
-                                            <label for="attachments-title"><?php _e( 'Attachments 3.x Title', 'attachments' ); ?></label>
-                                        </th>
-                                        <td>
-                                            <input name="attachments-title" id="attachments-title" value="title" class="regular-text" />
-                                            <p class="description"><?php _e( 'The <code>Title</code> field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard.', 'attachments' ); ?></p>
-                                        </td>
-                                    </tr>
-                                    <tr valign="top">
-                                        <th scope="row">
-                                            <label for="attachments-caption"><?php _e( 'Attachments 3.x Caption', 'attachments' ); ?></label>
-                                        </th>
-                                        <td>
-                                            <input name="attachments-caption" id="attachments-caption" value="caption" class="regular-text" />
-                                            <p class="description"><?php _e( 'The <code>Caption</code> field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard.', 'attachments' ); ?></p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <p class="submit">
-                                <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Start Migration', 'attachments' ); ?>" />
-                            </p>
-                        </form>
-                    <?php
+                    $migrator->prepare_migration();
                     break;
 
                 case 2:
-                    if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-2') ) wp_die( __( 'Invalid request', 'attachments' ) );
-
-                    // instantiate our migration class
-                    include_once( ATTACHMENTS_DIR . '/classes/class.attachments.migrate.php' );
-
-                    $migrator   = new AttachmentsMigrate();
-                    $total      = $migrator->migrate( $_GET['attachments-instance'], $_GET['attachments-title'], $_GET['attachments-caption'] );
-
-                    if( false == get_option( 'attachments_migrated' ) ) :
-                    ?>
-                        <h3><?php _e( 'Migration Complete!', 'attachments' ); ?></h3>
-                        <p><?php _e( 'The migration has completed.', 'attachments' ); ?> <strong><?php _e( 'Migrated', 'attachments'); ?>: <?php echo $total; ?></strong>.</p>
-                    <?php else : ?>
-                        <h3><?php _e( 'Migration has already Run!', 'attachments' ); ?></h3>
-                        <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
-                    <?php endif;
-
-                    // make sure the database knows the migration has run
-                    add_option( 'attachments_migrated', true, '', 'no' );
-
+                    $migrator->init_migration();
                     break;
             }
         }
@@ -268,7 +202,7 @@ add_action( "attachments_register", "my_attachments" );
         else
         { ?>
 
-            <?php if( false == get_option( 'attachments_migrated' ) && $legacy->found_posts ) : ?>
+            <?php if( false == get_option( 'attachments_migrated' ) && $migrator->legacy ) : ?>
                 <h2><?php _e( 'Migrate legacy Attachments data', 'attachments' ); ?></h2>
                 <p><?php _e( 'Attachments has found records from version 1.x. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
                 <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy data', 'attachments' ); ?></a></p>
@@ -276,7 +210,7 @@ add_action( "attachments_register", "my_attachments" );
                 <p><?php _e( 'You have already migrated your legacy Attachments data.', 'attachments' ); ?></p>
             <?php endif; ?>
 
-            <?php if( false == get_option( 'attachments_pro_migrated' ) && $legacy_pro->found_posts ) : ?>
+            <?php if( false == get_option( 'attachments_pro_migrated' ) && $migrator->legacy_pro ) : ?>
                 <h2><?php _e( 'Migrate legacy Attachments Pro data', 'attachments' ); ?></h2>
                 <p><?php _e( 'Attachments has found records from Attachments Pro. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
                 <p><a href="?page=attachments&amp;migrate_pro=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-pro-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy data', 'attachments' ); ?></a></p>
