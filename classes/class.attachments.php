@@ -561,24 +561,33 @@ if ( !class_exists( 'Attachments' ) ) :
             // support custom field types
             // $field_types = apply_filters( 'attachments_fields', $field_types );
 
+            $field_index = 0;
             foreach( $field_types as $type => $path )
             {
-                // store the registered classes so we can single out what gets added
-                $classes_before = get_declared_classes();
-
                 // proceed with inclusion
                 if( file_exists( $path ) )
                 {
                     // include the file
                     include_once( $path );
 
+                    // store the registered classes so we can single out what gets added
+                    $existing_classes = get_declared_classes();
+
+                    // we're going to use our Attachments class as a reference because
+                    // during subsequent instantiations of Attachments (e.g. within template files)
+                    // these field classes WILL NOT be added to the array again because
+                    // we're using include_once() so that strategy is no longer useful
+
                     // determine it's class
-                    $classes = get_declared_classes();
-                    // the field's class is last in line
-                    $field_class = end( $classes );
+                    $flag = array_search( 'Attachments_Field', $existing_classes );
+
+                    // the field's class is next
+                    $field_class = $existing_classes[$flag + $field_index + 1];
 
                     // create our link using our new field class
                     $field_types[$type] = $field_class;
+
+                    $field_index++;
                 }
             }
 
@@ -697,7 +706,6 @@ if ( !class_exists( 'Attachments' ) ) :
             foreach( $params['post_type'] as $key => $post_type )
                 $params['post_type'][$key] = sanitize_key( $post_type );
 
-            // print_r($params['post_type']);
 
             // make sure the instance name is proper
             $instance = str_replace( '-', '_', sanitize_title( $name ) );
@@ -1086,6 +1094,7 @@ if ( !class_exists( 'Attachments' ) ) :
                 return;
             }
 
+
             // grab our JSON and decode it
             $attachments_json   = get_post_meta( $post_id, $this->meta_key, true );
             $attachments_raw    = is_string( $attachments_json ) ? json_decode( $attachments_json ) : false;
@@ -1112,7 +1121,6 @@ if ( !class_exists( 'Attachments' ) ) :
                                         break;
                                     }
                                 }
-
                                 if( isset( $this->fields[$type] ) )
                                 {
                                     // we need to decode the html entities that were encoded for the save
