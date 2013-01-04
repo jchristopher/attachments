@@ -58,7 +58,7 @@ if ( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-            $this->version  = '3.1.1';
+            $this->version  = '3.2';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -66,22 +66,8 @@ if ( !class_exists( 'Attachments' ) ) :
             include_once( ATTACHMENTS_DIR . 'upgrade.php' );
             include_once( ATTACHMENTS_DIR . '/classes/class.field.php' );
 
-<<<<<<< HEAD
-            $this->check_for_legacy_data();
-=======
             // deal with our legacy issues if the user hasn't dismissed or migrated already
-            if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
-            {
-                // TODO: this will not retrieve posts that have exclude_from_search = true
-                // TODO: make this reusable elsewhere
-                $legacy         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
-                $this->legacy   = empty( $legacy->found_posts ) ? false : true;
-            }
-            else
-            {
-                $this->legacy   = false;
-            }
->>>>>>> master
+            $this->check_for_legacy_data();
 
             // set our image sizes
             $this->image_sizes = array_merge( $this->image_sizes, get_intermediate_image_sizes() );
@@ -119,11 +105,18 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
+        /**
+         * Stores whether or not this environment has active legacy Attachments/Pro data
+         *
+         * @since 3.2
+         */
         function check_for_legacy_data()
         {
             // deal with our legacy issues if the user hasn't dismissed or migrated already
             if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
             {
+                // TODO: this will not retrieve posts that have exclude_from_search = true
+                // TODO: make this reusable elsewhere
                 $legacy         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments' );
                 $this->legacy   = empty( $legacy->found_posts ) ? false : true;
             }
@@ -135,6 +128,8 @@ if ( !class_exists( 'Attachments' ) ) :
             // deal with our legacy Pro issues if the user hasn't dismissed or migrated already
             if( false == get_option( 'attachments_pro_migrated' ) && false == get_option( 'attachments_pro_ignore_migration' ) )
             {
+                // TODO: this will not retrieve posts that have exclude_from_search = true
+                // TODO: make this reusable elsewhere
                 $legacy_pro         = new WP_Query( 'post_type=any&post_status=any&posts_per_page=1&meta_key=_attachments_pro' );
                 $this->legacy_pro   = empty( $legacy_pro->found_posts ) ? false : true;
             }
@@ -529,7 +524,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
                                 // only thumbnails have sizes which is what we're on the hunt for
                                 if(attachments_isset(attachment.attributes.sizes)){
-	                                if(attachments_isset(attachment.attributes.sizes.thumbnail)){
+                                    if(attachments_isset(attachment.attributes.sizes.thumbnail)){
                                         if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
                                             // use the thumbnail
                                             attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
