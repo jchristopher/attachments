@@ -6,7 +6,7 @@ if( !defined( 'ABSPATH' ) ) exit;
 /**
 * Migration class for legacy Attachments data
 *
-* @since 3.2
+* @since 3.1.3
 */
 class AttachmentsMigrate extends Attachments
 {

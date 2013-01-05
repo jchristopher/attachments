@@ -32,4 +32,9 @@ class Attachments_Field_Text extends Attachments_Field implements Attachments_Fi
         return;
     }
 
+    function init()
+    {
+        return;
+    }
+
 }

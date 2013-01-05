@@ -67,37 +67,35 @@ if ( !class_exists( 'Attachments' ) ) :
             include_once( ATTACHMENTS_DIR . 'upgrade.php' );
             include_once( ATTACHMENTS_DIR . '/classes/class.field.php' );
 
+            // include our fields
+            $this->fields = $this->get_field_types();
+
             // deal with our legacy issues if the user hasn't dismissed or migrated already
             $this->check_for_legacy_data();
 
             // set our image sizes
             $this->image_sizes = array_merge( $this->image_sizes, get_intermediate_image_sizes() );
 
-            // include our fields
-            $this->fields = $this->get_field_types();
-
             // hook into WP
-            add_action( 'admin_enqueue_scripts',      array( $this, 'assets' ), 999, 1 );
-            add_action( 'admin_enqueue_scripts',      array( $this, 'admin_pointer' ), 999 );
+            add_action( 'admin_enqueue_scripts',        array( $this, 'assets' ), 999, 1 );
+            add_action( 'admin_enqueue_scripts',        array( $this, 'admin_pointer' ), 999 );
 
             // register our user-defined instances
-            add_action( 'init',                       array( $this, 'do_actions_filters' ) );
+            add_action( 'init',                         array( $this, 'do_actions_filters' ) );
 
             // determine which instances apply to the current post type
-            add_action( 'init',                       array( $this, 'set_instances_for_current_post_type' ) );
+            add_action( 'init',                         array( $this, 'set_instances_for_current_post_type' ) );
 
-            add_action( 'add_meta_boxes',             array( $this, 'meta_box_init' ) );
-
-            add_action( 'admin_footer',               array( $this, 'admin_footer' ) );
-
-            add_action( 'save_post',                  array( $this, 'save' ) );
-
-            add_action( 'admin_menu',                 array( $this, 'admin_page' ) );
+            add_action( 'add_meta_boxes',               array( $this, 'meta_box_init' ) );
+            add_action( 'admin_footer',                 array( $this, 'admin_footer' ) );
+            add_action( 'save_post',                    array( $this, 'save' ) );
+            add_action( 'admin_menu',                   array( $this, 'admin_page' ) );
 
             // with version 3 we'll be giving at least one admin notice
-            add_action( 'admin_notices',              array( $this, 'admin_notice' ) );
+            add_action( 'admin_notices',                array( $this, 'admin_notice' ) );
 
-            add_action( 'admin_print_footer_scripts', array( $this, 'field_assets' ), 999, 1 );
+            add_action( 'admin_head',                   array( $this, 'field_inits' ) );
+            add_action( 'admin_print_footer_scripts',   array( $this, 'field_assets' ) );
 
             // set our attachments if necessary
             if( !is_null( $instance ) )
@@ -982,10 +980,13 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
 
-        function field_assets( $hook )
+        /**
+         * Callback to fire the assets() function for reach registered field
+         *
+         * @since 3.1
+         */
+        function field_assets()
         {
-            global $post;
-
             // we only want to enqueue if appropriate
             if( empty( $this->instances_for_post_type ) )
                 return;
@@ -995,12 +996,8 @@ if ( !class_exists( 'Attachments' ) ) :
             // first we'll get a list of the field types on screen
             $fieldtypes = array();
             foreach( $this->instances_for_post_type as $instance )
-            {
                 foreach( $this->instances[$instance]['fields'] as $field )
-                {
                     $fieldtypes[] = $field['type'];
-                }
-            }
 
             // we only want to dump out assets once for each field type
             $fieldtypes = array_unique( $fieldtypes );
@@ -1010,6 +1007,40 @@ if ( !class_exists( 'Attachments' ) ) :
             {
                 $field = new $this->fields[$fieldtype];
                 $field->assets();
+            }
+        }
+
+
+
+        /**
+         * Callback to fire the init() function for reach registered field
+         *
+         * @since 3.1
+         */
+        function field_inits()
+        {
+            global $post;
+
+            // we only want to enqueue if we're on an edit screen and it's applicable
+            if( empty( $this->instances_for_post_type ) || empty( $post ) )
+                return;
+
+            // all metaboxes have been put in place, we can now determine which field assets need to be included
+
+            // first we'll get a list of the field types on screen
+            $fieldtypes = array();
+            foreach( $this->instances_for_post_type as $instance )
+                foreach( $this->instances[$instance]['fields'] as $field )
+                    $fieldtypes[] = $field['type'];
+
+            // we only want to dump out assets once for each field type
+            $fieldtypes = array_unique( $fieldtypes );
+
+            // loop through and dump out all the assets
+            foreach( $fieldtypes as $fieldtype )
+            {
+                $field = new $this->fields[$fieldtype];
+                $field->init();
             }
         }
 

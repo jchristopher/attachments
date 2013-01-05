@@ -32,4 +32,9 @@ class Attachments_Field_Textarea extends Attachments_Field implements Attachment
         return;
     }
 
+    function init()
+    {
+        return;
+    }
+
 }

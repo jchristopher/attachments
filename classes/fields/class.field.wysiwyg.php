@@ -15,10 +15,9 @@ class Attachments_Field_WYSIWYG extends Attachments_Field implements Attachments
         parent::__construct( $name, $label, $value );
 
         add_filter( 'wp_default_editor',    array( $this, 'wp_default_editor' ) );
-        add_action('admin_head',            array( $this, 'admin_head' ) );
     }
 
-    function admin_head()
+    function init()
     {
         global $post;
 
@@ -27,7 +26,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field implements Attachments
         add_post_type_support( $post->post_type, 'editor' );
 
         if( !$has_editor )
-            echo '<style type="text/css">#poststuff .postarea { display: none; }</style>';
+            echo '<style type="text/css">#poststuff .postarea { display:none; }</style>';
     }
 
     function html( $field )
