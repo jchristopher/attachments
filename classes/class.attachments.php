@@ -107,7 +107,7 @@ if ( !class_exists( 'Attachments' ) ) :
         /**
          * Stores whether or not this environment has active legacy Attachments/Pro data
          *
-         * @since 3.2
+         * @since 3.1.3
          */
         function check_for_legacy_data()
         {
@@ -987,8 +987,10 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function field_assets()
         {
-            // we only want to enqueue if appropriate
-            if( empty( $this->instances_for_post_type ) )
+            global $post;
+
+            // we only want to enqueue if we're on an edit screen and it's applicable
+            if( empty( $this->instances_for_post_type ) || empty( $post ) )
                 return;
 
             // all metaboxes have been put in place, we can now determine which field assets need to be included
