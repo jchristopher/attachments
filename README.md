@@ -250,6 +250,10 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
+    <dt>3.1.4</dt>
+    <dd>Changed 'Delete' to 'Remove' so as to not make it sound like the file itself would be deleted from Media (props Lane Goldberg)</dd>
+    <dd>Better handling of posts that have no Attachments when saving</dd>
+
     <dt>3.1.3</dt>
     <dd>Fixed a potential issue with the WYSIWYG field not working on CPT without editor support</dd>
     <dd>Field assets are less aggressive and only fire when necessary</dd>

@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 3.1.3
+Stable tag: 3.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,10 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.1.4 =
+* Changed 'Delete' to 'Remove' so as to not make it sound like the file itself would be deleted from Media (props Lane Goldberg)
+* Better handling of posts that have no Attachments when saving
 
 = 3.1.3 =
 * Fixed a potential issue with the WYSIWYG field not working on CPT without editor support

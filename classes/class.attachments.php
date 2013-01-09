@@ -59,7 +59,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // establish our environment variables
 
-            $this->version  = '3.1.3';
+            $this->version  = '3.1.4';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -961,7 +961,7 @@ if ( !class_exists( 'Attachments' ) ) :
                             <?php if( ( isset( $attachment->id ) && isset( $attachment->width ) ) || !isset( $attachment->id ) ) : ?>
                                 <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
                             <?php endif; ?>
-                            <div class="delete-attachment"><a href="#"><?php _e( 'Delete', 'attachments' ); ?></a></div>
+                            <div class="delete-attachment"><a href="#"><?php _e( 'Remove', 'attachments' ); ?></a></div>
                         </div>
                     </div>
 
@@ -1142,11 +1142,21 @@ if ( !class_exists( 'Attachments' ) ) :
                 }
             }
 
-            // we're going to store JSON (JSON_UNESCAPED_UNICODE is PHP 5.4+)
-            $attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $attachments );
+            if( !empty( $attachments ) )
+            {
+                // we're going to store JSON (JSON_UNESCAPED_UNICODE is PHP 5.4+)
+                $attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $attachments );
 
-            // we're going to wipe out any existing Attachments meta (because we'll put it back)
-            update_post_meta( $post_id, $this->meta_key, $attachments );
+                // we're going to wipe out any existing Attachments meta (because we'll put it back)
+                update_post_meta( $post_id, $this->meta_key, $attachments );
+            }
+            else
+            {
+                // there are no attachments so we'll clean up the record
+                delete_post_meta( $post_id, $this->meta_key );
+            }
+
+            return $post_id;
         }
 
 
