@@ -202,6 +202,18 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
         /**
+         * Returns a specific Attachment
+         *
+         * @since 3.2
+         */
+        function get_single( $index )
+        {
+            return isset( $this->attachments[$index] ) ? $this->attachments[$index] : false;
+        }
+
+
+
+        /**
          * Returns the asset (array) for the current Attachment
          *
          * @since 3.0.6

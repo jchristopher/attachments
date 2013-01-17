@@ -213,6 +213,18 @@ You can also retrieve various attributes of the current Attachment directly usin
 <?php endif; ?>
 ```
 
+If you don't want to use the above implementation to loop through your Attachments, can also retrieve them explicitly:
+
+```php
+<?php $attachments = new Attachments( 'attachments' ); ?>
+<?php if( $attachments->exist() ) : ?>
+  <?php if( $attachment = $attachments->get_single( 0 ) ) : ?>
+    <h3>Attachment at index 0:</h3>
+    <pre><?php print_r( $attachment ); ?></pre>
+  <?php endif; ?>
+<?php endif; ?>
+```
+
 ## Screenshots
 
 ##### An Attachments meta box sitting below the content editor
