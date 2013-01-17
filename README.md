@@ -266,11 +266,17 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 #### I lost my Attachments after upgrading!
 
-***DO NOT update any Post/Page/CPT with Attachments***, the data has not been lost. Please [contact me](http://mondaybynoon.com/contact/) to begin a bugfix
+***DO NOT update any Post/Page/CPT with Attachments***, the data has not been lost. Please **[Upgrade notice](#upgrade-notice)**.
 
 ## Changelog
 
 <dl>
+
+    <dt>3.2</dt>
+    <dd>Added option to disable the Settings screen</dd>
+    <dd>Added the ability to set a default for fields using the metadata that exists in WordPress. Available defaults include: title, caption, alt, and description. If set, the metadata for the correlating field will be used as the field default when initially adding an Attachment from the Media modal. Only applies to text, textarea, and wysiwyg fields.</dd>
+    <dd>Added a `get_single()` method that allows you to specifically retrieve a single Attachment</dd>
+    <dd>Clarified some documentation</dd>
 
     <dt>3.1.4</dt>
     <dd>Changed 'Delete' to 'Remove' so as to not make it sound like the file itself would be deleted from Media (props Lane Goldberg)</dd>

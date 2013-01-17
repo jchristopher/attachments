@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 3.1.4
+Stable tag: 3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,8 +56,16 @@ There is a lot more information on [Attachments' GitHub page](https://github.com
 1. Download the plugin and extract the files
 1. Upload `attachments` to your `~/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Implement Attachments in your theme's `functions.php` or your own plugin (see **Usage**)
-1. Update your templates where applicable (see **Usage**)
+1. Implement Attachments in your theme's `functions.php` or your own plugin (see **Other Notes > Usage**)
+1. Update your templates where applicable (see **Other Notes > Usage**)
+
+= Upgrading from version 1.x =
+
+**You will need to update your theme files that use Attachments 3.0**. Version 1.x of Attachments has been *fully deprecated* but is still available. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your wp-config.php:
+
+`define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments`
+
+Version 3 is a *major* rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
 
 == Frequently Asked Questions ==
 
@@ -67,15 +75,15 @@ You need to turn on Attachments for your post types. View the Attachments settin
 
 = Attachments are not showing up in my theme =
 
-You will need to edit your theme files where applicable. Please reference the **Usage** instructions.
+You will need to edit your theme files where applicable. Please reference the **Other Notes > Usage** instructions.
 
 = How do I disable the default Attachments meta box? =
 
-You will need to edit your Attachments configuration. Please reference the **Usage** instructions.
+You will need to edit your Attachments configuration. Please reference the **Other Notes > Usage** instructions.
 
 = How do I change the fields for each Attachment? =
 
-You will need to edit your Attachments configuration. Please reference the **Usage** instructions.
+You will need to edit your Attachments configuration. Please reference the **Other Notes > Usage** instructions.
 
 = Where are uploads saved? =
 
@@ -83,7 +91,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 = I lost my Attachments after upgrading! =
 
-***DO NOT update any Post/Page/CPT with Attachments***, the data has not been lost. Please [contact me](http://mondaybynoon.com/contact/) to begin a bugfix
+***DO NOT update any Post/Page/CPT that should have existing Attachments***, the data *has not been lost*. Please reference the **Installation > Upgrade Notice** details.
 
 == Screenshots ==
 
@@ -94,6 +102,12 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.2 =
+* Added option to disable the Settings screen
+* Added the ability to set a default for fields using the metadata that exists in WordPress. Available defaults include: title, caption, alt, and description. If set, the metadata for the correlating field will be used as the field default when initially adding an Attachment from the Media modal. Only applies to text, textarea, and wysiwyg fields.
+* Added a `get_single()` method that allows you to specifically retrieve a single Attachment
+* Clarified some documentation
 
 = 3.1.4 =
 * Changed 'Delete' to 'Remove' so as to not make it sound like the file itself would be deleted from Media (props Lane Goldberg)
@@ -301,11 +315,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 == Upgrade Notice ==
 
 = 3.0 =
-**You will need to update your theme files that use Attachments 3.0**. Version 1.x of Attachments has been *fully deprecated* but is still available. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your wp-config.php:
-
-`define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments`
-
-Version 3 is a *major* rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
+Now piggybacking the awesome Media workflow introduced in WordPress 3.5
 
 = 1.0.8 =
 As always, be sure to back up your database and files before upgrading.
