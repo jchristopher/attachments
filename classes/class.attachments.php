@@ -89,7 +89,10 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'add_meta_boxes',               array( $this, 'meta_box_init' ) );
             add_action( 'admin_footer',                 array( $this, 'admin_footer' ) );
             add_action( 'save_post',                    array( $this, 'save' ) );
-            add_action( 'admin_menu',                   array( $this, 'admin_page' ) );
+
+            // only show the Settings screen if it hasn't been explicitly disabled
+            if( !( defined( 'ATTACHMENTS_SETTINGS_SCREEN' ) && ATTACHMENTS_SETTINGS_SCREEN === false ) )
+                add_action( 'admin_menu',               array( $this, 'admin_page' ) );
 
             // with version 3 we'll be giving at least one admin notice
             add_action( 'admin_notices',                array( $this, 'admin_notice' ) );

@@ -328,6 +328,10 @@ Planned feature additions include:
 
 == Usage ==
 
+Attachments ships with a `Settings` screen (found under the `Settings` menu in the main WordPress admin navigation) that facilitates data migration from version 1.x and also offers some code snippets. If you would like to **disable the Settings screen** add the following to your theme's `functions.php`:
+
+`define( 'ATTACHMENTS_SETTINGS_SCREEN', false ); // disable the Settings screen`
+
 When Attachments is first activated, a default instance is created titled Attachments. It has two fields:
 
 1. Title
