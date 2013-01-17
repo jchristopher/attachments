@@ -599,6 +599,7 @@ if ( !class_exists( 'Attachments' ) ) :
             $field_types = array(
                 'text'      => ATTACHMENTS_DIR . 'classes/fields/class.field.text.php',
                 'textarea'  => ATTACHMENTS_DIR . 'classes/fields/class.field.textarea.php',
+                'select' 	=> ATTACHMENTS_DIR . 'classes/fields/class.field.select.php',
                 'wysiwyg'   => ATTACHMENTS_DIR . 'classes/fields/class.field.wysiwyg.php',
             );
 
@@ -651,7 +652,8 @@ if ( !class_exists( 'Attachments' ) ) :
             $defaults = array(
                     'name'      => 'title',
                     'type'      => 'text',
-                    'label'     => __( 'Title', 'attachments' ),
+                    'label'     => __( 'Title', 'attachments' ), 
+                    'meta'		=> array()
                 );
 
             $params = array_merge( $defaults, $params );
@@ -660,15 +662,18 @@ if ( !class_exists( 'Attachments' ) ) :
             if( !isset( $this->fields[$params['type']] ) )
                return false;
 
-           // sanitize
-           if( isset( $params['name'] ) )
+            // sanitize
+            if( isset( $params['name'] ) )
                $params['name'] = str_replace( '-', '_', sanitize_title( $params['name'] ) );
 
             if( isset( $params['label'] ) )
                 $params['label'] = __( esc_html( $params['label'] ) );
-
+			
+            if( ( !isset( $params['meta'] ) ) || ( ( isset( $params['meta'] ) ) && ( !is_array( $params['meta'] ) ) ) )
+                $params['meta'] = array();
+			
             // instantiate the class for this field and send it back
-            return new $this->fields[ $params['type'] ]( $params['name'], $params['label'] );
+            return new $this->fields[ $params['type'] ]( $params['name'], $params['label'], null, $params['meta'] );
         }
 
 
@@ -863,10 +868,11 @@ if ( !class_exists( 'Attachments' ) ) :
             {
                 $name   = sanitize_title( $field['name'] );
                 $label  = esc_html( $field['label'] );
-
+                $meta	= ( ( isset( $field['meta'] ) ) ? $field['meta'] : array() );
+				
                 $value  = ( isset( $attachment->fields->$name ) ) ? $attachment->fields->$name : null;
 
-                $field  = new $this->fields[$type]( $name, $label, $value );
+                $field  = new $this->fields[$type]( $name, $label, $value, $meta );
                 $field->value = $field->format_value_for_input( $field->value );
 
                 // does this field already have a unique ID?
