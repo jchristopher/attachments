@@ -10,15 +10,7 @@
 // Declare our class
 if ( !class_exists( 'Attachments_Field' ) ) :
 
-    interface Attachments_Field_Template
-    {
-        public function html( $field );
-        public function format_value_for_input( $value, $field = null );
-        public function assets();
-        public function init();
-    }
-
-    class Attachments_Field implements Attachments_Field_Template
+    abstract class Attachments_Field
     {
         public $instance;       // the instance this field is used within
         public $name;           // the user-defined field name
@@ -76,28 +68,10 @@ if ( !class_exists( 'Attachments_Field' ) ) :
                 $this->default = strtolower( $default );
         }
 
-        public function html( $field )
-        {
-        ?>
-            <input type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" value="<?php esc_attr_e( $field->value ); ?>" data-default="<?php esc_attr_e( $field->default ); ?>" />
-        <?php
-        }
-
-        public function format_value_for_input( $value, $field = null )
-        {
-            return $value;
-        }
-
-        public function assets()
-        {
-            return;
-        }
-
-        public function init()
-        {
-            return;
-        }
-
+        abstract public function html( $field );
+        abstract public function format_value_for_input( $value, $field = null );
+        abstract public function assets();
+        abstract public function init();
     }
 
 endif; // class_exists check
