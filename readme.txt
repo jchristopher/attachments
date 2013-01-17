@@ -371,23 +371,27 @@ function my_attachments( $attachments )
      * Fields for the instance are stored in an array. Each field consists of
      * an array with three keys: name, type, label.
      *
-     * name  - (string) The field name used. No special characters.
-     * type  - (string) The registered field type.
+     * name    - (string) The field name used. No special characters.
+     * type    - (string) The registered field type.
      *                  Fields available: text, textarea, wysiwyg
-     * label - (string) The label displayed for the field.
+     * label   - (string) The label displayed for the field.
+     * caption - (string) The default WordPress metadata to use when initially adding the Attachment
+     *                  Defaults available: title, caption, alt, description
      */
 
     'fields'        => array(
       array(
-        'name'  => 'title',                          // unique field name
-        'type'  => 'text',                           // registered field type
-        'label' => __( 'Title', 'attachments' ),     // label to display
+        'name'      => 'title',                         // unique field name
+        'type'      => 'text',                          // registered field type
+        'label'     => __( 'Title', 'attachments' ),    // label to display
+        'default'   => 'title',                         // default value upon selection
       ),
       array(
-        'name'  => 'caption',                        // unique field name
-        'type'  => 'wysiwyg',                        // registered field type
-        'label' => __( 'Caption', 'attachments' ),   // label to display
-      ),
+        'name'      => 'caption',                       // unique field name
+        'type'      => 'textarea',                      // registered field type
+        'label'     => __( 'Caption', 'attachments' ),  // label to display
+        'default'   => 'caption',                       // default value upon selection
+      )
     ),
 
   );

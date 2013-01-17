@@ -28,12 +28,18 @@ if ( !class_exists( 'Attachments_Field' ) ) :
         public $type;           // field type as it was registered
         public $uid;            // unique id for field
         public $value;          // the value for the field
+        public $defaults;       // stores possible defaults the user can use which correlate with WP Media meta
+        public $default;        // the user-defined default value when first selected from the modal
 
         function __construct( $name = 'name', $label = 'Name', $value = null )
         {
             $this->name     = sanitize_title( $name );
             $this->label    = __( esc_attr( $label) );
             $this->value    = $value;
+            $this->default  = '';
+
+            $this->defaults = array( 'title', 'caption', 'alt', 'description' ); // WordPress-specific Media meta
+            // TODO: determine how to integrate with custom metadata that was added to Media
         }
 
         function set_field_instance( $instance, $field )
@@ -64,10 +70,16 @@ if ( !class_exists( 'Attachments_Field' ) ) :
             $this->type = $field_type;
         }
 
+        function set_field_default( $default = '' )
+        {
+            if( is_string( $default ) && !empty( $default ) && in_array( strtolower( $default ), $this->defaults ) )
+                $this->default = strtolower( $default );
+        }
+
         public function html( $field )
         {
         ?>
-            <input type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" value="<?php esc_attr_e( $field->value ); ?>" />
+            <input type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" value="<?php esc_attr_e( $field->value ); ?>" data-default="<?php esc_attr_e( $field->default ); ?>" />
         <?php
         }
 

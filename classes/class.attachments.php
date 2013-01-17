@@ -542,11 +542,14 @@ if ( !class_exists( 'Attachments' ) ) :
                                 attachment.attributes.attachment_thumb = attachment.attributes.icon;
 
                                 // only thumbnails have sizes which is what we're on the hunt for
-                                if(attachments_isset(attachment.attributes.sizes)){
-                                    if(attachments_isset(attachment.attributes.sizes.thumbnail)){
-                                        if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
-                                            // use the thumbnail
-                                            attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
+                                // TODO: this is a mess
+                                if(attachments_isset(attachment.attributes)){
+                                    if(attachments_isset(attachment.attributes.sizes)){
+                                        if(attachments_isset(attachment.attributes.sizes.thumbnail)){
+                                            if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
+                                                // use the thumbnail
+                                                attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
+                                            }
                                         }
                                     }
                                 }
@@ -555,6 +558,19 @@ if ( !class_exists( 'Attachments' ) ) :
 
                                 // append the template
                                 $element.find('.attachments-container').append(template(templateData));
+
+                                // see if we need to set a default
+                                // TODO: can we tie this into other field types (select, radio, checkbox)?
+                                $element.find('.attachments-attachment:last .attachments-fields input, .attachments-attachment:last .attachments-fields textarea').each(function(){
+                                    if($(this).data('default')){
+                                        var meta_for_default = $(this).data('default');
+                                        if(attachments_isset(attachment.attributes)){
+                                            if(attachments_isset(attachment.attributes[meta_for_default])){
+                                                $(this).val(attachment.attributes[meta_for_default]);
+                                            }
+                                        }
+                                    }
+                                });
 
                                 $('body').trigger('attachments/new');
 
@@ -709,14 +725,16 @@ if ( !class_exists( 'Attachments' ) ) :
                     // fields for this instance (array)
                     'fields'        => array(
                         array(
-                            'name'  => 'title',                         // unique field name
-                            'type'  => 'text',                          // registered field type
-                            'label' => __( 'Title', 'attachments' ),    // label to display
+                            'name'      => 'title',                         // unique field name
+                            'type'      => 'text',                          // registered field type
+                            'label'     => __( 'Title', 'attachments' ),    // label to display
+                            'default'   => 'title',                         // default value upon selection
                         ),
                         array(
-                            'name'  => 'caption',                       // unique field name
-                            'type'  => 'text',                          // registered field type
-                            'label' => __( 'Caption', 'attachments' ),  // label to display
+                            'name'      => 'caption',                       // unique field name
+                            'type'      => 'wysiwyg',                      // registered field type
+                            'label'     => __( 'Caption', 'attachments' ),  // label to display
+                            'default'   => 'caption',                       // default value upon selection
                         ),
                     ),
 
@@ -864,13 +882,14 @@ if ( !class_exists( 'Attachments' ) ) :
 
             if( isset( $this->fields[$type] ) )
             {
-                $name   = sanitize_title( $field['name'] );
-                $label  = esc_html( $field['label'] );
+                $name           = sanitize_title( $field['name'] );
+                $label          = esc_html( $field['label'] );
+                $default        = isset( $field['default'] ) ? $field['default'] : false; // validated in the class
 
-                $value  = ( isset( $attachment->fields->$name ) ) ? $attachment->fields->$name : null;
+                $value          = ( isset( $attachment->fields->$name ) ) ? $attachment->fields->$name : null;
 
-                $field  = new $this->fields[$type]( $name, $label, $value );
-                $field->value = $field->format_value_for_input( $field->value );
+                $field          = new $this->fields[$type]( $name, $label, $value );
+                $field->value   = $field->format_value_for_input( $field->value );
 
                 // does this field already have a unique ID?
                 $uid = ( isset( $attachment->uid ) ) ? $attachment->uid : null;
@@ -879,6 +898,7 @@ if ( !class_exists( 'Attachments' ) ) :
                 $field->set_field_instance( $instance, $field );
                 $field->set_field_identifiers( $field, $uid );
                 $field->set_field_type( $type );
+                $field->set_field_default( $default );
 
                 ?>
                 <div class="attachments-attachment-field attachments-attachment-field-<?php echo $instance; ?> attachments-attachment-field-<?php echo $field->type; ?> attachment-field-<?php echo $field->name; ?>">
