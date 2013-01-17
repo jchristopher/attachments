@@ -28,12 +28,14 @@ if ( !class_exists( 'Attachments_Field' ) ) :
         public $type;           // field type as it was registered
         public $uid;            // unique id for field
         public $value;          // the value for the field
+        public $meta;			// associated metadata for the field (i.e., an array containing the values for a select box)
 
-        function __construct( $name = 'name', $label = 'Name', $value = null )
+        function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() )
         {
             $this->name     = sanitize_title( $name );
             $this->label    = __( esc_attr( $label) );
             $this->value    = $value;
+            $this->meta		= $meta;
         }
 
         function set_field_instance( $instance, $field )
