@@ -7,7 +7,7 @@
  * @subpackage Main
  */
 
-class Attachments_Field_Text extends Attachments_Field implements Attachments_Field_Template
+class Attachments_Field_Text extends Attachments_Field
 {
 
     function __construct( $name = 'name', $label = 'Name', $value = null )
