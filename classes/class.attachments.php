@@ -730,6 +730,11 @@ if ( !class_exists( 'Attachments' ) ) :
                                 // append the template
                                 $element.find('.attachments-container').append(template(templateData));
 
+                                // if we're in a sidebar we DO want to show the fields which are normally hidden on load via CSS
+                                if($element.parents('#side-sortables')){
+                                    $element.find('.attachments-attachment:last .attachments-fields').show();
+                                }
+
                                 // see if we need to set a default
                                 // TODO: can we tie this into other field types (select, radio, checkbox)?
                                 $element.find('.attachments-attachment:last .attachments-fields input, .attachments-attachment:last .attachments-fields textarea').each(function(){
@@ -906,7 +911,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
                     // text for modal 'Attach' button (string)
                     'modal_text'    => __( 'Attach', 'attachments' ),
-                
+
                     // meta box position (normal, side or advanced)
                     'position'      => 'normal',
 
@@ -1178,6 +1183,8 @@ if ( !class_exists( 'Attachments' ) ) :
                             <div class="delete-attachment"><a href="#"><?php _e( 'Remove', 'attachments' ); ?></a></div>
                         </div>
                     </div>
+
+                    <p class="attachments-attachment-fields-toggle"><a href="#"><?php _e( 'Toggle Fields', 'attachments' ); ?></a></p>
 
                     <div class="attachments-handle"><img src="<?php echo trailingslashit( $this->url ) . 'images/handle.gif'; ?>" alt="Handle" width="20" height="20" /></div>
 

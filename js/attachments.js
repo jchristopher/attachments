@@ -86,11 +86,14 @@ jQuery(document).ready(function($){
         containment: 'parent',
         handle: '.attachments-handle img',
         start: function(event, ui) {
-            //ui.placeholder.height(ui.item.height());
             $(document).trigger('attachments/sortable_start');
         },
         stop: function(event, ui) {
             $(document).trigger('attachments/sortable_stop');
         }
+    });
+    $('body').on('click','p.attachments-attachment-fields-toggle > a', function(){
+        $(this).parents('.attachments-attachment').find('.attachments-fields').toggle();
+        return false;
     });
 });
