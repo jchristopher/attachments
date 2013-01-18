@@ -1270,7 +1270,6 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function save( $post_id )
         {
-            error_log(print_r($_POST));
             // is the user logged in?
             if( !is_user_logged_in() )
                 return $post_id;
@@ -1317,13 +1316,13 @@ if ( !class_exists( 'Attachments' ) ) :
                             $field_value = str_replace("\n", "%%ATTACHMENTS_NEWLINE%%", $field_value );
 
                             // slashes were already added so we're going to strip them
-                            $field_value = stripslashes( $field_value );
+                            $field_value = stripslashes_deep( $field_value );
 
                             // put back our newlines
                             $field_value = str_replace("%%ATTACHMENTS_NEWLINE%%", "\\n", $field_value );
 
                             // encode the whole thing
-                            $field_value = htmlentities( $field_value, ENT_QUOTES, 'UTF-8' );
+                            $field_value = $this->encode_field_value( $field_value );
 
                             // encode things properly
                             $attachment['fields'][$key] = $field_value;
@@ -1349,6 +1348,40 @@ if ( !class_exists( 'Attachments' ) ) :
             }
 
             return $post_id;
+        }
+
+
+
+        /**
+         * Recursive function to encode a field type before saving
+         * @param  mixed $field_value The field value
+         * @return mixed              The encoded field value
+         *
+         * @since 3.3
+         */
+        function encode_field_value( $field_value = null )
+        {
+            if( is_null( $field_value ) )
+                return;
+
+            if( is_object( $field_value ) )
+            {
+                $input = get_object_vars( $field_value );
+
+                foreach( $input as $key => $val )
+                    $field_value[$key] = $this->encode_field_value( $val );
+
+                $field_value = (object) $field_value;
+            }
+            elseif( is_array( $field_value ) )
+            {
+                foreach( $field_value as $key => $val )
+                    $field_value[$key] = $this->encode_field_value( $val );
+            }
+            else
+                $field_value = htmlentities( $field_value, ENT_QUOTES, 'UTF-8' );
+
+            return $field_value;
         }
 
 
@@ -1476,7 +1509,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         if( isset( $this->fields[$type] ) )
                         {
                             // we need to decode the html entities that were encoded for the save
-                            $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES, 'UTF-8' );
+                            $attachment->fields->$key = $this->decode_field_value( $attachment->fields->$key );
                         }
                         else
                         {
@@ -1487,11 +1520,45 @@ if ( !class_exists( 'Attachments' ) ) :
                     else
                     {
                         // this was a theme file request, just grab it
-                        $attachment->fields->$key = html_entity_decode( $attachment->fields->$key, ENT_QUOTES, 'UTF-8' );
+                        $attachment->fields->$key = $this->decode_field_value( $attachment->fields->$key );
                     }
                 }
             }
             return $attachment;
+        }
+
+
+
+        /**
+         * Recursive function to decode a field value when retrieving it
+         * @param  mixed $field_value The field value
+         * @return mixed              The encoded field value
+         *
+         * @since 3.3
+         */
+        function decode_field_value( $field_value = null )
+        {
+            if( is_null( $field_value ) )
+                return;
+
+            if( is_object( $field_value ) )
+            {
+                $input = get_object_vars( $field_value );
+
+                foreach( $input as $key => $val )
+                    $field_value[$key] = $this->decode_field_value( $val );
+
+                $field_value = (object) $field_value;
+            }
+            elseif( is_array( $field_value ) )
+            {
+                foreach( $field_value as $key => $val )
+                    $field_value[$key] = $this->decode_field_value( $val );
+            }
+            else
+                $field_value = html_entity_decode( $field_value, ENT_QUOTES, 'UTF-8' );
+
+            return $field_value;
         }
 
 

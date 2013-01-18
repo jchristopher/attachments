@@ -106,6 +106,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 = 3.3 =
 * Added a `search()` method to allow searching for Attachments based on their attributes (e.g. attachment ID, post ID, post type, field values, etc.)
 * Improved the 'Remove' animation
+* New field: select
 
 = 3.2 =
 * Added option to disable the Settings screen
@@ -422,6 +423,67 @@ function my_attachments( $attachments )
 }
 
 add_action( 'attachments_register', 'my_attachments' );`
+
+**Fields Reference**
+
+At this time there are **four** field types available:
+
+1. `text`
+1. `textarea`
+1. `select`
+1. `wysiwyg`
+
+When declaring fields for your instance, you'll be composing an array of fields, each with an array of parameters that set the various attributes of each field. Here is a full example of all available parameters for all available fields:
+
+`<?php
+/**
+ * Fields for the instance are stored in an array. Each field consists of
+ * an array with three required keys: name, type, label
+ * and one optional key: meta
+ *
+ * name    - (string) The field name used. No special characters.
+ * type    - (string) The registered field type.
+ *                  Fields available: text, textarea, wysiwyg, select
+ * label   - (string) The label displayed for the field.
+ * default - (string) The default WordPress metadata to use when initially adding the Attachment
+ *                  Defaults available: title, caption, alt, description
+ * meta    - (array) The field-specific parameters that apply only to that field type
+ */
+
+$fields         => array(
+  array(
+    'name'      => 'title',                             // unique field name
+    'type'      => 'text',                              // registered field type
+    'label'     => __( 'Title', 'attachments' ),        // label to display
+    'default'   => 'title',                             // default value upon selection
+  ),
+  array(
+    'name'      => 'caption',                           // unique field name
+    'type'      => 'textarea',                          // registered field type
+    'label'     => __( 'Caption', 'attachments' ),      // label to display
+    'default'   => 'caption',                           // default value upon selection
+  ),
+  array(
+    'name'      => 'option',                            // unique field name
+    'type'      => 'select',                            // registered field type
+    'label'     => __( 'Option', 'attachments' ),       // label to display
+    'meta'      => array(                               // field-specific meta as defined by field class
+                    'allow_null'    => true,            // allow null value? (adds 'empty' <option>)
+                    'multiple'      => true,            // multiple <select>?
+                    'options'       => array(           // the <option>s to use
+                          '1'     => 'Option 1',
+                          '2'     => 'Option 2',
+                      )
+                  ),
+  ),
+  array(
+    'name'      => 'description',                       // unique field name
+    'type'      => 'wysiwyg',                           // registered field type
+    'label'     => __( 'Description', 'attachments' ),  // label to display
+    'default'   => 'description',                       // default value upon selection
+  ),
+);
+?>`
 
 = Pulling Attachments to your Theme =
 

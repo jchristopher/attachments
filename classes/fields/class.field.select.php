@@ -48,10 +48,23 @@ class Attachments_Field_Select extends Attachments_Field
     function html( $field )
     {
     ?>
-        <select name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>"<?php if( $this->multiple ) : ?> multiple<?php endif; ?>>
+        <select name="<?php esc_attr_e( $field->field_name ); ?><?php if( $this->multiple ) : ?>[]<?php endif; ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>"<?php if( $this->multiple ) : ?> multiple<?php endif; ?>>
             <?php if( $this->allow_null && !$this->multiple ) : ?><option value="">&mdash;</option><?php endif; ?>
             <?php foreach ( $this->options as $option_value => $option_label ) : ?>
-                <option value="<?php esc_attr_e( $option_value ); ?>"<?php selected( $field->value, $option_value ); ?>>
+                <?php
+                    $selected = selected( $field->value, $option_value ) ? ' selected' : '';
+
+                    if( is_array( $field->value ) )
+                        $selected = in_array( $option_value, $field->value ) ? ' selected' : '';
+
+                    if( is_object( $field->value ) )
+                    {
+                        $values     = get_object_vars( $field->value );
+                        $selected   = in_array( $option_value, $values ) ? ' selected' : '';
+                    }
+
+                ?>
+                <option value="<?php esc_attr_e( $option_value ); ?>"<?php echo $selected; ?>>
                     <?php echo $option_label; ?>
                 </option>
             <?php endforeach; ?>
