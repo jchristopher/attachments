@@ -92,7 +92,7 @@ jQuery(document).ready(function($){
             $(document).trigger('attachments/sortable_stop');
         }
     });
-    $('body').on('click','p.attachments-attachment-fields-toggle > a', function(){
+    $('body').on('click','.attachments-attachment-fields-toggle > a', function(){
         $(this).parents('.attachments-attachment').find('.attachments-fields').toggle();
         return false;
     });

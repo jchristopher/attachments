@@ -1181,10 +1181,9 @@ if ( !class_exists( 'Attachments' ) ) :
                                 <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
                             <?php endif; ?>
                             <div class="delete-attachment"><a href="#"><?php _e( 'Remove', 'attachments' ); ?></a></div>
+                            <div class="attachments-attachment-fields-toggle"><a href="#"><?php _e( 'Toggle Fields', 'attachments' ); ?></a></div>
                         </div>
                     </div>
-
-                    <p class="attachments-attachment-fields-toggle"><a href="#"><?php _e( 'Toggle Fields', 'attachments' ); ?></a></p>
 
                     <div class="attachments-handle"><img src="<?php echo trailingslashit( $this->url ) . 'images/handle.gif'; ?>" alt="Handle" width="20" height="20" /></div>
 
