@@ -59,7 +59,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // establish our environment variables
 
-            $this->version  = '3.2';
+            $this->version  = '3.3';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
