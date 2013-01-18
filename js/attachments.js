@@ -86,10 +86,11 @@ jQuery(document).ready(function($){
         containment: 'parent',
         handle: '.attachments-handle img',
         start: function(event, ui) {
+            //ui.placeholder.height(ui.item.height());
             $(document).trigger('attachments/sortable_start');
         },
         stop: function(event, ui) {
             $(document).trigger('attachments/sortable_stop');
-        },
+        }
     });
 });

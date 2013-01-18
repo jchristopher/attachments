@@ -204,3 +204,35 @@ a.attachments-invoke {
     display:block;
     cursor:pointer;
 }
+
+/* Side styles */
+
+#post-body.columns-2 #side-sortables .attachments-parent-container {
+    padding-bottom: 41px;
+}
+#post-body.columns-2 #side-sortables .attachments-container {
+    padding-bottom: 0;
+}
+#post-body.columns-2 #side-sortables .attachments-attachment {
+    min-height: 0;
+    padding-bottom: 13px;
+}
+#post-body.columns-2 #side-sortables .attachments-attachment .attachment-meta {
+    position: static;
+    margin: 23px 0 0 20px;
+}
+#post-body.columns-2 #side-sortables .attachments-attachment:first-of-type .attachment-meta {
+    margin-top: 17px;
+}
+#post-body.columns-2 #side-sortables .attachments-attachment:last-of-type {
+    padding-top: 0;
+    padding-bottom: 13px;
+    margin-bottom: 0px;
+}
+#post-body.columns-2 #side-sortables .attachments-attachment:first-of-type .attachments-handle {
+    top:14px;
+}
+#post-body.columns-2 #side-sortables .attachments-fields {
+    margin-right: 0;
+    margin-left: 20px;
+}
