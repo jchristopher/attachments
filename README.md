@@ -410,7 +410,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 #### I lost my Attachments after upgrading!
 
-***DO NOT update any Post/Page/CPT with Attachments***, the data has not been lost. Please **[Upgrade notice](#upgrade-notice)**.
+***DO NOT update any Post/Page/CPT with Attachments***, the data has not been lost. Please reference the **[Upgrade notice](#upgrade-notice)**.
 
 ## Changelog
 
