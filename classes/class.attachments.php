@@ -601,8 +601,10 @@ if ( !class_exists( 'Attachments' ) ) :
                     $instance_name      = $instance;
                     $instance           = (object) $this->instances[$instance];
                     $instance->name     = $instance_name;
+                    $position           = isset($instance->position) ? $instance->position : 'normal';
+                    $priority           = isset($instance->priority) ? $instance->priority : 'high';
 
-                    add_meta_box( 'attachments-' . $instance_name, __( esc_attr( $instance->label ) ), array( $this, 'meta_box_markup' ), $this->get_post_type(), 'normal', 'high', array( 'instance' => $instance, 'setup_nonce' => !$nonce_sent ) );
+                    add_meta_box( 'attachments-' . $instance_name, __( esc_attr( $instance->label ) ), array( $this, 'meta_box_markup' ), $this->get_post_type(), $position, $priority, array( 'instance' => $instance, 'setup_nonce' => !$nonce_sent ) );
 
                     $nonce_sent = true;
                 }
@@ -904,6 +906,12 @@ if ( !class_exists( 'Attachments' ) ) :
 
                     // text for modal 'Attach' button (string)
                     'modal_text'    => __( 'Attach', 'attachments' ),
+                
+                    // meta box position (normal, side or advanced)
+                    'position'      => 'normal',
+
+                    // meta box priority (high, default, low, core)
+                    'priority'      => 'high',
 
                     // fields for this instance (array)
                     'fields'        => array(
