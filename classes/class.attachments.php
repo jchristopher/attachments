@@ -748,9 +748,18 @@ if ( !class_exists( 'Attachments' ) ) :
 
                         targetAttachment = $(this).parents('.attachments-attachment');
 
-                        targetAttachment.slideUp(function(){
-                            targetAttachment.remove();
-                        });
+                        targetAttachment.find('.attachment-meta').fadeOut(125);
+                        targetAttachment.css('min-height',0).animate(
+                            {
+                                padding: 0,
+                                margin: 0,
+                                height: 0
+                            },
+                            600,
+                            function(){
+                                targetAttachment.remove();
+                            }
+                        );
 
                     } );
 

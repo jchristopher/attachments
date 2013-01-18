@@ -8,6 +8,7 @@ a.attachments-invoke {
     padding:5px 0 25px;
     border-bottom:1px solid #e7e7e7;
     min-height:125px;
+    overflow:hidden;
 }
 
 .attachments-attachment:before,

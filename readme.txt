@@ -105,6 +105,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 = 3.3 =
 * Added a `search()` method to allow searching for Attachments based on their attributes (e.g. attachment ID, post ID, post type, field values, etc.)
+* Improved the 'Remove' animation
 
 = 3.2 =
 * Added option to disable the Settings screen
