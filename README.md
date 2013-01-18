@@ -416,9 +416,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 <dl>
 
-    <dd>3.3.1</dd>
-    <dt>Added meta box positioning arguments when registering instances</dt>
-    <dt>Cleaned up some CSS when Attachments instances are in the sidebar</dt>
+    <dt>3.3.1</dt>
+    <dd>Added meta box positioning arguments when registering instances</dd>
+    <dd>Cleaned up some CSS when Attachments instances are in the sidebar</dd>
 
     <dt>3.3</dt>
     <dd>Added a <code>search()</code> method to allow searching for Attachments based on their attributes (e.g. attachment ID, post ID, post type, field values, etc.)</dd>
