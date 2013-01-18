@@ -59,7 +59,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // establish our environment variables
 
-            $this->version  = '3.3';
+            $this->version  = '3.3.1';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -897,6 +897,12 @@ if ( !class_exists( 'Attachments' ) ) :
                     // all post types to utilize (string|array)
                     'post_type'     => array( 'post', 'page' ),
 
+                    // meta box position (string) (normal, side or advanced)
+                    'position'      => 'normal',
+
+                    // meta box priority (string) (high, default, low, core)
+                    'priority'      => 'high',
+
                     // maximum number of Attachments (int) (-1 is unlimited)
                     'limit'         => -1,
 
@@ -911,12 +917,6 @@ if ( !class_exists( 'Attachments' ) ) :
 
                     // text for modal 'Attach' button (string)
                     'modal_text'    => __( 'Attach', 'attachments' ),
-
-                    // meta box position (normal, side or advanced)
-                    'position'      => 'normal',
-
-                    // meta box priority (high, default, low, core)
-                    'priority'      => 'high',
 
                     // fields for this instance (array)
                     'fields'        => array(

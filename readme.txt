@@ -107,6 +107,10 @@ Else: please reference the **Installation > Upgrade Notice** details.
 
 == Changelog ==
 
+= 3.3.1 =
+* Added meta box positioning arguments when registering instances
+* Cleaned up some CSS when Attachments instances are in the sidebar
+
 = 3.3 =
 * Added a `search()` method to allow searching for Attachments based on their attributes (e.g. attachment ID, post ID, post type, field values, etc.)
 * Improved the 'Remove' animation
@@ -382,6 +386,12 @@ function my_attachments( $attachments )
 
     // all post types to utilize (string|array)
     'post_type'     => array( 'post', 'page' ),
+
+    // meta box position (string) (normal, side or advanced)
+    'position'      => 'normal',
+
+    // meta box priority (string) (high, default, low, core)
+    'priority'      => 'high',
 
     // allowed file type(s) (array) (image|video|text|audio|application)
     'filetype'      => null,  // no filetype limit

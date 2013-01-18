@@ -139,6 +139,12 @@ function my_attachments( $attachments )
     // all post types to utilize (string|array)
     'post_type'     => array( 'post', 'page' ),
 
+    // meta box position (string) (normal, side or advanced)
+    'position'      => 'normal',
+
+    // meta box priority (string) (high, default, low, core)
+    'priority'      => 'high',
+
     // allowed file type(s) (array) (image|video|text|audio|application)
     'filetype'      => null,  // no filetype limit
 
@@ -409,6 +415,10 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 ## Changelog
 
 <dl>
+
+    <dd>3.3.1</dd>
+    <dt>Added meta box positioning arguments when registering instances</dt>
+    <dt>Cleaned up some CSS when Attachments instances are in the sidebar</dt>
 
     <dt>3.3</dt>
     <dd>Added a <code>search()</code> method to allow searching for Attachments based on their attributes (e.g. attachment ID, post ID, post type, field values, etc.)</dd>
