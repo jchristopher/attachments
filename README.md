@@ -296,9 +296,23 @@ If you don't want to use the above implementation to loop through your Attachmen
 ```php
 <?php $attachments = new Attachments( 'attachments' ); ?>
 <?php if( $attachments->exist() ) : ?>
-  <?php if( $attachment = $attachments->get_single( 0 ) ) : ?>
+  <?php $my_index = 0; ?>
+  <?php if( $attachment = $attachments->get_single( $my_index ) ) : ?>
     <h3>Attachment at index 0:</h3>
     <pre><?php print_r( $attachment ); ?></pre>
+    <ul>
+      <li>
+        ID: <?php echo $attachments->id( $my_index ); ?><br />
+        Type: <?php echo $attachments->type( $my_index ); ?><br />
+        Subtype: <?php echo $attachments->subtype( $my_index ); ?><br />
+        URL: <?php echo $attachments->url( $my_index ); ?><br />
+        Image: <?php echo $attachments->image( 'thumbnail', $my_index ); ?><br />
+        Source: <?php echo $attachments->src( 'full', $my_index ); ?><br />
+        Size: <?php echo $attachments->filesize( $my_index ); ?><br />
+        Title Field: <?php echo $attachments->field( 'title', $my_index ); ?><br />
+        Caption Field: Name: <?php echo $attachments->field( 'caption', $my_index ); ?>
+      </li>
+    </ul>
   <?php endif; ?>
 <?php endif; ?>
 ```
@@ -400,6 +414,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
     <dd>Added a <code>search()</code> method to allow searching for Attachments based on their attributes (e.g. attachment ID, post ID, post type, field values, etc.)</dd>
     <dd>Improved the 'Remove' animation</dd>
     <dd>New field: select</dd>
+    <dd>New parameter for Attachments attributes methods. You can pass the index (<code>int</code>) of the Attachment you'd like to utilize when firing the method.</dd>
 
     <dt>3.2</dt>
     <dd>Added option to disable the Settings screen</dd>

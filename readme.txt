@@ -91,7 +91,11 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
 = I lost my Attachments after upgrading! =
 
-***DO NOT update any Post/Page/CPT that should have existing Attachments***, the data *has not been lost*. Please reference the **Installation > Upgrade Notice** details.
+***DO NOT update any Post/Page/CPT that should have existing Attachments***, the data *has not been lost*.
+
+If you disabled the default intsance after migrating, used the default values when migrating, and used a snippet from the docs to add a new one, **make sure your instance names match**. The default value during migration uses an instance name of `attachments` while many snippets use `my_attachments`.
+
+Else: please reference the **Installation > Upgrade Notice** details.
 
 == Screenshots ==
 
@@ -107,6 +111,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 * Added a `search()` method to allow searching for Attachments based on their attributes (e.g. attachment ID, post ID, post type, field values, etc.)
 * Improved the 'Remove' animation
 * New field: select
+* New parameter for Attachments attributes methods. You can pass the index (`int`) of the Attachment you'd like to utilize when firing the method.
 
 = 3.2 =
 * Added option to disable the Settings screen
@@ -551,9 +556,23 @@ If you don't want to use the above implementation to loop through your Attachmen
 
 `<?php $attachments = new Attachments( 'attachments' ); ?>
 <?php if( $attachments->exist() ) : ?>
-  <?php if( $attachment = $attachments->get_single( 0 ) ) : ?>
+  <?php $my_index = 0; ?>
+  <?php if( $attachment = $attachments->get_single( $my_index ) ) : ?>
     <h3>Attachment at index 0:</h3>
     <pre><?php print_r( $attachment ); ?></pre>
+    <ul>
+      <li>
+        ID: <?php echo $attachments->id( $my_index ); ?><br />
+        Type: <?php echo $attachments->type( $my_index ); ?><br />
+        Subtype: <?php echo $attachments->subtype( $my_index ); ?><br />
+        URL: <?php echo $attachments->url( $my_index ); ?><br />
+        Image: <?php echo $attachments->image( 'thumbnail', $my_index ); ?><br />
+        Source: <?php echo $attachments->src( 'full', $my_index ); ?><br />
+        Size: <?php echo $attachments->filesize( $my_index ); ?><br />
+        Title Field: <?php echo $attachments->field( 'title', $my_index ); ?><br />
+        Caption Field: Name: <?php echo $attachments->field( 'caption', $my_index ); ?>
+      </li>
+    </ul>
   <?php endif; ?>
 <?php endif; ?>`
 

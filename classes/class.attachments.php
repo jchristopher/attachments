@@ -348,18 +348,20 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0.6
          */
-        function asset( $size = 'thumbnail' )
+        function asset( $size = 'thumbnail', $index = null )
         {
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+
             // do we have our meta yet?
-            if( !isset( $this->attachments[$this->attachments_ref]->meta ) )
-                $this->attachments[$this->attachments_ref]->meta = wp_get_attachment_metadata( $this->attachments[$this->attachments_ref]->id );
+            if( !isset( $this->attachments[$index]->meta ) )
+                $this->attachments[$index]->meta = wp_get_attachment_metadata( $this->attachments[$index]->id );
 
             // is it an image?
             if(
-                isset( $this->attachments[$this->attachments_ref]->meta['sizes'] ) &&  // is it an image?
+                isset( $this->attachments[$index]->meta['sizes'] ) &&  // is it an image?
                 in_array( $size, $this->image_sizes ) )                                // do we have the right size?
             {
-                $asset = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, $size );
+                $asset = wp_get_attachment_image_src( $this->attachments[$index]->id, $size );
             }
             else
             {
@@ -377,9 +379,10 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0.6
          */
-        function icon()
+        function icon( $index = null )
         {
-            $asset = wp_get_attachment_image_src( $this->attachments[$this->attachments_ref]->id, null, true );
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+            $asset = wp_get_attachment_image_src( $this->attachments[$index]->id, null, true );
             return $asset;
         }
 
@@ -390,14 +393,15 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function image( $size = 'thumbnail' )
+        function image( $size = 'thumbnail', $index = null )
         {
             $asset = $this->asset( $size );
 
             $image_src      = $asset[0];
             $image_width    = $asset[1];
             $image_height   = $asset[2];
-            $image_alt      = get_post_meta( $this->attachments[$this->attachments_ref]->id, '_wp_attachment_image_alt', true );
+            $index          = is_null( $index ) ? $this->attachments_ref : intval( $index );
+            $image_alt      = get_post_meta( $this->attachments[$index]->id, '_wp_attachment_image_alt', true );
 
             $image = '<img src="' . $image_src . '" width="' . $image_width . '" height="' . $image_height . '" alt="' . $image_alt . '" />';
 
@@ -411,7 +415,7 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function src( $size = 'thumbnail' )
+        function src( $size = 'thumbnail', $index = null )
         {
             $asset = $this->asset( $size );
             return $asset[0];
@@ -424,12 +428,14 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function filesize()
+        function filesize( $index = null )
         {
-            if( !isset( $this->attachments[$this->attachments_ref]->id ) )
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+
+            if( !isset( $this->attachments[$index]->id ) )
                 return false;
 
-            $url        = wp_get_attachment_url( $this->attachments[$this->attachments_ref]->id );
+            $url        = wp_get_attachment_url( $this->attachments[$index]->id );
             $uploads    = wp_upload_dir();
             $file_path  = str_replace( $uploads['baseurl'], $uploads['basedir'], $url );
 
@@ -448,13 +454,15 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function type()
+        function type( $index = null )
         {
-            if( !isset( $this->attachments[$this->attachments_ref]->id ) )
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+
+            if( !isset( $this->attachments[$index]->id ) )
                 return false;
 
-            $attachment_mime = explode( '/', get_post_mime_type( $this->attachments[$this->attachments_ref]->id ) );
-            return isset( $attachment_mime[0] ) ? $attachment_mime[0] : null;
+            $attachment_mime = explode( '/', get_post_mime_type( $this->attachments[$index]->id ) );
+            return isset( $attachment_mime[0] ) ? $attachment_mime[0] : false;
         }
 
 
@@ -464,13 +472,15 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function subtype()
+        function subtype( $index = null )
         {
-            if( !isset( $this->attachments[$this->attachments_ref]->id ) )
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+
+            if( !isset( $this->attachments[$index]->id ) )
                 return false;
 
-            $attachment_mime = explode( '/', get_post_mime_type( $this->attachments[$this->attachments_ref]->id ) );
-            return isset( $attachment_mime[1] ) ? $attachment_mime[1] : null;
+            $attachment_mime = explode( '/', get_post_mime_type( $this->attachments[$index]->id ) );
+            return isset( $attachment_mime[1] ) ? $attachment_mime[1] : false;
         }
 
 
@@ -480,9 +490,11 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function id()
+        function id( $index = null )
         {
-            return isset( $this->attachments[$this->attachments_ref]->id ) ? $this->attachments[$this->attachments_ref]->id : null;
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+
+            return isset( $this->attachments[$index]->id ) ? $this->attachments[$index]->id : false;
         }
 
 
@@ -492,9 +504,11 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.3
          */
-        function post_id()
+        function post_id( $index = null )
         {
-            return isset( $this->attachments[$this->attachments_ref]->post_id ) ? $this->attachments[$this->attachments_ref]->post_id : null;
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+
+            return isset( $this->attachments[$index]->post_id ) ? $this->attachments[$index]->post_id : false;
         }
 
 
@@ -504,12 +518,11 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function url()
+        function url( $index = null )
         {
-            if( !isset( $this->attachments[$this->attachments_ref]->id ) )
-                return false;
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
 
-            return wp_get_attachment_url( $this->attachments[$this->attachments_ref]->id );
+            return isset( $this->attachments[$index]->id ) ? wp_get_attachment_url( $this->attachments[$index]->id ) : false;
         }
 
 
@@ -519,9 +532,11 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function field( $name = 'title' )
+        function field( $name = 'title', $index = null )
         {
-            return isset( $this->attachments[$this->attachments_ref]->fields->$name ) ? $this->attachments[$this->attachments_ref]->fields->$name : false;
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+
+            return isset( $this->attachments[$index]->fields->$name ) ? $this->attachments[$index]->fields->$name : false;
         }
 
 
