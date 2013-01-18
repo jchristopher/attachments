@@ -25,6 +25,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
         public $value;          // the value for the field
         public $defaults;       // stores possible defaults the user can use which correlate with WP Media meta
         public $default;        // the user-defined default value when first selected from the modal
+        public $meta;           // houses any metadata necessary for the field
 
 
 
@@ -34,13 +35,13 @@ if ( !class_exists( 'Attachments_Field' ) ) :
          * @param string $label Field label
          * @param mixed $value Field value
          */
-        function __construct( $name = 'name', $label = 'Name', $value = null )
+        function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() )
         {
             $this->name     = sanitize_title( $name );
             $this->label    = __( esc_attr( $label) );
             $this->value    = $value;
             $this->default  = '';
-
+            $this->meta     = $meta;
             $this->defaults = array( 'title', 'caption', 'alt', 'description' ); // WordPress-specific Media meta
             // TODO: determine how to integrate with custom metadata that was added to Media
         }

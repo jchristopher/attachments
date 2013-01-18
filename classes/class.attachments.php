@@ -781,6 +781,7 @@ if ( !class_exists( 'Attachments' ) ) :
             $field_types = array(
                 'text'      => ATTACHMENTS_DIR . 'classes/fields/class.field.text.php',
                 'textarea'  => ATTACHMENTS_DIR . 'classes/fields/class.field.textarea.php',
+                'select'    => ATTACHMENTS_DIR . 'classes/fields/class.field.select.php',
                 'wysiwyg'   => ATTACHMENTS_DIR . 'classes/fields/class.field.wysiwyg.php',
             );
 
@@ -834,6 +835,7 @@ if ( !class_exists( 'Attachments' ) ) :
                     'name'      => 'title',
                     'type'      => 'text',
                     'label'     => __( 'Title', 'attachments' ),
+                    'meta'      => array(),
                 );
 
             $params = array_merge( $defaults, $params );
@@ -849,8 +851,11 @@ if ( !class_exists( 'Attachments' ) ) :
             if( isset( $params['label'] ) )
                 $params['label'] = __( esc_html( $params['label'] ) );
 
+            if( !isset( $params['meta'] ) || !is_array( $params['meta'] ) )
+                 $params['meta'] = array();
+
             // instantiate the class for this field and send it back
-            return new $this->fields[ $params['type'] ]( $params['name'], $params['label'] );
+            return new $this->fields[ $params['type'] ]( $params['name'], $params['label'], $params['meta'] );
         }
 
 
@@ -1048,10 +1053,10 @@ if ( !class_exists( 'Attachments' ) ) :
                 $name           = sanitize_title( $field['name'] );
                 $label          = esc_html( $field['label'] );
                 $default        = isset( $field['default'] ) ? $field['default'] : false; // validated in the class
+                $meta           = isset( $field['meta'] ) ? $field['meta'] : array();
+                $value          = isset( $attachment->fields->$name ) ? $attachment->fields->$name : null;
 
-                $value          = ( isset( $attachment->fields->$name ) ) ? $attachment->fields->$name : null;
-
-                $field          = new $this->fields[$type]( $name, $label, $value );
+                $field          = new $this->fields[$type]( $name, $label, $value, $meta );
                 $field->value   = $field->format_value_for_input( $field->value );
 
                 // does this field already have a unique ID?
@@ -1265,6 +1270,7 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function save( $post_id )
         {
+            error_log(print_r($_POST));
             // is the user logged in?
             if( !is_user_logged_in() )
                 return $post_id;

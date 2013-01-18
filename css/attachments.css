@@ -190,6 +190,16 @@ a.attachments-invoke {
     resize:vertical;
 }
 
+/* Select styling */
+.attachments-attachment-field-select select {
+    display:block;
+    width:100%;
+}
+
+.attachments-attachment-field-select select[multiple] {
+    height:100px;
+}
+
 .attachments-handle {
     position:absolute;
     left:0;

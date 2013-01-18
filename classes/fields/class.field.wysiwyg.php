@@ -16,9 +16,9 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
      * @param string $label Field label
      * @param mixed $value Field value
      */
-    function __construct( $name = 'name', $label = 'Name', $value = null )
+    function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() )
     {
-        parent::__construct( $name, $label, $value );
+        parent::__construct( $name, $label, $value, $meta );
 
         add_filter( 'wp_default_editor',    array( $this, 'wp_default_editor' ) );
     }
