@@ -3,8 +3,8 @@ Contributors: jchristopher
 Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
-Tested up to: 3.5
-Stable tag: 3.3.1
+Tested up to: 3.5.1
+Stable tag: 3.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,9 @@ Else: please reference the **Installation > Upgrade Notice** details.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.3.2 =
+* You can now specify which view is default when browsing the Media modal (e.g. have 'Upload Files' be default instead of 'Media Library')
 
 = 3.3.1 =
 * Added meta box positioning arguments when registering instances
@@ -378,6 +381,21 @@ You may create instances with your own custom fields by using the `attachments_r
 
 function my_attachments( $attachments )
 {
+  $fields         => array(
+    array(
+      'name'      => 'title',                         // unique field name
+      'type'      => 'text',                          // registered field type
+      'label'     => __( 'Title', 'attachments' ),    // label to display
+      'default'   => 'title',                         // default value upon selection
+    ),
+    array(
+      'name'      => 'caption',                       // unique field name
+      'type'      => 'textarea',                      // registered field type
+      'label'     => __( 'Caption', 'attachments' ),  // label to display
+      'default'   => 'caption',                       // default value upon selection
+    ),
+  );
+
   $args = array(
 
     // title of the meta box (string)
@@ -404,32 +422,11 @@ function my_attachments( $attachments )
     // text for modal 'Attach' button (string)
     'modal_text'    => __( 'Attach', 'attachments' ),
 
-    /**
-     * Fields for the instance are stored in an array. Each field consists of
-     * an array with three keys: name, type, label.
-     *
-     * name    - (string) The field name used. No special characters.
-     * type    - (string) The registered field type.
-     *                  Fields available: text, textarea, wysiwyg
-     * label   - (string) The label displayed for the field.
-     * caption - (string) The default WordPress metadata to use when initially adding the Attachment
-     *                  Defaults available: title, caption, alt, description
-     */
+    // which tab should be the default in the modal (string) (browse|upload)
+    'router'        => 'browse',
 
-    'fields'        => array(
-      array(
-        'name'      => 'title',                         // unique field name
-        'type'      => 'text',                          // registered field type
-        'label'     => __( 'Title', 'attachments' ),    // label to display
-        'default'   => 'title',                         // default value upon selection
-      ),
-      array(
-        'name'      => 'caption',                       // unique field name
-        'type'      => 'textarea',                      // registered field type
-        'label'     => __( 'Caption', 'attachments' ),  // label to display
-        'default'   => 'caption',                       // default value upon selection
-      )
-    ),
+    // fields array
+    'fields'        => $fields,
 
   );
 

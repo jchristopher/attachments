@@ -59,7 +59,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // establish our environment variables
 
-            $this->version  = '3.3.1';
+            $this->version  = '3.3.2';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -654,6 +654,7 @@ if ( !class_exists( 'Attachments' ) ) :
                     var $element     = $('#attachments-<?php echo esc_attr( $instance->name ); ?>'),
                         title        = '<?php echo __( esc_attr( $instance->label ) ); ?>',
                         button       = '<?php echo __( esc_attr( $instance->modal_text ) ); ?>',
+                        router       = '<?php echo __( esc_attr( $instance->router ) ); ?>',
                         attachmentsframe;
 
                     $element.on( 'click', '.attachments-invoke', function( event ) {
@@ -664,6 +665,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         // if the frame already exists, open it
                         if ( attachmentsframe ) {
                             attachmentsframe.open();
+                            attachmentsframe.content.mode(router);
                             return;
                         }
 
@@ -684,7 +686,9 @@ if ( !class_exists( 'Attachments' ) ) :
                             button: {
                                 // Set the text of the button.
                                 text: button
-                            }
+                            },
+
+                            router: 'upload'
                         });
 
                         // set up our select handler
@@ -759,6 +763,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
                         // open the frame
                         attachmentsframe.open();
+                        attachmentsframe.content.mode(router);
 
                     });
 
@@ -917,6 +922,9 @@ if ( !class_exists( 'Attachments' ) ) :
 
                     // text for modal 'Attach' button (string)
                     'modal_text'    => __( 'Attach', 'attachments' ),
+
+                    // which tab should be the default in the modal (string) (browse|upload)
+                    'router'        => 'browse',
 
                     // fields for this instance (array)
                     'fields'        => array(

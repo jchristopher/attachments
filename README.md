@@ -157,6 +157,9 @@ function my_attachments( $attachments )
     // text for modal 'Attach' button (string)
     'modal_text'    => __( 'Attach', 'attachments' ),
 
+    // which tab should be the default in the modal (string) (browse|upload)
+    'router'        => 'browse',
+
     // fields array
     'fields'        => $fields,
 
@@ -415,6 +418,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 ## Changelog
 
 <dl>
+
+    <dt>3.3.2</dt>
+    <dd>You can now specify which view is default when browsing the Media modal (e.g. have 'Upload Files' be default instead of 'Media Library')</dd>
 
     <dt>3.3.1</dt>
     <dd>Added meta box positioning arguments when registering instances</dd>
