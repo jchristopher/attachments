@@ -6,7 +6,7 @@
   * Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
   * Author:      Jonathan Christopher
   * Author URI:  http://mondaybynoon.com/
-  * Version:     3.3.2
+  * Version:     3.3.3
   * Text Domain: attachments
   * Domain Path: /languages/
   * License:     GPLv2 or later
@@ -39,7 +39,7 @@ else
     else
     {
         define( 'ATTACHMENTS_DIR', plugin_dir_path( __FILE__ ) );
-        define( 'ATTACHMENTS_URL', plugin_dir_url( __FILE__ ) );
+        define( 'ATTACHMENTS_URL', plugins_url( 'attachments' ) );
 
         // load current version of Attachments
         require_once 'classes/class.attachments.php';

@@ -59,7 +59,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // establish our environment variables
 
-            $this->version  = '3.3.2';
+            $this->version  = '3.3.3';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -131,7 +131,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
                     // set up our WP_Query args to grab anything with legacy data
                     $args = array(
-                            'post_type'         => isset( $post_types ) ? $post_types : array(),
+                            'post_type'         => isset( $post_types ) ? $post_types : array( 'post', 'page' ),
                             'post_status'       => 'any',
                             'posts_per_page'    => 1,
                             'meta_key'          => '_attachments',
@@ -145,9 +145,11 @@ if ( !class_exists( 'Attachments' ) ) :
             // deal with our legacy Pro issues if the user hasn't dismissed or migrated already
             if( false == get_option( 'attachments_pro_migrated' ) && false == get_option( 'attachments_pro_ignore_migration' ) )
             {
+                $post_types = get_post_types();
+
                 // set up our WP_Query args to grab anything (really anything) with legacy data
                 $args = array(
-                        'post_type'         => get_post_types(),
+                        'post_type'         => !empty( $post_types ) ? $post_types : array( 'post', 'page' ),
                         'post_status'       => 'any',
                         'posts_per_page'    => 1,
                         'meta_key'          => '_attachments_pro',
@@ -686,9 +688,7 @@ if ( !class_exists( 'Attachments' ) ) :
                             button: {
                                 // Set the text of the button.
                                 text: button
-                            },
-
-                            router: 'upload'
+                            }
                         });
 
                         // set up our select handler
