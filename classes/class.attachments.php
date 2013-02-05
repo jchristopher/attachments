@@ -135,6 +135,7 @@ if ( !class_exists( 'Attachments' ) ) :
                             'post_status'       => 'any',
                             'posts_per_page'    => 1,
                             'meta_key'          => '_attachments',
+                            'suppress_filters'  => true,
                         );
 
                     $legacy         = new WP_Query( $args );
@@ -153,6 +154,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         'post_status'       => 'any',
                         'posts_per_page'    => 1,
                         'meta_key'          => '_attachments_pro',
+                        'suppress_filters'  => true,
                     );
 
                 $legacy_pro         = new WP_Query( $args );

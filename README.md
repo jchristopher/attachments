@@ -421,6 +421,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 
     <dt>3.3.3</dt>
     <dd>Fixed a PHP Warning when activated using Multisite</dd>
+    <dd>Slightly modified the migration process to better handle plugins like WPML (props sebastian.friedrich)</dd>
 
     <dt>3.3.2</dt>
     <dd>You can now specify which view is default when browsing the Media modal (e.g. have 'Upload Files' be default instead of 'Media Library')</dd>

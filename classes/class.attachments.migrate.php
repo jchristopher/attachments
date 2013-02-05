@@ -52,6 +52,7 @@ class AttachmentsMigrate extends Attachments
                     'post_status'       => 'any',
                     'posts_per_page'    => -1,
                     'meta_key'          => '_attachments',
+                    'suppress_filters'  => true,
                 );
 
             $query = new WP_Query( $args );
