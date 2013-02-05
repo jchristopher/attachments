@@ -29,7 +29,7 @@ Attachments allows you to simply append any number of items from your WordPress 
 
 ### Updated for WordPress 3.5!
 
-WordPress 3.5 ships with an amazing new Media workflow and Attachments 3.0 makes great use of it. *If you are not running WordPress 3.5, version 1.6.2.1 will be used until you upgrade to WordPress 3.5.*
+WordPress 3.5 ships with an amazing new Media workflow and Attachments 3.0 makes great use of it. *If you are not running WordPress 3.5, the (now deprecated) version 1.6.2.1 (included with Attachments 3.x) will be used until you upgrade to WordPress 3.5+*
 
 ### Associate Media items with posts
 
@@ -74,7 +74,7 @@ That snippet will request all of the existing Attachments defined for the curren
 ## Upgrade Notice
 
 #### 3.0
-**You will need to update your theme files that use Attachments 3.0**. Version 1.x of Attachments has been *fully deprecated* but is still available. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your `wp-config.php`:
+**You will need to update your theme files that use Attachments 3.0**. Version 1.x of Attachments has been **fully deprecated** but is still available *and included with Attachments 3.x*. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your `wp-config.php`:
 
 ```php
 define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments
