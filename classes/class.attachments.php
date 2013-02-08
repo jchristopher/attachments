@@ -90,8 +90,8 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'admin_footer',                 array( $this, 'admin_footer' ) );
             add_action( 'save_post',                    array( $this, 'save' ) );
 
-			// check if a different meta key has been specified
-			add_action( 'after_setup_theme',            array( $this, 'meta_key_override' ), 999 );
+            // check if a different meta key has been specified
+            add_action( 'after_setup_theme',            array( $this, 'meta_key_override' ), 999 );
 
             // only show the Settings screen if it hasn't been explicitly disabled
             if( !( defined( 'ATTACHMENTS_SETTINGS_SCREEN' ) && ATTACHMENTS_SETTINGS_SCREEN === false ) )
@@ -113,10 +113,10 @@ if ( !class_exists( 'Attachments' ) ) :
         /**
          * Allows a different meta key to be used
          */
-		function meta_key_override() {
-			if ( defined('ATTACHMENTS_META_KEY') )
-				$this->meta_key = ATTACHMENTS_META_KEY;
-		}
+        function meta_key_override() {
+            if ( defined('ATTACHMENTS_META_KEY') )
+                $this->meta_key = ATTACHMENTS_META_KEY;
+        }
 
 
 
