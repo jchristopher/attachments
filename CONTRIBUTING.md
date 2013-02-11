@@ -1,6 +1,6 @@
 # Contributing to Attachments development
 
-Thank you so much for contributing to this project, I love pull requests! To effecively contribute to the development of Attachments please do the following:
+Thank you so much for contributing to this project, I love pull requests! To effectively contribute to the development of Attachments please do the following:
 
 1. Create a GitHub account
 1. [Fork](https://help.github.com/articles/fork-a-repo) the repo
