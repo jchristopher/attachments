@@ -116,7 +116,7 @@ You may create instances with your own custom fields by using the `attachments_r
 
 function my_attachments( $attachments )
 {
-  $fields         => array(
+  $fields         = array(
     array(
       'name'      => 'title',                         // unique field name
       'type'      => 'text',                          // registered field type
