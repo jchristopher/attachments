@@ -32,8 +32,6 @@ if ( !class_exists( 'Attachments' ) ) :
         private $fields;                    // stores all registered field types
         private $attachments;               // stores all of the Attachments for the given instance
 
-        private $legacy             = false;            // whether or not there is legacy Attachments data
-        private $legacy_pro         = false;            // whether or not there is legacy Attachment Pro data
         private $image_sizes        = array( 'full' );  // store all registered image sizes
         private $default_instance   = true;             // use the default instance?
         private $attachments_ref    = -1;               // flags where a get() loop last did it's thing
@@ -59,26 +57,24 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // establish our environment variables
 
-            $this->version  = '3.4';
+            $this->version  = '3.4.1';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
             // includes
             include_once( ATTACHMENTS_DIR . 'upgrade.php' );
+            include_once( ATTACHMENTS_DIR . '/classes/class.attachments.legacy.php' );
+            include_once( ATTACHMENTS_DIR . '/classes/class.attachments.search.php' );
             include_once( ATTACHMENTS_DIR . '/classes/class.field.php' );
 
             // include our fields
             $this->fields = $this->get_field_types();
-
-            // deal with our legacy issues if the user hasn't dismissed or migrated already
-            $this->check_for_legacy_data();
 
             // set our image sizes
             $this->image_sizes = array_merge( $this->image_sizes, get_intermediate_image_sizes() );
 
             // hook into WP
             add_action( 'admin_enqueue_scripts',        array( $this, 'assets' ), 999, 1 );
-            add_action( 'admin_enqueue_scripts',        array( $this, 'admin_pointer' ), 999 );
 
             // register our user-defined instances
             add_action( 'init',                         array( $this, 'setup_instances' ) );
@@ -93,9 +89,6 @@ if ( !class_exists( 'Attachments' ) ) :
             // only show the Settings screen if it hasn't been explicitly disabled
             if( !( defined( 'ATTACHMENTS_SETTINGS_SCREEN' ) && ATTACHMENTS_SETTINGS_SCREEN === false ) )
                 add_action( 'admin_menu',               array( $this, 'admin_page' ) );
-
-            // with version 3 we'll be giving at least one admin notice
-            add_action( 'admin_notices',                array( $this, 'admin_notice' ) );
 
             add_action( 'admin_head',                   array( $this, 'field_inits' ) );
             add_action( 'admin_print_footer_scripts',   array( $this, 'field_assets' ) );
@@ -130,197 +123,14 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
         /**
-         * Stores whether or not this environment has active legacy Attachments/Pro data
-         *
-         * @since 3.1.3
-         */
-        function check_for_legacy_data()
-        {
-            // we'll get a warning issued if fired when Network Activated
-            // since it's supremely unlikely we'd have legacy data at this point, we're going to short circuit
-            if( is_multisite() )
-            {
-                $plugins = get_site_option( 'active_sitewide_plugins' );
-                if ( isset($plugins['attachments/index.php']) )
-                    return;
-            }
-
-            // deal with our legacy issues if the user hasn't dismissed or migrated already
-            if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
-            {
-                $legacy_attachments_settings = get_option( 'attachments_settings' );
-
-                if( $legacy_attachments_settings && is_array( $legacy_attachments_settings['post_types'] ) && count( $legacy_attachments_settings['post_types'] ) )
-                {
-                    // we have legacy settings, so we're going to use the post types
-                    // that Attachments is currently utilizing
-
-                    // the keys are the actual CPT names, so we need those
-                    foreach( $legacy_attachments_settings['post_types'] as $post_type => $value )
-                        if( $value )
-                            $post_types[] = $post_type;
-
-                    // set up our WP_Query args to grab anything with legacy data
-                    $args = array(
-                            'post_type'         => isset( $post_types ) ? $post_types : array( 'post', 'page' ),
-                            'post_status'       => 'any',
-                            'posts_per_page'    => 1,
-                            'meta_key'          => '_attachments',
-                            'suppress_filters'  => true,
-                        );
-
-                    $legacy         = new WP_Query( $args );
-                    $this->legacy   = empty( $legacy->found_posts ) ? false : true;
-                }
-            }
-
-            // deal with our legacy Pro issues if the user hasn't dismissed or migrated already
-            if( false == get_option( 'attachments_pro_migrated' ) && false == get_option( 'attachments_pro_ignore_migration' ) )
-            {
-                $post_types = get_post_types();
-
-                // set up our WP_Query args to grab anything (really anything) with legacy data
-                $args = array(
-                        'post_type'         => !empty( $post_types ) ? $post_types : array( 'post', 'page' ),
-                        'post_status'       => 'any',
-                        'posts_per_page'    => 1,
-                        'meta_key'          => '_attachments_pro',
-                        'suppress_filters'  => true,
-                    );
-
-                $legacy_pro         = new WP_Query( $args );
-                $this->legacy_pro   = empty( $legacy_pro->found_posts ) ? false : true;
-            }
-        }
-
-
-
-        /**
          * Facilitates searching for Attachments
          *
          * @since 3.3
          */
         function search( $query = null, $params = array() )
         {
-            $defaults = array(
-                    'attachment_id' => null,            // not searching for a single attachment ID
-                    'instance'      => 'attachments',   // default instance
-                    'post_type'     => null,            // search 'any' post type
-                    'post_id'       => null,            // searching all posts
-                    'post_status'   => 'publish',       // search only published posts
-                    'fields'        => null,            // search all fields
-                );
-
-            $query  = is_null( $query ) ? null : sanitize_text_field( $query );
-            $params = array_merge( $defaults, $params );
-
-            // sanitize parameters
-            $params['attachment_id']    = is_null( $params['attachment_id'] ) ? null : intval( $params['attachment_id'] );
-            $params['instance']         = !is_string( $params['instance'] ) ? 'attachments' : sanitize_text_field( $params['instance'] );
-            $params['post_type']        = is_null( $params['post_type'] ) ? 'any' : sanitize_text_field( $params['post_type'] );
-            $params['post_id']          = is_null( $params['post_id'] ) ? null : intval( $params['post_id'] );
-
-            $params['post_status']      = sanitize_text_field( $params['post_status'] );
-
-            if( is_string( $params['fields'] ) )
-                $params['fields']       = array( $params['fields'] );   // we always want an array
-
-            // since we have an array for our fields, we need to loop through and sanitize
-            for( $i = 0; $i < count( $params['fields'] ); $i++ )
-                $params['fields'][$i] = sanitize_text_field( $params['fields'][$i] );
-
-            // prepare our search args
-            $args = array(
-                    'nopaging'      => true,
-                    'post_status'   => $params['post_status'],
-                    'meta_query'    => array(
-                            array(
-                                    'key'       => 'attachments',
-                                    'value'     => $query,
-                                    'compare'   => 'LIKE'
-                                )
-                        ),
-                );
-
-            // append any applicable parameters that got passed to the original method call
-            if( $params['post_type'] )
-                $args['post_type'] = $params['post_type'];
-
-            if( $params['post_id'] )
-                $args['post__in'] = array( $params['post_id'] );    // avoid using 'p' or 'page_id'
-
-            // we haven't utilized all parameters yet because they're meta-value based so we need to
-            // do some parsing on our end to validate the returned results
-
-            $possible_posts         = new WP_Query( $args );
-            $potential_attachments  = false;  // stores valid attachments as restrictions are added
-
-            if( $possible_posts->found_posts )
-            {
-                // we have results from the reliminary search, we need to quantify them
-                while( $possible_posts->have_posts() )
-                {
-                    $possible_posts->next_post();
-                    $possible_post_ids[] = $possible_posts->post->ID;
-                }
-
-                // now that we have our possible post IDs we can grab all Attachments for all of those posts
-                foreach( $possible_post_ids as $possible_post_id )
-                {
-                    $possible_attachments = $this->get_attachments( $params['instance'], $possible_post_id );
-
-                    foreach( $possible_attachments as $possible_attachment )
-                        $potential_attachments[] = $possible_attachment;
-                }
-
-            }
-
-            // if there aren't even any potential attachments, we'll just short circuit
-            if( !$potential_attachments )
-                return;
-
-            // first we need to make sure that our query matches each attachment
-            // we need to do this because the LIKE query returned the entire meta record,
-            // not necessarily tied to any specific Attachment
-            $total_potentials = count( $potential_attachments );
-            for( $i = 0; $i < $total_potentials; $i++ )
-            {
-                $valid = false;
-
-                // if we need to limit our search to specific fields, we'll do that here
-                if( $params['fields'] )
-                {
-                    // we only want to check certain fields
-                    foreach( $params['fields'] as $field )
-                        if( isset( $potential_attachments[$i]->fields->$field ) )   // does the field exist?
-                            if( strpos( strtolower( $potential_attachments[$i]->fields->$field ),
-                                        strtolower( $query ) ) !== false ) // does the value match?
-                                $valid = true;
-                }
-                else
-                {
-                    // we want to check all fields
-                    foreach( $potential_attachments[$i]->fields as $field_name => $field_value )
-                        if( strpos( strtolower( $field_value) , strtolower( $query ) ) !== false )
-                            $valid = true;
-                }
-
-                if( !$valid )
-                    unset( $potential_attachments[$i] );
-
-                // now our potentials have been limited to each match the query based on any field
-            }
-
-            // limit to attachment ID if applicable
-            if( $params['attachment_id'] )
-            {
-                $total_potentials = count( $potential_attachments );
-                for( $i = 0; $i < $total_potentials; $i++ )
-                    if( $potential_attachments[$i]->id != $params['attachment_id'] )
-                        unset( $potential_attachments[$i] );
-            }
-
-            $this->attachments = array_values( $potential_attachments );
+            $results            = new AttachmentsSearch( $query, $params );
+            $this->attachments  = $results->results;
         }
 
 
@@ -1645,115 +1455,6 @@ if ( !class_exists( 'Attachments' ) ) :
                 $field_value = html_entity_decode( $field_value, ENT_QUOTES, 'UTF-8' );
 
             return $field_value;
-        }
-
-
-
-        /**
-         * Determines whether or not there is 'active' legacy data the user may not know about
-         *
-         * @since 3.0
-         */
-        function has_outstanding_legacy_data()
-        {
-            if(
-               // migration has not taken place and we have legacy data
-               ( false == get_option( 'attachments_migrated' ) && !empty( $this->legacy ) )
-
-               &&
-
-               // we're not intentionally ignoring the message
-               ( false == get_option( 'attachments_ignore_migration' ) )
-            )
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
-
-        /**
-         * Outputs a WordPress message to notify user of legacy data
-         *
-         * @since 3.0
-         */
-        function admin_notice()
-        {
-
-            if( $this->has_outstanding_legacy_data() && ( isset( $_GET['page'] ) && $_GET['page'] !== 'attachments' || !isset( $_GET['page'] ) ) ) : ?>
-                <div class="message updated" id="message">
-                    <p><?php _e( '<strong>Attachments has detected legacy Attachments data.</strong> A lot has changed since Attachments 1.x.' ,'attachments' ); ?> <a href="options-general.php?page=attachments&amp;overview=1"><?php _e( 'Find out more', 'attachments' ); ?>.</a></p>
-                </div>
-            <?php endif;
-        }
-
-
-
-        /**
-         * Implements our WordPress pointer if necessary
-         *
-         * @since 3.0
-         */
-        function admin_pointer( $hook_suffix )
-        {
-
-            // Assume pointer shouldn't be shown
-            $enqueue_pointer_script_style = false;
-
-            // Get array list of dismissed pointers for current user and convert it to array
-            $dismissed_pointers = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
-
-            // Check if our pointer is not among dismissed ones
-            if( $this->legacy && !in_array( 'attachments_legacy', $dismissed_pointers ) ) {
-                $enqueue_pointer_script_style = true;
-
-                // Add footer scripts using callback function
-                add_action( 'admin_print_footer_scripts', array( $this, 'pointer_legacy' ) );
-            }
-
-            // Enqueue pointer CSS and JS files, if needed
-            if( $enqueue_pointer_script_style ) {
-                wp_enqueue_style( 'wp-pointer' );
-                wp_enqueue_script( 'wp-pointer' );
-            }
-        }
-
-
-
-        /**
-         * Pointer that calls attention to legacy data
-         *
-         * @since 3.0
-         */
-        function pointer_legacy()
-        {
-            $pointer_content  = "<h3>". __( esc_html( 'Attachments 3.0 brings big changes!' ), 'attachments' ) ."</h3>";
-            $pointer_content .= "<p>". __( esc_html( 'It is very important that you take a few minutes to see what has been updated. The changes will affect your themes/plugins.' ), 'attachments' ) ."</p>";
-            ?>
-
-            <script type="text/javascript">
-            jQuery(document).ready( function($) {
-                $('#message a').pointer({
-                    content:'<?php echo $pointer_content; ?>',
-                    position:{
-                        edge:'top',
-                        align:'center'
-                    },
-                    pointerWidth:350,
-                    close:function() {
-                        $.post( ajaxurl, {
-                            pointer: 'attachments_legacy',
-                            action: 'dismiss-wp-pointer'
-                        });
-                    }
-                }).pointer('open');
-            });
-            </script>
-            <?php
         }
 
 

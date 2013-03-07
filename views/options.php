@@ -4,6 +4,9 @@
     include_once( ATTACHMENTS_DIR . '/classes/class.attachments.migrate.php' );
     $migrator = new AttachmentsMigrate();
 
+    include_once( ATTACHMENTS_DIR . '/classes/class.attachments.legacy.php' );
+    $legacy = new AttachmentsLegacyHandler();
+
     if( isset( $_GET['dismiss'] ) )
     {
         if( !wp_verify_nonce( $_GET['nonce'], 'attachments-dismiss') )
@@ -78,7 +81,7 @@
         else
         { ?>
 
-            <?php if( false == get_option( 'attachments_migrated' ) && $migrator->legacy ) : ?>
+            <?php if( false == get_option( 'attachments_migrated' ) && $legacy->legacy ) : ?>
                 <h2><?php _e( 'Migrate legacy Attachments data', 'attachments' ); ?></h2>
                 <p><?php _e( 'Attachments has found records from version 1.x. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
                 <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy data', 'attachments' ); ?></a></p>
