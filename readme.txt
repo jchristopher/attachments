@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 3.3.3
+Stable tag: 3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,12 @@ Else: please reference the **Installation > Upgrade Notice** details.
 5. Drag and drop to sort
 
 == Changelog ==
+
+= 3.4 =
+* New filter: `attachments_meta_key` facilitates using a different meta key for Attachments storage
+* New filter: `attachments_get_{my_instance}` (where `{my_instance}` is your instance name) allows you to filter Attachments per instance once they've been retrieved
+* Fixed an issue where retrieving single Attachments didn't properly pass the index to attribute methods
+* Fixed PHP Warnings when Network Activating
 
 = 3.3.3 =
 * Fixed a PHP Warning when activated using Multisite
@@ -580,7 +586,7 @@ If you don't want to use the above implementation to loop through your Attachmen
         Source: <?php echo $attachments->src( 'full', $my_index ); ?><br />
         Size: <?php echo $attachments->filesize( $my_index ); ?><br />
         Title Field: <?php echo $attachments->field( 'title', $my_index ); ?><br />
-        Caption Field: Name: <?php echo $attachments->field( 'caption', $my_index ); ?>
+        Caption Field: <?php echo $attachments->field( 'caption', $my_index ); ?>
       </li>
     </ul>
   <?php endif; ?>

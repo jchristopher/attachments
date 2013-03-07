@@ -291,7 +291,7 @@ You can also retrieve various attributes of the current Attachment directly usin
         Source: <?php echo $attachments->src( 'full' ); ?><br />
         Size: <?php echo $attachments->filesize(); ?><br />
         Title Field: <?php echo $attachments->field( 'title' ); ?><br />
-        Caption Field: Name: <?php echo $attachments->field( 'caption' ); ?>
+        Caption Field: <?php echo $attachments->field( 'caption' ); ?>
       </li>
     <?php endwhile; ?>
   </ul>
@@ -319,7 +319,7 @@ If you don't want to use the above implementation to loop through your Attachmen
         Source: <?php echo $attachments->src( 'full', $my_index ); ?><br />
         Size: <?php echo $attachments->filesize( $my_index ); ?><br />
         Title Field: <?php echo $attachments->field( 'title', $my_index ); ?><br />
-        Caption Field: Name: <?php echo $attachments->field( 'caption', $my_index ); ?>
+        Caption Field: <?php echo $attachments->field( 'caption', $my_index ); ?>
       </li>
     </ul>
   <?php endif; ?>
@@ -418,6 +418,12 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 ## Changelog
 
 <dl>
+
+    <dt>3.4</dt>
+    <dd>New filter: <code>attachments_meta_key</code> facilitates using a different meta key for Attachments storage</dd>
+    <dd>New filter: <code>attachments_get_<strong>{my_instance}</strong></code> (where <code><strong>{my_instance}</strong></code> is your instance name) allows you to filter Attachments per instance once they've been retrieved</dd>
+    <dd>Fixed an issue where retrieving single Attachments didn't properly pass the index to attribute methods</dd>
+    <dd>Fixed PHP Warnings when Network Activating</dd>
 
     <dt>3.3.3</dt>
     <dd>Fixed a PHP Warning when activated using Multisite</dd>
@@ -526,6 +532,5 @@ Planned feature additions include:
 * Additional field type: radio
 * User-defined limiting the number of Attachments per instance
 * User-defined custom field types
-* Additional hooks/actions from top to bottom
 * Shortcode(s)
 * Output templates

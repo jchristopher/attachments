@@ -59,7 +59,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // establish our environment variables
 
-            $this->version  = '3.3.3';
+            $this->version  = '3.4';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -81,7 +81,7 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'admin_enqueue_scripts',        array( $this, 'admin_pointer' ), 999 );
 
             // register our user-defined instances
-            add_action( 'init',                         array( $this, 'do_actions_filters' ) );
+            add_action( 'init',                         array( $this, 'setup_instances' ) );
 
             // determine which instances apply to the current post type
             add_action( 'init',                         array( $this, 'set_instances_for_current_post_type' ) );
@@ -89,9 +89,6 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'add_meta_boxes',               array( $this, 'meta_box_init' ) );
             add_action( 'admin_footer',                 array( $this, 'admin_footer' ) );
             add_action( 'save_post',                    array( $this, 'save' ) );
-
-            // check if a different meta key has been specified
-            add_action( 'after_setup_theme',            array( $this, 'meta_key_override' ), 999 );
 
             // only show the Settings screen if it hasn't been explicitly disabled
             if( !( defined( 'ATTACHMENTS_SETTINGS_SCREEN' ) && ATTACHMENTS_SETTINGS_SCREEN === false ) )
@@ -103,19 +100,31 @@ if ( !class_exists( 'Attachments' ) ) :
             add_action( 'admin_head',                   array( $this, 'field_inits' ) );
             add_action( 'admin_print_footer_scripts',   array( $this, 'field_assets' ) );
 
-            // set our attachments if necessary
-            if( !is_null( $instance ) )
+            // execution of actions varies depending on whether we're in the admin or not and an instance was passed
+            if( is_admin() )
+            {
+                add_action( 'after_setup_theme', array( $this, 'apply_init_filters' ) );
                 $this->attachments = $this->get_attachments( $instance, $post_id );
+            }
+            elseif( !is_null( $instance ) )
+            {
+                $this->apply_init_filters();
+                $this->attachments = $this->get_attachments( $instance, $post_id );
+            }
+
         }
 
 
 
         /**
-         * Allows a different meta key to be used
+         * Various initialization filter triggers
+         *
+         * @since 3.4
          */
-        function meta_key_override() {
-            if ( defined('ATTACHMENTS_META_KEY') )
-                $this->meta_key = ATTACHMENTS_META_KEY;
+        function apply_init_filters()
+        {
+            // allows a different meta_key to be used
+            $this->meta_key = apply_filters( 'attachments_meta_key', $this->meta_key );
         }
 
 
@@ -127,6 +136,15 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function check_for_legacy_data()
         {
+            // we'll get a warning issued if fired when Network Activated
+            // since it's supremely unlikely we'd have legacy data at this point, we're going to short circuit
+            if( is_multisite() )
+            {
+                $plugins = get_site_option( 'active_sitewide_plugins' );
+                if ( isset($plugins['attachments/index.php']) )
+                    return;
+            }
+
             // deal with our legacy issues if the user hasn't dismissed or migrated already
             if( false == get_option( 'attachments_migrated' ) && false == get_option( 'attachments_ignore_migration' ) )
             {
@@ -383,7 +401,7 @@ if ( !class_exists( 'Attachments' ) ) :
             else
             {
                 // either it's not an image or we don't have the proper size, so we'll use the icon
-                $asset = $this->icon();
+                $asset = $this->icon( $index );
             }
 
             return $asset;
@@ -412,7 +430,7 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function image( $size = 'thumbnail', $index = null )
         {
-            $asset = $this->asset( $size );
+            $asset = $this->asset( $size, $index );
 
             $image_src      = $asset[0];
             $image_width    = $asset[1];
@@ -434,7 +452,7 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function src( $size = 'thumbnail', $index = null )
         {
-            $asset = $this->asset( $size );
+            $asset = $this->asset( $size, $index );
             return $asset[0];
         }
 
@@ -563,7 +581,7 @@ if ( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function do_actions_filters()
+        function setup_instances()
         {
             // implement our default instance if appropriate
             if( !defined( 'ATTACHMENTS_DEFAULT_INSTANCE' ) )
@@ -1463,14 +1481,17 @@ if ( !class_exists( 'Attachments' ) ) :
             elseif( is_null( $instance ) )
             {
                 // return them all, regardless of instance
-                foreach( $attachments_raw as $instance => $attachments_unprocessed )
-                    foreach( $attachments_unprocessed as $unprocessed_attachment )
-                        $attachments[] = $this->process_attachment( $unprocessed_attachment, $instance );
+                if( is_array( $attachments_raw ) && count( $attachments_raw ) )
+                    foreach( $attachments_raw as $instance => $attachments_unprocessed )
+                        foreach( $attachments_unprocessed as $unprocessed_attachment )
+                            $attachments[] = $this->process_attachment( $unprocessed_attachment, $instance );
             }
 
             // tack on the post ID for each attachment
             for( $i = 0; $i < count( $attachments ); $i++ )
                 $attachments[$i]->post_id = $post_id;
+
+            $attachments = apply_filters( "attachments_get_{$instance}", $attachments );
 
             return $attachments;
         }
