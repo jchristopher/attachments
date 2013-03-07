@@ -663,9 +663,14 @@ if ( !class_exists( 'Attachments' ) ) :
 
             ?>
 
-            <div id="attachments-<?php echo $instance->name; ?>" class="attachments-parent-container">
+            <div id="attachments-<?php echo $instance->name; ?>" class="attachments-parent-container<?php if( $instance->append == false ) : ?> attachments-prepend<?php endif; ?>">
                 <?php if( !empty( $instance->note ) ) : ?>
                     <div class="attachments-note"><?php echo apply_filters( 'the_content', $instance->note ); ?></div>
+                <?php endif; ?>
+                <?php if( $instance->append == false ) : ?>
+                    <div class="attachments-invoke-wrapper">
+                        <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
+                    </div>
                 <?php endif; ?>
                 <div class="attachments-container attachments-<?php echo $instance->name; ?>"><?php
                         if( isset( $instance->attachments ) && !empty( $instance->attachments ) )
@@ -680,9 +685,11 @@ if ( !class_exists( 'Attachments' ) ) :
                             }
                         }
                     ?></div>
-                <div class="attachments-invoke-wrapper">
-                    <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
-                </div>
+                <?php if( $instance->append == true ) : ?>
+                    <div class="attachments-invoke-wrapper">
+                        <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
+                    </div>
+                <?php endif; ?>
             </div>
             <script type="text/javascript">
                 jQuery(document).ready(function($){
@@ -765,7 +772,7 @@ if ( !class_exists( 'Attachments' ) ) :
                                 var templateData = attachment.attributes;
 
                                 // append the template
-                                $element.find('.attachments-container').append(template(templateData));
+                                $element.find('.attachments-container').<?php if( $instance->append ) : ?>append<?php else : ?>prepend<?php endif; ?>(template(templateData));
 
                                 // if we're in a sidebar we DO want to show the fields which are normally hidden on load via CSS
                                 if($element.parents('#side-sortables')){
@@ -949,6 +956,10 @@ if ( !class_exists( 'Attachments' ) ) :
 
                     // include a note within the meta box (string)
                     'note'          => null,    // no note
+
+                    // by default new Attachments will be appended to the list
+                    // but you can have then prepend if you set this to false
+                    'append'        => true,
 
                     // text for 'Attach' button (string)
                     'button_text'   => __( 'Attach', 'attachments' ),
@@ -1491,7 +1502,9 @@ if ( !class_exists( 'Attachments' ) ) :
             for( $i = 0; $i < count( $attachments ); $i++ )
                 $attachments[$i]->post_id = $post_id;
 
-            $attachments = apply_filters( "attachments_get_{$instance}", $attachments );
+            // we don't want the filter to run on the admin side of things
+            if( !is_admin() )
+                $attachments = apply_filters( "attachments_get_{$instance}", $attachments );
 
             return $attachments;
         }

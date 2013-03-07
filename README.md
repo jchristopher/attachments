@@ -9,7 +9,7 @@ Attachments allows you to simply append any number of items from your WordPress 
 * **[Upgrade Notice](#upgrade-notice)** *Pay specific attention if upgrading from a version before 3.0*
 * [Usage](#usage)
     * [Disable Settings Screen](#disable-settings-screen)
-    * [Setting Up Instances](#setting-up-instances)
+    * [Setting Up Instances](#setting-up-instances) - Create meta boxes for your Posts, Pages, and Custom Post Types
         * [Disable the Default Instance](#disable-the-default-instance)
         * [Create Custom Instances](#create-custom-instances)
         * [Fields Reference](#fields-reference)
@@ -18,6 +18,9 @@ Attachments allows you to simply append any number of items from your WordPress 
         * [Retrieve Attachment Attributes](#retrieve-attachment-attributes)
         * [Retrieve Single Attachments](#retrieve-single-attachments)
     * [Search](#search)
+* [Filters](#filters)
+    * [Post Meta Key](#post-meta-key) - Change the `meta_key` used to store Attachments' data
+    * [Get Attachments](#get-attachments) - Edit the order of Attachments in your theme
 * [Screenshots](#screenshots)
 * [Frequently Asked Questions](#frequently-asked-questions)
 * [Changelog](#changelog)
@@ -83,6 +86,8 @@ define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments
 Version 3 is a **major** rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
 
 ## Usage
+
+Attachments is based on *instances* which correlate directly with the meta boxes that appear on edit screens of Posts, Pages, and Custom Post Types. By default Attachments ships with a single meta box that appears *only on Posts and Pages*. It has two fields: one for Title and one for Caption. If you would like to disable or customize the default instance, or you'd like to create additional instances with custom fields for different post types, please see [Setting Up Instances](#setting-up-instances).
 
 ### Disable Settings Screen
 
@@ -150,6 +155,10 @@ function my_attachments( $attachments )
 
     // include a note within the meta box (string)
     'note'          => 'Attach files here!',
+
+    // by default new Attachments will be appended to the list
+    // but you can have then prepend if you set this to false
+    'append'        => true,
 
     // text for 'Attach' button in meta box (string)
     'button_text'   => __( 'Attach Files', 'attachments' ),
@@ -372,6 +381,51 @@ $defaults = array(
 
 Once you've performed your search, you can loop through the returned Attachments as you normally would.
 
+## Filters
+
+Attachments makes use of various filters to allow customization of it's internals without having to edit any of the code within the plugin. These filters can be utilized within your theme's `functions.php`.
+
+### Post Meta Key
+
+Attachments stores it's data in the `postmeta` table of the WordPress database alongside your other Custom Field data. The default `meta_key` is `attachments` but you might want to change the `meta_key` Attachments uses to store it's data. You can use the `attachments_meta_key` filter to do just that:
+
+```php
+function my_attachments_meta_key()
+{
+    return '_my_attachments_meta_key';
+}
+
+add_filter( 'attachments_meta_key', 'my_attachments_meta_key' );
+```
+
+Adding the above to your theme's `functions.php` will tell Attachments to save all of it's data using a `meta_key` of `_my_attachments_meta_key` (keys prefixed with _ will be hidden from the Custom Fields meta box).
+
+### Get Attachments
+
+There may be a time where you'd like to alter Attachments' data before working with it in your theme. For example you may want to randomize Attachments before outputting them. The `attachments_get_{$instance}` filter allows you to do just that:
+
+```php
+function my_attachments_randomize( $attachments )
+{
+    return shuffle( $attachments );
+}
+
+add_filter( 'attachments_get_my_attachments', 'my_attachments_randomize' );
+```
+
+**NOTE** that this filter *depends on your instance name*. In the example above the filter only applies when working with the `my_attachments` instance. If your instance name was `foo_bar` and you wanted to reverse the order of your Attachments before using them, the filter would look like this:
+
+```php
+function my_attachments_reverse( $attachments )
+{
+    return array_reverse( $attachments );
+}
+
+add_filter( 'attachments_get_foo_bar', 'my_attachments_reverse' );
+```
+
+Please keep in mind the instance name requirement when setting up this filter.
+
 ## Screenshots
 
 ##### An Attachments meta box sitting below the content editor
@@ -424,6 +478,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
     <dd>New filter: <code>attachments_get_<strong>{my_instance}</strong></code> (where <code><strong>{my_instance}</strong></code> is your instance name) allows you to filter Attachments per instance once they've been retrieved</dd>
     <dd>Fixed an issue where retrieving single Attachments didn't properly pass the index to attribute methods</dd>
     <dd>Fixed PHP Warnings when Network Activating</dd>
+    <dd>You can now have new Attachments <em>prepend</em> the list instead of append by setting <code>append => false</code> in your instance</dd>
 
     <dt>3.3.3</dt>
     <dd>Fixed a PHP Warning when activated using Multisite</dd>
