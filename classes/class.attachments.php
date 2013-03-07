@@ -231,6 +231,18 @@ if ( !class_exists( 'Attachments' ) ) :
             return $asset;
         }
 
+        /**
+         * Returns the date for the current Attachment
+         * @author Hasin Hayder
+         */
+        function date( $d="d/m/Y", $index = null )
+        {
+            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
+            $date = get_the_time ($d,$this->attachments[$index]->id);
+            return $date;
+        }
+
+
 
 
         /**
