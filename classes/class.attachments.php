@@ -412,7 +412,7 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function image( $size = 'thumbnail', $index = null )
         {
-            $asset = $this->asset( $size );
+            $asset = $this->asset( $size , $index);
 
             $image_src      = $asset[0];
             $image_width    = $asset[1];
@@ -434,7 +434,7 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function src( $size = 'thumbnail', $index = null )
         {
-            $asset = $this->asset( $size );
+            $asset = $this->asset( $size , $index);
             return $asset[0];
         }
 
