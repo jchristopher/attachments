@@ -474,7 +474,7 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 <dl>
 
     <dt>3.4.1</dt>
-    <dd>Class bstraction and cleanup</dd>
+    <dd>Class abstraction and cleanup</dd>
 
     <dt>3.4</dt>
     <dd>New filter: <code>attachments_meta_key</code> facilitates using a different meta key for Attachments storage</dd>
