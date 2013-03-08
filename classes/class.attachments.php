@@ -202,9 +202,7 @@ if ( !class_exists( 'Attachments' ) ) :
                 $this->attachments[$index]->meta = wp_get_attachment_metadata( $this->attachments[$index]->id );
 
             // is it an image?
-            if(
-                isset( $this->attachments[$index]->meta['sizes'] ) &&  // is it an image?
-                in_array( $size, $this->image_sizes ) )                                // do we have the right size?
+            if( isset( $this->attachments[$index]->meta['sizes'] ) )
             {
                 $asset = wp_get_attachment_image_src( $this->attachments[$index]->id, $size );
             }
@@ -228,20 +226,25 @@ if ( !class_exists( 'Attachments' ) ) :
         {
             $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
             $asset = wp_get_attachment_image_src( $this->attachments[$index]->id, null, true );
+
             return $asset;
         }
+
+
 
         /**
          * Returns the date for the current Attachment
          * @author Hasin Hayder
+         *
+         * @since 3.4.1
          */
-        function date( $d="d/m/Y", $index = null )
+        function date( $d = "d/m/Y", $index = null )
         {
-            $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
-            $date = get_the_time ($d,$this->attachments[$index]->id);
+            $index  = is_null( $index ) ? $this->attachments_ref : intval( $index );
+            $date   = get_the_time( $d, $this->attachments[$index]->id );
+
             return $date;
         }
-
 
 
 
