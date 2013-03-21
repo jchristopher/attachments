@@ -73,6 +73,9 @@ if ( !class_exists( 'Attachments' ) ) :
             // set our image sizes
             $this->image_sizes = array_merge( $this->image_sizes, get_intermediate_image_sizes() );
 
+            // set up l10n
+            add_action( 'plugins_loaded',               array( $this, 'l10n' ) );
+
             // hook into WP
             add_action( 'admin_enqueue_scripts',        array( $this, 'assets' ), 999, 1 );
 
@@ -105,6 +108,18 @@ if ( !class_exists( 'Attachments' ) ) :
                 $this->attachments = $this->get_attachments( $instance, $post_id );
             }
 
+        }
+
+
+
+        /**
+         * Register our textdomain for l10n
+         *
+         * @since 3.4.2
+         */
+        function l10n()
+        {
+            load_plugin_textdomain( 'attachments', false, trailingslashit( ATTACHMENTS_DIR ) . 'languages/' );
         }
 
 
