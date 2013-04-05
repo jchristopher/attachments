@@ -1,0 +1,233 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Attachments v3.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-03-21 11:42+0100\n"
+"PO-Revision-Date: 2013-03-21 17:14+0100\n"
+"Last-Translator: Joan Botella Vinaches <joanbotella@joanbotella.com>\n"
+"Language-Team: Joan Botella Vinaches <joanbotella@joanbotella.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_ngettext:1,2\n"
+"X-Poedit-Basepath: /media/Datos/Joan/Desarrollo/web/elrodat/web/wp-content/plugins/attachments\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: SPAIN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: index.php:30
+msgid "Attachments requires PHP 5.2+. Attachments has been automatically deactivated."
+msgstr "Attachments requiere PHP 5.2+. Attachments ha sido desactivado automáticamente."
+
+#: classes/class.attachments.migrate.php:162
+#: classes/class.attachments.migrate.php:218
+msgid "Invalid request"
+msgstr "Petición inválida"
+
+#: classes/class.attachments.migrate.php:164
+msgid "Migration Step 1"
+msgstr "Paso 1 de la Migración"
+
+#: classes/class.attachments.migrate.php:165
+msgid "In order to migrate Attachments 1.x data, you need to set which instance and fields in version 3.0+ you'd like to use:"
+msgstr "Para migrar los datos de Attachments 1.x necesitas especificar qué instancia y campos de la versión 3.0+ te gustaría usar:"
+
+#: classes/class.attachments.migrate.php:174
+msgid "Attachments 3.x Instance"
+msgstr "Instancia de Attachments 3.x"
+
+#: classes/class.attachments.migrate.php:178
+msgid "The instance name you would like to use in the migration. Required."
+msgstr "El nombre de la instancia que te gustaría usar en la migración. Requerido."
+
+#: classes/class.attachments.migrate.php:183
+msgid "Attachments 3.x Title"
+msgstr "Título de Attachments 3.x"
+
+#: classes/class.attachments.migrate.php:187
+msgid "The <code>Title</code> field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard."
+msgstr "Los datos del campo <code>Title</code> se migrarán al campo con este nombre en Attachments 3.x. Dejar vacío para ignorar."
+
+#: classes/class.attachments.migrate.php:192
+msgid "Attachments 3.x Caption"
+msgstr "Leyenda de Attachments 3.x"
+
+#: classes/class.attachments.migrate.php:196
+msgid "The <code>Caption</code> field data will be migrated to this field name in Attachments 3.x. Leave empty to disregard."
+msgstr "Los datos del campo <code>Leyenda</code> se migrarán al campo con este nombre en Attachments 3.x. Dejar vacío para ignorar."
+
+#: classes/class.attachments.migrate.php:224
+msgid "Migration Complete!"
+msgstr "¡Migración Completa!"
+
+#: classes/class.attachments.migrate.php:225
+msgid "The migration has completed."
+msgstr "La migración se ha completado."
+
+#: classes/class.attachments.migrate.php:225
+msgid "Migrated"
+msgstr "Migrado"
+
+#: classes/class.attachments.migrate.php:227
+msgid "Migration has already Run!"
+msgstr "¡La migración ya se ha ejecutado!"
+
+#: classes/class.attachments.migrate.php:228
+msgid "The migration has already been run. The migration process has not been repeated."
+msgstr "La migración ya se había ejecutado. El proceso de migración no se ha repetido."
+
+#: classes/class.attachments.php:904
+#: classes/class.attachments.php:978
+#: deprecated/attachments.php:365
+msgid "Title"
+msgstr "Título"
+
+# I kept "Attachments" untranslated instead of using the "Adjuntos" spanish version, because is the name of the plugin, and even the spanish users have to search it by its english name.
+#: classes/class.attachments.php:940
+#: classes/class.attachments.php:1768
+#: deprecated/attachments.php:417
+msgid "Attachments"
+msgstr "Attachments"
+
+#: classes/class.attachments.php:965
+#: classes/class.attachments.php:968
+#: deprecated/attachments.php:312
+msgid "Attach"
+msgstr "Adjuntar"
+
+#: classes/class.attachments.php:984
+#: deprecated/attachments.php:369
+msgid "Caption"
+msgstr "Leyenda"
+
+#: classes/class.attachments.php:1235
+msgid "Remove"
+msgstr "Eliminar"
+
+# "Campos de Alternancia" is a bit ugly...
+#: classes/class.attachments.php:1236
+msgid "Toggle Fields"
+msgstr "Campos de Alternancia"
+
+#: classes/class.attachments.php:1689
+msgid "<strong>Attachments has detected legacy Attachments data.</strong> A lot has changed since Attachments 1.x."
+msgstr "<strong>Attachments ha detectado datos de una versión antigua.</strong> Mucho ha cambiado desde Attachments 1.x."
+
+#: classes/class.attachments.php:1689
+msgid "Find out more"
+msgstr "Saber más"
+
+#: deprecated/attachments.php:51
+msgid "Attachments requires PHP 5.2 or higher, as does WordPress 3.2+. Attachments has been automatically deactivated."
+msgstr "Attachments requiere PHP 5.2 o superior, al igual que WordPress 3.2+. Attachments ha sido desactivado automáticamente."
+
+#: deprecated/attachments.php:361
+msgid "Delete"
+msgstr "Borrar"
+
+#: views/options.php:26
+msgid "<strong>Attachments has changed significantly since it's last update.</strong> These changes <em>will affect your themes and plugins</em>."
+msgstr "<strong>Attachments ha cambiado significativamente desde su última actualización.</strong> Estos cambios <em>afectarán a tus temas y plugins</em>."
+
+#: views/options.php:29
+msgid "Immediate Reversal to Attachments 1.x"
+msgstr "Revertir Inmediatamente a Attachments 1.x"
+
+# Keep the "wp-config.php" part of the sentence inside the translatable string, or it will become difficult to read for the translator.
+#: views/options.php:31
+msgid "If you would like to immediately <em>revert to the old version of Attachments</em> you may do so by downgrading the plugin install itself, or adding the following to your"
+msgstr "Si quisieras <em>revertir a la versión antigua de Attachments</em> inmediatamente puedes hacerlo degradando la instalación misma del plugin, o añadiendo lo siguiente a tu"
+
+#: views/options.php:35
+msgid "Overview of changes from Attachments 1.x"
+msgstr "Resumen de cambios desde Attachments 1.x"
+
+# "coming down the line" == "new" ?
+# I'm keeping untrasnlated the "meta box" concept. As a plugin writter, I often read the english name instead of "cajas meta" even on spanish articles.
+#: views/options.php:37
+msgid "A lot has changed since Attachments 1.x. The entire codebase was rewritten to not only make better use of the stellar Media updates in WordPress 3.5, but to also facilitate some exciting features coming down the line. With this rewrite came significant changes to the way you will work with Attachments. One of the biggest changes in Attachments 3.0 is the ability to create multiple meta boxes of Attachments, each with any number of custom fields you define. By default, Attachments will re-implement the meta box you've been using until now, but <strong>you will need to trigger a migration to the new format</strong>."
+msgstr "Mucho ha cambiado desde Attachments 1.x. Todo el código de base ha sido reescrito no sólo para hacer mejor uso de las actualizaciones estelares de Media en WordPress 3.5, sino también para facilitar algunas nuevas funcionalidades excitantes. Con esta reescritura llegan cambios significativos en la forma con la que trabajas con Attachments. Uno de los mayores cambios en Attachments 3.0 es la capacidad para crear múltiples meta boxes de Attachments, cada una con el número de campos personalizados que definas. Por defecto, Attachments reimplementa la meta box que has estado usando hasta ahora, pero <strong>necesitarás realizar una migración al nuevo formato</strong>."
+
+#: views/options.php:39
+msgid "Migrating Attachments 1.x data to Attachments 3.x"
+msgstr "Migrando los datos de Attachments 1.x a Attachments 3.x"
+
+#: views/options.php:41
+msgid "If you have existing Attachments 1.x data and are using it, a migration script has been bundled here and you can use it below. If you would like to directly migrate from Attachments 1.x to Attachments 3.x you can use the defaults put in place and your data will be migrated to the new format quickly and easily. Alternatively, if you'd like to customize the fields you're using a bit, you can do that first and then adjust the migration parameters to map the old fields to your new ones."
+msgstr "Si tienes datos de Attachments 1.x que estés usando, un script de migración ha sido incluído y puedes usarlo más abajo. Si quieres migrar directamente de Attachments 1.x a Attachments 3.x puedes usar los valores por defecto especificados y tus datos se migrarán al nuevo formato rápida y fácilmente. Por el contrario, si prefieres personalizar un poco los campos que estás usando, puedes hacerlo y después ajustar los parámetros de migración para adaptar los campos viejos a los nuevos."
+
+#: views/options.php:43
+msgid "Setting up Instances"
+msgstr "Preparando Instancias"
+
+# I suppose the README file won't be translated, so the file name won't be LEEME.
+#: views/options.php:45
+msgid "Attachments 3.0 ships with what are called <em>instances</em>. An instance is equivalent to a meta box on an edit screen and it has a number of properties you can customize. Please read the README for more information."
+msgstr "Attachments 3.0 se distribuye con lo que se han llamado <em>instancias</em>. Una instancia es equivalente a una meta box en la pantalla de edición y tiene diversas propiedades que puedes personalizar. Por favor lee el README para más información."
+
+# A typo on AdditiNOal !
+#: views/options.php:45
+#: views/options.php:49
+msgid "Additinoal instructions"
+msgstr "Instrucciones adicionales"
+
+#: views/options.php:47
+msgid "Retrieving Attachments in your theme"
+msgstr "Mostrando Attachments en tu tema"
+
+# Incompleted sentence again. Some languages may need to add some text after whatever it has to be readed, or to know exactly what has to be readed in order to use male or female articles!
+#: views/options.php:49
+msgid "As always has been the case with Attachments, editing your theme files is required. The syntax to do so has changed in Attachments 3.0. Please read the"
+msgstr "Como siempre ha ocurrido con Attachments, es necesario que edites los archivos de tu tema. La sintaxis para hacerlo ha cambiado en Attachments 3.0. Por favor lee las"
+
+#: views/options.php:82
+msgid "Migrate legacy Attachments data"
+msgstr "Migrar datos de versiones antiguas de Attachments"
+
+#: views/options.php:83
+msgid "Attachments has found records from version 1.x. Would you like to migrate them to version 3?"
+msgstr "Attachments ha encontrado registros de la versión 1.x. ¿Quieres migrarlos a la versión 3?"
+
+#: views/options.php:84
+msgid "Migrate legacy data"
+msgstr "Migrar datos de una versión antigua"
+
+#: views/options.php:86
+msgid "You have already migrated your legacy Attachments data."
+msgstr "Ya has migrado los datos de la versión antigua de Attachments."
+
+#: views/options.php:89
+msgid "Revert to version 1.x"
+msgstr "Revertir a la versión 1.x"
+
+# Incompleted again.
+#: views/options.php:90
+msgid "If you would like to forcefully revert to the 1.x version branch of Attachments, add the following to your"
+msgstr "Si quieres revertir a la fuerza a la rama de la versión 1.x de Attachments, añade lo siguiente a tu"
+
+#: views/options.php:92
+msgid "Meta box customization"
+msgstr "Personalización de las meta box"
+
+# Incompleted.
+#: views/options.php:93
+msgid "By default, Attachments implements a single meta box on Posts and Pages with two fields. You can disable this default instance by adding the following to your"
+msgstr "Por defecto, Attachments implementa una única meta box en Entradas y Páginas con dos campos. Puedes deshabilitar esta instancia por defecto añadiendo lo siguiente a tu"
+
+# Incompleted. The right translation would be "añadiendo lo siguiente en el fichero functions.php de tu tema", but I can't change the "functions.php" position because is outside the translatable string.
+#: views/options.php:95
+msgid "Your Attachments meta box(es) can be customized by adding the following to your theme's"
+msgstr "Tu(s) meta box(es) de Attachments pueden ser personalizadas añadiendo lo siguiente en tu tema, en el fichero"
+
+#: views/options.php:97
+msgid "Using Attachments data in your theme"
+msgstr "Usando datos de Attachments en tu tema"
+
+# The Loop is kept untranslated because all the doc out there uses that words instead of "El Bucle" spanish version.
+#: views/options.php:98
+msgid "Attachments does not directly integrate with your theme out of the box, you will need to edit your theme's template files where appropriate. You can add the following within The Loop to retrieve all Attachments data for the current post:"
+msgstr "Attachments no se integra directamente en tu tema tras instalarlo, necesitarás editar los archivos de plantillas de tu tema donde sea apropiado. Puedes añadir lo siguiente dentro de The Loop para obtener los datos de Attachments para la entrada actual:"
+

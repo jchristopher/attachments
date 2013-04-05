@@ -32,11 +32,11 @@ if ( !class_exists( 'Attachments' ) ) :
         private $fields;                    // stores all registered field types
         private $attachments;               // stores all of the Attachments for the given instance
 
-        private $image_sizes        = array( 'full' );  // store all registered image sizes
-        private $default_instance   = true;             // use the default instance?
-        private $attachments_ref    = -1;               // flags where a get() loop last did it's thing
-        private $meta_key           = 'attachments';    // our meta key
-        private $valid_filetypes    = array(            // what WordPress considers to be valid file types
+        private $image_sizes        = array( 'full' );      // store all registered image sizes
+        private $default_instance   = true;                 // use the default instance?
+        private $attachments_ref    = -1;                   // flags where a get() loop last did it's thing
+        private $meta_key           = 'attachments';        // our meta key
+        private $valid_filetypes    = array(                // what WordPress considers to be valid file types
                     'image',
                     'video',
                     'text',
@@ -108,6 +108,18 @@ if ( !class_exists( 'Attachments' ) ) :
                 $this->attachments = $this->get_attachments( $instance, $post_id );
             }
 
+        }
+
+
+
+        /**
+         * Getter for the current meta_key
+         *
+         * @since 3.4.2
+         */
+        function get_meta_key()
+        {
+            return $this->meta_key;
         }
 
 

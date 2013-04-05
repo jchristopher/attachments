@@ -62,12 +62,15 @@ class AttachmentsSearch extends Attachments
                 'post_status'   => $params['post_status'],
                 'meta_query'    => array(
                         array(
-                                'key'       => 'attachments',
+                                'key'       => parent::get_meta_key(),
                                 'value'     => $query,
                                 'compare'   => 'LIKE'
                             )
                     ),
             );
+
+        print_r( $args );
+        die();
 
         // append any applicable parameters that got passed to the original method call
         if( $params['post_type'] )
