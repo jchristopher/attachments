@@ -69,9 +69,6 @@ class AttachmentsSearch extends Attachments
                     ),
             );
 
-        print_r( $args );
-        die();
-
         // append any applicable parameters that got passed to the original method call
         if( $params['post_type'] )
             $args['post_type'] = $params['post_type'];
