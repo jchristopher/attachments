@@ -120,7 +120,7 @@ class AttachmentsSearch extends Attachments
                 // we only want to check certain fields
                 foreach( $params['fields'] as $field )
                     if( isset( $potential_attachments[$i]->fields->$field ) )   // does the field exist?
-                        if( strpos( strtolower( $potential_attachments[$i]->fields->$field ),
+                        if( !$query || strpos( strtolower( $potential_attachments[$i]->fields->$field ),
                                     strtolower( $query ) ) !== false ) // does the value match?
                             $valid = true;
             }
