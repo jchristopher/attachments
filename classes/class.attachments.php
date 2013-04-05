@@ -57,7 +57,7 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // establish our environment variables
 
-            $this->version  = '3.4.1';
+            $this->version  = '3.4.2.1';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -349,7 +349,7 @@ if ( !class_exists( 'Attachments' ) ) :
                 return false;
 
             $attachment_mime = $this->get_mime_type( $this->attachments[$index]->id );
-            return isset( $attachment_mime[0] ) ? $attachment_mime[0] : false;
+            return $attachment_mime;
         }
 
 
@@ -361,10 +361,7 @@ if ( !class_exists( 'Attachments' ) ) :
          */
         function get_mime_type( $id = null )
         {
-            if( !is_int( $id ) )
-                return false;
-
-            $attachment_mime = explode( '/', get_post_mime_type( $id ) );
+            $attachment_mime = explode( '/', get_post_mime_type( intval( $id ) ) );
             return isset( $attachment_mime[0] ) ? $attachment_mime[0] : false;
         }
 
