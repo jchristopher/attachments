@@ -36,6 +36,7 @@ class AttachmentsSearch extends Attachments
                 'post_id'       => null,            // searching all posts
                 'post_status'   => 'publish',       // search only published posts
                 'fields'        => null,            // search all fields
+                'filetype'      => null,            // search all filetypes
             );
 
         $query  = is_null( $query ) ? null : sanitize_text_field( $query );
@@ -51,6 +52,9 @@ class AttachmentsSearch extends Attachments
 
         if( is_string( $params['fields'] ) )
             $params['fields']       = array( $params['fields'] );   // we always want an array
+
+        if( is_string( $params['filetype'] ) )
+            $params['filetype']     = array( $params['filetype'] ); // we always want an array
 
         // since we have an array for our fields, we need to loop through and sanitize
         for( $i = 0; $i < count( $params['fields'] ); $i++ )
@@ -122,14 +126,16 @@ class AttachmentsSearch extends Attachments
                     if( isset( $potential_attachments[$i]->fields->$field ) )   // does the field exist?
                         if( !$query || strpos( strtolower( $potential_attachments[$i]->fields->$field ),
                                     strtolower( $query ) ) !== false ) // does the value match?
-                            $valid = true;
+                            if( !is_null( $params['filetype'] ) && in_array( parent::get_mime_type( $potential_attachments[$i]->id ), $params['filetype'] ) )
+                                $valid = true;
             }
             else
             {
                 // we want to check all fields
                 foreach( $potential_attachments[$i]->fields as $field_name => $field_value )
-                    if( strpos( strtolower( $field_value) , strtolower( $query ) ) !== false )
-                        $valid = true;
+                    if( !$query || strpos( strtolower( $field_value) , strtolower( $query ) ) !== false )
+                        if( !is_null( $params['filetype'] ) && in_array( parent::get_mime_type( $potential_attachments[$i]->id ), $params['filetype'] ) )
+                            $valid = true;
             }
 
             if( !$valid )

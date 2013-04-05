@@ -106,7 +106,7 @@ When Attachments is first activated, a default instance is created titled Attach
 
 #### Disable the Default Instance
 
-If you would like to *disable the default instance* (meta box titled 'Attachments' with a 'Title' and 'Caption' field) add the following to your `wp-config.php` **before** `require_once(ABSPATH . 'wp-settings.php');`:
+If you would like to *disable the default instance* (meta box titled 'Attachments' with a 'Title' and 'Caption' field) add the following to your `wp-config.php` *before* `require_once(ABSPATH . 'wp-settings.php');`:
 
 ```php
 define( 'ATTACHMENTS_DEFAULT_INSTANCE', false );
@@ -474,7 +474,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 <dl>
 
     <dt>3.4.2</dt>
+    <dd>Fixed an issue where the `languages` directory wouldn't be utilized for l10n</dd>
     <dd>Search now respects custom `meta_key`</dd>
+    <dd>You can now pass in a `filetype` parameter when searching to limit results in that way</dd>
 
     <dt>3.4.1</dt>
     <dd>Class abstraction and cleanup</dd>

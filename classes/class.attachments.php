@@ -348,7 +348,23 @@ if ( !class_exists( 'Attachments' ) ) :
             if( !isset( $this->attachments[$index]->id ) )
                 return false;
 
-            $attachment_mime = explode( '/', get_post_mime_type( $this->attachments[$index]->id ) );
+            $attachment_mime = $this->get_mime_type( $this->attachments[$index]->id );
+            return isset( $attachment_mime[0] ) ? $attachment_mime[0] : false;
+        }
+
+
+
+        /**
+         * Retrieves the mime type for a WordPress $post ID
+         *
+         * @since 3.4.2
+         */
+        function get_mime_type( $id = null )
+        {
+            if( !is_int( $id ) )
+                return false;
+
+            $attachment_mime = explode( '/', get_post_mime_type( $id ) );
             return isset( $attachment_mime[0] ) ? $attachment_mime[0] : false;
         }
 
