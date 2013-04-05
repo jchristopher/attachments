@@ -475,9 +475,9 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 <dl>
 
     <dt>3.4.2</dt>
-    <dd>Fixed an issue where the `languages` directory wouldn't be utilized for l10n</dd>
-    <dd>Search now respects custom `meta_key`</dd>
-    <dd>You can now pass in a `filetype` parameter when searching to limit results in that way</dd>
+    <dd>Fixed an issue where the <code>languages</code> directory wouldn't be utilized for l10n</dd>
+    <dd>Search now respects custom <code>meta_key</code></dd>
+    <dd>You can now pass in a <code>filetype</code> parameter when searching to limit results in that way</dd>
 
     <dt>3.4.1</dt>
     <dd>Class abstraction and cleanup</dd>
