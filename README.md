@@ -375,7 +375,8 @@ $defaults = array(
       'post_type'     => null,            // (string) search 'any' post type
       'post_id'       => null,            // (int) searching all posts
       'post_status'   => 'publish',       // (string) search only published posts
-      'fields'        => null,            // (string|array) search all fields
+      'fields'        => null,            // (string|array) search all Attachment fields
+      'filetype'      => null,            // (string|array) search all Attachment filetypes
   );
 ```
 
