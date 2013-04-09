@@ -206,7 +206,7 @@ When declaring fields for your instance, you'll be composing an array of fields,
  * meta    - (array) The field-specific parameters that apply only to that field type
  */
 
-$fields         => array(
+$fields         = array(
   array(
     'name'      => 'title',                             // unique field name
     'type'      => 'text',                              // registered field type
