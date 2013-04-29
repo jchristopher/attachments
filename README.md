@@ -1,4 +1,4 @@
-This is a WordPress plugin. [Official download available on WordPress Extend](http://wordpress.org/extend/plugins/attachments/).
+This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
 
 # Attachments
 
@@ -344,7 +344,7 @@ Attachments provides a method of searching it's own data using a number of attri
   $attachments = new Attachments();
 
   $search_args = array(
-      'instance'      => 'attachments',       // search all instances
+      'instance'      => 'attachments',       // search 'attachments' instance
       'fields'        => array( 'caption' ),  // search the 'caption' field only
     );
 
@@ -473,6 +473,10 @@ Attachments uses WordPress' built in Media library for uploads and storage.
 ## Changelog
 
 <dl>
+
+    <dt>3.4.3</dt>
+    <dd>Attachments now takes into account media deleted outside Attachments meta boxes and removes deleted attachments automatically</dd>
+    <dd>Added working Polish translation, props <a href="https://github.com/mleczakm">@mleczakm</a></dd>
 
     <dt>3.4.2.1</dt>
     <dd>Fixed a regression that prevented the <code>type</code> method from returning</dd>

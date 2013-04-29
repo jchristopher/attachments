@@ -124,17 +124,17 @@ class AttachmentsSearch extends Attachments
                 // we only want to check certain fields
                 foreach( $params['fields'] as $field )
                     if( isset( $potential_attachments[$i]->fields->$field ) )   // does the field exist?
-                        if( !$query || strpos( strtolower( $potential_attachments[$i]->fields->$field ),
+                        if( empty( $query ) || strpos( strtolower( $potential_attachments[$i]->fields->$field ),
                                     strtolower( $query ) ) !== false ) // does the value match?
-                            if( !is_null( $params['filetype'] ) && in_array( parent::get_mime_type( $potential_attachments[$i]->id ), $params['filetype'] ) )
+                            if( is_null( $params['filetype'] ) || ( !is_null( $params['filetype'] ) && in_array( parent::get_mime_type( $potential_attachments[$i]->id ), $params['filetype'] ) ) )
                                 $valid = true;
             }
             else
             {
                 // we want to check all fields
                 foreach( $potential_attachments[$i]->fields as $field_name => $field_value )
-                    if( !$query || strpos( strtolower( $field_value) , strtolower( $query ) ) !== false )
-                        if( !is_null( $params['filetype'] ) && in_array( parent::get_mime_type( $potential_attachments[$i]->id ), $params['filetype'] ) )
+                    if( empty( $query ) || strpos( strtolower( $field_value) , strtolower( $query ) ) !== false )
+                        if( is_null( $params['filetype'] ) || ( !is_null( $params['filetype'] ) && in_array( parent::get_mime_type( $potential_attachments[$i]->id ), $params['filetype'] ) ) )
                             $valid = true;
             }
 
