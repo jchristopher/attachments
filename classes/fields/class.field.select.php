@@ -24,15 +24,15 @@ class Attachments_Field_Select extends Attachments_Field
     function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() )
     {
         $defaults = array(
-                'allow_null'    => true,
-                'multiple'      => false,
                 'options'       => array(),       // no <option>s by default
+                'allow_null'    => false,
+                'multiple'      => false,
             );
 
         $meta = array_merge( $defaults, $meta );
 
         $this->options      = is_array( $meta['options'] ) ? $meta['options'] : array();
-        $this->allow_null   = is_bool( $meta['allow_null'] ) ? $meta['allow_null'] : true;
+        $this->allow_null   = is_bool( $meta['allow_null'] ) ? $meta['allow_null'] : false;
         $this->multiple     = is_bool( $meta['multiple'] ) ? $meta['multiple'] : false;
 
         parent::__construct( $name, $label, $value, $meta );
