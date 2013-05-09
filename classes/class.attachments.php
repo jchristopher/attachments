@@ -14,7 +14,7 @@
 if( !defined( 'ABSPATH' ) ) exit;
 
 // Declare our class
-if ( !class_exists( 'Attachments' ) ) :
+if( !class_exists( 'Attachments' ) ) :
 
     /**
      * Main Attachments Class
@@ -22,8 +22,8 @@ if ( !class_exists( 'Attachments' ) ) :
      * @since 3.0
      */
 
-    class Attachments {
-
+    class Attachments
+    {
         private $version;                   // stores Attachments' version number
         private $url;                       // stores Attachments' URL
         private $dir;                       // stores Attachments' directory
@@ -74,6 +74,9 @@ if ( !class_exists( 'Attachments' ) ) :
 
             // set up l10n
             add_action( 'plugins_loaded',               array( $this, 'l10n' ) );
+
+            // load extensions
+            add_action( 'plugins_loaded',               array( $this, 'load_extensions' ) );
 
             // hook into WP
             add_action( 'admin_enqueue_scripts',        array( $this, 'assets' ), 999, 1 );
@@ -127,6 +130,19 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
         /**
+         * Getter for the existing fields
+         *
+         * @return array
+         * @since 3.5
+         */
+        function get_fields()
+        {
+            return $this->fields;
+        }
+
+
+
+        /**
          * Callback for WordPress' delete_post action. Searches all saved Attachments
          * data for any records using a deleted attachment. If found, the record is removed.
          *
@@ -173,15 +189,9 @@ if ( !class_exists( 'Attachments' ) ) :
                             if( is_object( $post_attachments ) )
                             {
                                 foreach( $post_attachments as $existing_instance => $existing_instance_attachments )
-                                {
                                     foreach( $existing_instance_attachments as $existing_instance_attachment_key => $existing_instance_attachment )
-                                    {
                                         if( $pid == intval( $existing_instance_attachment->id ) )
-                                        {
                                             unset( $post_attachments->{$existing_instance}[$existing_instance_attachment_key] );
-                                        }
-                                    }
-                                }
 
                                 // saving routine assumes array from POST so we'll typecast it
                                 $post_attachments = (array) $post_attachments;
@@ -210,6 +220,18 @@ if ( !class_exists( 'Attachments' ) ) :
 
 
         /**
+         * Getter for our URL
+         *
+         * @since 3.5
+         */
+        function get_url()
+        {
+            return $this->url;
+        }
+
+
+
+        /**
          * Register our textdomain for l10n
          *
          * @since 3.4.2
@@ -217,6 +239,13 @@ if ( !class_exists( 'Attachments' ) ) :
         function l10n()
         {
             load_plugin_textdomain( 'attachments', false, trailingslashit( ATTACHMENTS_DIR ) . 'languages' );
+        }
+
+
+
+        function load_extensions()
+        {
+            do_action( 'attachments_extension', $this );
         }
 
 
@@ -589,7 +618,22 @@ if ( !class_exists( 'Attachments' ) ) :
                     $position           = isset($instance->position) ? $instance->position : 'normal';
                     $priority           = isset($instance->priority) ? $instance->priority : 'high';
 
-                    add_meta_box( 'attachments-' . $instance_name, __( esc_attr( $instance->label ) ), array( $this, 'meta_box_markup' ), $this->get_post_type(), $position, $priority, array( 'instance' => $instance, 'setup_nonce' => !$nonce_sent ) );
+                    $applicable = true;
+                    // $applicable = apply_filters( 'attachments_location', $instance );
+
+                    if( $applicable )
+                        add_meta_box(
+                            'attachments-' . $instance_name,
+                            __( esc_attr( $instance->label ) ),
+                            array( $this, 'meta_box_markup' ),
+                            $this->get_post_type(),
+                            $position,
+                            $priority,
+                            array(
+                                'instance'      => $instance,
+                                'setup_nonce'   => !$nonce_sent
+                            )
+                        );
 
                     $nonce_sent = true;
                 }
@@ -650,7 +694,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         attachmentsframe;
 
                     $element.on( 'click', '.attachments-invoke', function( event ) {
-                        var options, attachment;
+                        var attachment;
 
                         event.preventDefault();
 
@@ -684,7 +728,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         // set up our select handler
                         attachmentsframe.on( 'select', function() {
 
-                            selection = attachmentsframe.state().get('selection');
+                            var selection = attachmentsframe.state().get('selection');
 
                             if ( ! selection )
                                 return;
@@ -930,7 +974,7 @@ if ( !class_exists( 'Attachments' ) ) :
                         ),
                         array(
                             'name'      => 'caption',                       // unique field name
-                            'type'      => 'wysiwyg',                      // registered field type
+                            'type'      => 'wysiwyg',                       // registered field type
                             'label'     => __( 'Caption', 'attachments' ),  // label to display
                             'default'   => 'caption',                       // default value upon selection
                         ),
@@ -1416,7 +1460,7 @@ if ( !class_exists( 'Attachments' ) ) :
         function encode_field_value( $field_value = null )
         {
             if( is_null( $field_value ) )
-                return;
+                return false;
 
             if( is_object( $field_value ) )
             {
@@ -1545,7 +1589,8 @@ if ( !class_exists( 'Attachments' ) ) :
         /**
          * Processes Attachment (including fields) in preparation for return
          * @param  object $attachment An Attachment object as it was stored as post metadata
-         * @return object             Post-processed Attachment data
+         * @param string $instance The applicable instance
+         * @return object Post-processed Attachment data
          *
          * @since 3.3
          */
@@ -1603,7 +1648,7 @@ if ( !class_exists( 'Attachments' ) ) :
         function decode_field_value( $field_value = null )
         {
             if( is_null( $field_value ) )
-                return;
+                return false;
 
             if( is_object( $field_value ) )
             {
