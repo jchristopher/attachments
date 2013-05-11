@@ -293,3 +293,11 @@ a.attachments-invoke {
     margin-left: 30px;
     display:none;
 }
+
+.attachment-details .edit-attachment-asset {
+    float:left;
+}
+
+.attachment-details .delete-attachment {
+    float:right;
+}

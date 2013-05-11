@@ -720,7 +720,8 @@ if( !class_exists( 'Attachments' ) ) :
                         router       = '<?php echo __( esc_attr( $instance->router ) ); ?>',
                         limit        = <?php echo intval( $instance->limit ); ?>,
                         existing     = <?php echo ( isset( $instance->attachments ) && !empty( $instance->attachments ) ) ? count( $instance->attachments ): 0; ?>,
-                        attachmentsframe;
+                        attachmentsframe,
+                        editframe;
 
                     $element.on( 'click', '.attachments-invoke', function( event ) {
                         var attachment;
@@ -843,6 +844,64 @@ if( !class_exists( 'Attachments' ) ) :
                         attachmentsframe.content.mode(router);
 
                     });
+
+                    $element.on( 'click', '.edit-attachment-asset', function( event ) {
+                        event.preventDefault();
+                        if ( editframe ) {
+                            editframe.open();
+                            editframe.content.mode(router);
+                            return;
+                        }
+                        editframe = wp.media({
+                            title: title,
+                            multiple: false,
+                            library: {
+                                type: '<?php echo esc_attr( implode( ",", $instance->filetype ) ); ?>'
+                            },
+                            button: {
+                                text: '<?php _e( "Change", 'attachments' ); ?>'
+                            }
+                        });
+                        editframe.on( 'select', function(){
+                            var selection = editframe.state().get('selection');
+
+                            if ( ! selection )
+                                return;
+
+                            selection.each( function( attachment ) {
+
+                                // update the ID
+                                $element.find('input.attachments-track-id').val(attachment.id);
+
+                                // update the thumbnail
+                                var updatedThumb = false;
+                                if(attachments_isset(attachment.attributes)){
+                                    if(attachments_isset(attachment.attributes.sizes)){
+                                        if(attachments_isset(attachment.attributes.sizes.thumbnail)){
+                                            if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
+                                                updatedThumb = true;
+                                                $element.find('.attachment-thumbnail img').attr('src',attachment.attributes.sizes.thumbnail.url);
+                                            }
+                                        }
+                                    }
+                                }
+                                if( !updatedThumb ){
+                                    $element.find('.attachment-thumbnail img').attr('src','');
+                                }
+
+                                // update the name
+                                $element.find('.attachment-details .filename').text(attachment.attributes.filename);
+
+                                // update the dimensions
+                                if(attachments_isset(attachment.attributes.width)&&attachments_isset(attachment.attributes.height)){
+                                    $element.find('.attachment-details .dimensions').html(attachment.attributes.width + ' &times; ' + attachment.attributes.height).show();
+                                }
+
+                            } );
+                        });
+                        editframe.open();
+                        editframe.content.mode(router);
+                    } );
 
                     $element.on( 'click', '.delete-attachment a', function( event ) {
 
@@ -1232,7 +1291,7 @@ if( !class_exists( 'Attachments' ) ) :
                 <div class="attachments-attachment attachments-attachment-<?php echo $instance; ?>">
                     <?php $array_flag = ( isset( $attachment->uid ) ) ? $attachment->uid : '{{ attachments.attachment_uid }}'; ?>
 
-                    <input type="hidden" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '{{ attachments.id }}' ; ?>" />
+                    <input type="hidden" class="attachments-track-id" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '{{ attachments.id }}' ; ?>" />
 
                     <?php
                         // since attributes can change over time (image gets replaced, cropped, etc.) we'll pull that info
@@ -1269,6 +1328,7 @@ if( !class_exists( 'Attachments' ) ) :
                             <?php if( ( isset( $attachment->id ) && isset( $attachment->width ) ) || !isset( $attachment->id ) ) : ?>
                                 <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
                             <?php endif; ?>
+                            <div class="edit-attachment-asset"><a href="#"><?php _e( 'Change', 'attachments' ); ?></a></div>
                             <div class="delete-attachment"><a href="#"><?php _e( 'Remove', 'attachments' ); ?></a></div>
                             <div class="attachments-attachment-fields-toggle"><a href="#"><?php _e( 'Toggle Fields', 'attachments' ); ?></a></div>
                         </div>
