@@ -425,26 +425,51 @@ if( !class_exists( 'Attachments' ) ) :
 
 
         /**
+         * Returns the width of the current Attachment if it's an image
+         *
+         * @since 3.0
+         */
+        function width( $size = 'thumbnail', $index = null )
+        {
+            $asset = $this->asset( $size, $index );
+            return $asset[1];
+        }
+
+
+
+        /**
+         * Returns the height of the current Attachment if it's an image
+         *
+         * @since 3.0
+         */
+        function height( $size = 'thumbnail', $index = null )
+        {
+            $asset = $this->asset( $size, $index );
+            return $asset[2];
+        }
+
+
+
+        /**
          * Returns the formatted filesize of the current Attachment
          *
          * @since 3.0
          */
-        function filesize( $index = null )
+        function filesize( $index = null, $size = 'full' )
         {
             $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
 
             if( !isset( $this->attachments[$index]->id ) )
                 return false;
 
-            $url        = wp_get_attachment_url( $this->attachments[$index]->id );
+            $url        = $this->src( $size, $index );
             $uploads    = wp_upload_dir();
             $file_path  = str_replace( $uploads['baseurl'], $uploads['basedir'], $url );
 
             $formatted = '0 bytes';
             if( file_exists( $file_path ) )
-            {
                 $formatted = size_format( @filesize( $file_path ) );
-            }
+
             return $formatted;
         }
 
@@ -612,14 +637,15 @@ if( !class_exists( 'Attachments' ) ) :
             {
                 foreach( $this->instances_for_post_type as $instance )
                 {
+                    // facilitate more fine-grained meta box positioning than post type
+                    $applicable         = apply_filters( "attachments_location_{$instance}", true, $instance );
+
+                    // obtain other details about instance
                     $instance_name      = $instance;
                     $instance           = (object) $this->instances[$instance];
                     $instance->name     = $instance_name;
                     $position           = isset($instance->position) ? $instance->position : 'normal';
                     $priority           = isset($instance->priority) ? $instance->priority : 'high';
-
-                    $applicable = true;
-                    // $applicable = apply_filters( 'attachments_location', $instance );
 
                     if( $applicable )
                         add_meta_box(
