@@ -455,14 +455,15 @@ if( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function filesize( $index = null, $size = 'full' )
+        function filesize( $index = null, $size = null )
         {
             $index = is_null( $index ) ? $this->attachments_ref : intval( $index );
 
             if( !isset( $this->attachments[$index]->id ) )
                 return false;
 
-            $url        = $this->src( $size, $index );
+            // if an image size is passed along, use that
+            $url        = is_string( $size ) ? $this->src( $size, $index ) : wp_get_attachment_url( $this->attachments[$index]->id );
             $uploads    = wp_upload_dir();
             $file_path  = str_replace( $uploads['baseurl'], $uploads['basedir'], $url );
 
