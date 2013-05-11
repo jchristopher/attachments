@@ -718,12 +718,20 @@ if( !class_exists( 'Attachments' ) ) :
                         title        = '<?php echo __( esc_attr( $instance->label ) ); ?>',
                         button       = '<?php echo __( esc_attr( $instance->modal_text ) ); ?>',
                         router       = '<?php echo __( esc_attr( $instance->router ) ); ?>',
+                        limit        = <?php echo intval( $instance->limit ); ?>,
+                        existing     = <?php echo ( isset( $instance->attachments ) && !empty( $instance->attachments ) ) ? count( $instance->attachments ): 0; ?>,
                         attachmentsframe;
 
                     $element.on( 'click', '.attachments-invoke', function( event ) {
                         var attachment;
 
                         event.preventDefault();
+
+                        existing = $element.find('.attachments-container > .attachments-attachment').length;
+                        if( limit > -1 && existing >= limit ){
+                            alert('<?php _e( "Currently limited to", "attachments" ); ?> ' + limit);
+                            return false;
+                        }
 
                         // if the frame already exists, open it
                         if ( attachmentsframe ) {
@@ -732,7 +740,7 @@ if( !class_exists( 'Attachments' ) ) :
                             return;
                         }
 
-                        // set our seetings
+                        // set our settings
                         attachmentsframe = wp.media({
 
                             title: title,
@@ -753,7 +761,7 @@ if( !class_exists( 'Attachments' ) ) :
                         });
 
                         // set up our select handler
-                        attachmentsframe.on( 'select', function() {
+                        attachmentsframe.on( 'select', function(){
 
                             var selection = attachmentsframe.state().get('selection');
 
@@ -770,6 +778,11 @@ if( !class_exists( 'Attachments' ) ) :
 
                             // loop through the selected files
                             selection.each( function( attachment ) {
+
+                                // make sure we respect the limit
+                                if( limit > -1 && existing >= limit ){
+                                    return;
+                                }
 
                                 // set our attributes to the template
                                 attachment.attributes.attachment_uid = attachments_uniqid( 'attachmentsjs' );
@@ -794,6 +807,9 @@ if( !class_exists( 'Attachments' ) ) :
 
                                 // append the template
                                 $element.find('.attachments-container').<?php if( $instance->append ) : ?>append<?php else : ?>prepend<?php endif; ?>(template(templateData));
+
+                                // update the number of existing Attachments
+                                existing = $element.find('.attachments-container > .attachments-attachment').length;
 
                                 // if we're in a sidebar we DO want to show the fields which are normally hidden on load via CSS
                                 if($element.parents('#side-sortables')){
