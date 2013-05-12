@@ -3,8 +3,8 @@ Contributors: jchristopher
 Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
-Tested up to: 3.5.1
-Stable tag: 3.4.3
+Tested up to: 3.6
+Stable tag: 3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,13 +12,9 @@ Attachments allows you to simply append any number of items from your WordPress 
 
 == Description ==
 
-**Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/attachments#usage)
+**Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/attachments/docs/usage.md)
 
 Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types. This plugin *does not* directly interact with your theme, you will need to edit your template files.
-
-= Updated for WordPress 3.5! =
-
-WordPress 3.5 ships with an amazing new Media workflow and Attachments 3.0 makes great use of it. *If you are not running WordPress 3.5, the (now deprecated) version 1.6.2.1 (included with Attachments 3.x) will be used until you upgrade to WordPress 3.5+*
 
 = Associate Media items with posts =
 
@@ -67,7 +63,7 @@ There is a lot more information on [Attachments' GitHub page](https://github.com
 
 `define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments`
 
-Version 3 is a *major* rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
+Version 3 is a *major* rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your database prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
 
 == Frequently Asked Questions ==
 
@@ -83,7 +79,7 @@ Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues
 
 == Changelog ==
 
-Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments#changelog)
+Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/docs/changelog.md)
 
 == Upgrade Notice ==
 
@@ -92,8 +88,8 @@ Now piggybacking the awesome Media workflow introduced in WordPress 3.5
 
 == Roadmap ==
 
-Please see [Attachments on GitHub](https://github.com/jchristopher/attachments#roadmap)
+Please see [Attachments on GitHub](https://github.com/jchristopher/attachments/docs/roadmap.md)
 
 == Usage ==
 
-**Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/attachments#usage)
+**Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/docs/usage.md)

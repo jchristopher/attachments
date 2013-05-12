@@ -15,6 +15,15 @@
         // set our flag that the user wants to ignore the migration message
         add_option( 'attachments_ignore_migration', true, '', 'no' );
     }
+
+    if( isset( $_GET['dismiss-pro'] ) )
+    {
+        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-pro-dismiss') )
+            wp_die( __( 'Invalid request', 'attachments' ) );
+
+        // set our flag that the user wants to ignore the migration message
+        add_option( 'attachments_pro_ignore_migration', true, '', 'no' );
+    }
 ?>
 
 <div class="wrap">
@@ -78,6 +87,19 @@
                     break;
             }
         }
+        elseif( isset( $_GET['migrate-pro'] ) )
+        {
+            switch( intval( $_GET['migrate-pro'] ) )
+            {
+                case 1:
+                    $migrator->prepare_pro_migration();
+                    break;
+
+                case 2:
+                    $migrator->init_pro_migration();
+                    break;
+            }
+        }
         else
         { ?>
 
@@ -89,11 +111,20 @@
                 <p><?php _e( 'You have already migrated your legacy Attachments data.', 'attachments' ); ?></p>
             <?php endif; ?>
 
+            <?php if( false == get_option( 'attachments_pro_migrated' ) && $legacy->legacy_pro ) : ?>
+                <h2><?php _e( 'Migrate Attachments Pro data', 'attachments' ); ?></h2>
+                <p><?php _e( 'Attachments has found records stored in Attachments Pro. Would you like to migrate them to Attachments?', 'attachments' ); ?></p>
+                <p><a href="?page=attachments&amp;migrate-pro=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-pro-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate Attachments Pro data', 'attachments' ); ?></a></p>
+            <?php elseif( true == get_option( 'attachments_pro_migrated' ) ) : ?>
+                <p><?php _e( 'You have already migrated your Attachments Pro data.', 'attachments' ); ?></p>
+                <?php /* TODO: if possible, output necessary code here too */ ?>
+            <?php endif; ?>
+
             <h2><?php _e( 'Revert to version 1.x', 'attachments' ); ?></h2>
             <p><?php _e( 'If you would like to forcefully revert to the 1.x version branch of Attachments, add the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
             <p><code>define( 'ATTACHMENTS_LEGACY', true );</code></p>
             <h2><?php _e( 'Meta box customization', 'attachments' ); ?></h2>
-            <p><?php _e( 'By default, Attachments implements a single meta box on Posts and Pages with two fields. You can disable this default instance by adding the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
+            <p><?php _e( 'Attachments requires manual creation of meta boxes using code outlined in the documentation. If you would prefer a UI for managing Attachments Instances, please see', 'attachments' ); ?> <a href="http://mondaybynoon.com/members/plugins/attachments-ui/">Attachments UI</a>. <?php _e( 'By default, Attachments implements a single meta box on Posts and Pages with two fields. You can disable this default instance by adding the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
             <p><code>define( 'ATTACHMENTS_DEFAULT_INSTANCE', false );</code></p>
             <p><?php _e( "Your Attachments meta box(es) can be customized by adding the following to your theme's", 'attachments' ); ?> <code>functions.php</code>:</p>
             <script src="https://gist.github.com/4217475.js"> </script>
@@ -101,7 +132,6 @@
             <p><?php _e( "Attachments does not directly integrate with your theme out of the box, you will need to edit your theme's template files where appropriate. You can add the following within The Loop to retrieve all Attachments data for the current post:", 'attachments' ); ?></p>
             <script src="https://gist.github.com/4217483.js"> </script>
         <?php }
-
     ?>
 
 </div>

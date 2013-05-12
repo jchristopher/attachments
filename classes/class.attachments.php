@@ -55,8 +55,7 @@ if( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-
-            $this->version  = '3.4.3';
+            $this->version  = '3.5';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
 
@@ -427,7 +426,7 @@ if( !class_exists( 'Attachments' ) ) :
         /**
          * Returns the width of the current Attachment if it's an image
          *
-         * @since 3.0
+         * @since 3.5
          */
         function width( $size = 'thumbnail', $index = null )
         {
@@ -440,7 +439,7 @@ if( !class_exists( 'Attachments' ) ) :
         /**
          * Returns the height of the current Attachment if it's an image
          *
-         * @since 3.0
+         * @since 3.5
          */
         function height( $size = 'thumbnail', $index = null )
         {

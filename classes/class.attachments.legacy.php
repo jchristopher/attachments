@@ -45,7 +45,7 @@ class AttachmentsLegacyHandler
         if( is_multisite() )
         {
             $plugins = get_site_option( 'active_sitewide_plugins' );
-            if ( isset($plugins['attachments/index.php']) )
+            if( isset( $plugins['attachments/index.php'] ) )
                 return;
         }
 
@@ -56,8 +56,7 @@ class AttachmentsLegacyHandler
 
             if( $legacy_attachments_settings && is_array( $legacy_attachments_settings['post_types'] ) && count( $legacy_attachments_settings['post_types'] ) )
             {
-                // we have legacy settings, so we're going to use the post types
-                // that Attachments is currently utilizing
+                // we have legacy settings, so we're going to use the post types that Attachments is currently utilizing
 
                 // the keys are the actual CPT names, so we need those
                 foreach( $legacy_attachments_settings['post_types'] as $post_type => $value )
