@@ -266,7 +266,9 @@ class AttachmentsMigrate extends Attachments
                         <li><?php echo $attachments_pro_instance['label']; ?></li>
                     <?php endforeach; ?>
                 </ul>
-                <p><?php _e( 'Each Pro Instance will be migrated to an equivalent Attachments Instance, and you will be provided code to copy and paste into your <code>functions.php</code>', 'attachments' ); ?></p>
+                <h2><?php _e( 'Note: this is a multi-step process', 'attachments' ); ?></h2>
+                <p><?php _e( 'The data from each Pro Instance will be migrated to an equivalent Attachments Instance, and you will be provided code to copy and paste into your <code>functions.php</code>.', 'attachments' ); ?></p>
+                <p><?php _e( '<em>This data migration is only the first step. <strong>You must add the code from the following page to your <code>functions.php</code></strong> to restore your meta boxes</em>.', 'attachments' ); ?></p>
             <?php endif; ?>
 
             <p class="submit">
@@ -295,6 +297,7 @@ class AttachmentsMigrate extends Attachments
             foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance )
             {
                 $totals[] = $this->migrate_pro( $attachments_pro_instance );
+                print_r($attachments_pro_instance);
             }
 
             $total_attachments = 0;
@@ -304,8 +307,194 @@ class AttachmentsMigrate extends Attachments
 
             if( false == get_option( 'attachments_pro_migrated' ) ) :
                 ?>
-                <h3><?php _e( 'Migration Complete!', 'attachments' ); ?></h3>
-                <p><?php _e( 'The migration has completed.', 'attachments' ); ?> <strong><?php _e( 'Migrated', 'attachments'); ?>: <?php echo $total_attachments; ?></strong>.</p>
+                <h3><?php _e( 'Data conversion complete!', 'attachments' ); ?></h3>
+                <p><?php _e( 'The data conversion has been completed successfully.', 'attachments' ); ?> <strong><?php _e( 'Converted', 'attachments'); ?>: <?php echo $total_attachments; ?> <?php echo ( $total_attachments == 1 ) ? __( 'Attachment', 'attachments' ) : __( 'Attachments', 'attachments' ); ?></strong></p>
+                <h2><?php _e( 'The migration is NOT COMPLETE', 'attachments' ); ?></h2>
+                <p><?php _e( "While the data migration has taken place, you still need to add the following to your <code>functions.php</code> in order to have Attachments' meta boxes show up where appropriate:", 'attachments' ); ?></p>
+                <textarea style="font-family:monospace; display:block; width:100%; height:300px;">
+if( !function_exists( 'migrated_pro_attachments' ) )
+{
+    function migrated_pro_attachments( $attachments )
+    {<?php foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance ) : ?>
+
+        $fields = array(<?php if( is_array( $attachments_pro_instance['fields'] ) ) : foreach( $attachments_pro_instance['fields'] as $field ) : if( $field['type'] == 'textfield' ) { $field['type'] = 'text'; } ?>
+
+            array(
+                'name'      => '<?php echo str_replace( '_', '-', sanitize_title( $field['label'] ) ); ?>',
+                'type'      => '<?php echo $field['type']; ?>',
+                'label'     => '<?php echo $field['label']; ?>',
+                'default'   => '<?php echo isset( $field['mapped_to'] ) ? $field['mapped_to'] : ''; ?>',
+            ),<?php endforeach; echo "\n"; endif; ?>
+        );
+
+        $args = array(
+            'label'         => '<?php echo $attachments_pro_instance['label']; ?>',
+            'post_type'     => array( 'post', 'page' ),
+            'filetype'      => null,
+            'note'          => '<?php echo $attachments_pro_instance['description']; ?>',
+            'fields'        => $fields,
+        );
+
+        $attachments->register( '<?php echo $attachments_pro_instance['name']; ?>', $args );<?php endforeach; ?>
+
+    }
+}
+
+add_action( 'attachments_register', 'migrated_pro_attachments' );
+
+<?php
+    $integrate_auto_append = false;
+    foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance )
+    {
+        if( isset( $attachments_pro_instance['auto_append_enable'] ) )
+        {
+            $integrate_auto_append = true;
+            break;
+        }
+    }
+
+    if( $integrate_auto_append ) : ?>
+/**
+ * Facilitate Attachments auto-append template parsing
+ */
+
+if( !function_exists( 'attachments_magic_tags_processor' ) )
+{
+    function attachments_magic_tags_processor( $in )
+    {
+        global $attachments_magic_tag_index, $attachments_auto_append_ref;
+        $name = $in[2];
+
+        switch( $name )
+        {
+            case 'index':
+                $value = $attachments_magic_tag_index;
+                break;
+
+            case 'id':
+                $value = $attachments_auto_append_ref->id();
+                break;
+
+            case 'thumb':
+                $value = $attachments_auto_append_ref->image( 'thumbnail' );
+                break;
+
+            case 'url':
+                $value = $attachments_auto_append_ref->url();
+                break;
+
+            case 'mime':
+            case 'type':
+                $value = $attachments_auto_append_ref->type();
+                break;
+
+            case 'subtype':
+                $value = $attachments_auto_append_ref->subtype();
+                break;
+
+            case 'filesize':
+                $value = $attachments_auto_append_ref->filesize();
+                break;
+
+            default:
+                $value = '';
+                break;
+        }
+
+        // we might be dealing with fields
+        if( empty( $value ) )
+        {
+            if( strpos( $name, 'field_' ) !== false )
+            {
+                // we are dealing with a field
+                $field = explode( '_', $name );
+
+                if( isset( $field[1] ) )
+                    $value = $attachments_auto_append_ref->field( $field[1] );
+            }
+        }
+
+        // image details
+        if( empty( $value ) )
+        {
+            $request = explode( '.', $name );
+
+            if( is_array( $request ) && count( $request ) == 2 )
+            {
+                switch ( $request[1] )
+                {
+                    case 'url':
+                    case 'src':
+                        $value = $attachments_auto_append_ref->src( $request[0] );
+                        break;
+
+                    case 'width':
+                        $value = $attachments_auto_append_ref->width( $request[0] );
+                        break;
+
+                    case 'height':
+                        $value = $attachments_auto_append_ref->height( $request[0] );
+                        break;
+
+                    case 'filesize':
+                        $value = $attachments_auto_append_ref->filesize( null, $request[0] );
+                        break;
+
+                    default:
+                        $value = '';
+                        break;
+                }
+            }
+        }
+
+        return $value;
+    }
+}
+<?php endif; ?>
+
+<?php foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance ) : if( isset( $attachments_pro_instance['auto_append_enable'] ) && isset( $attachments_pro_instance['auto_append_template'] ) ) : ?>
+if( !is_admin() )
+{
+    function attachments_auto_append_<?php echo $attachments_pro_instance['name']; ?>( $content )
+    {
+        global $attachments_magic_tag_index, $attachments_auto_append_ref;
+
+        $original   = $content;
+        $output     = '';
+        $template   = <<<EOD
+<?php echo $attachments_pro_instance['auto_append_template']; ?>
+
+EOD;
+
+        $attachments_auto_append_ref = new Attachments( '<?php echo $attachments_pro_instance['name']; ?>' );
+        if( $attachments_auto_append_ref->exist() )
+        {
+            $pattern = '/\s*\{@begin_attachments_loop\}\s*(.*?)\s*\{@end_attachments_loop\}\s*/xmis';
+            preg_match( $pattern, $template, $matches );
+            $loop_content = '';
+            if( isset( $matches[1] ) )
+            {
+                $loop_content = $matches[1];
+                $attachments_magic_tag_index = 1;
+                while( $attachments_auto_append_ref->get() )
+                {
+                    $output .= preg_replace_callback( "/({@(.*?)})/m", 'attachments_magic_tags_processor', $loop_content );
+                    $attachments_magic_tag_index++;
+                }
+                $output = preg_replace( $pattern, $output, $template );
+            }
+        }
+
+        return $original . $output;
+    }
+
+    add_filter( 'the_content', 'attachments_auto_append_<?php echo $attachments_pro_instance['name']; ?>' );
+}
+<?php endif; endforeach; ?>
+                </textarea>
+                <p><?php _e( "This code snippet has also been emailed to you for future reference as the migration only runs once. When you have verified your meta boxes have been restored and Attachments is operating as expected, you should deactivate Attachments Pro.", 'attachments' ); ?></p>
+                <h2><?php _e( 'The migration is STILL NOT COMPLETE', 'attachments' ); ?></h2>
+                <p><?php _e( 'While the data has been migrated and the meta boxes restored, <em>you still need to edit your template files where appropriate</em>. Please see the documentation for more information', 'attachments' ); ?></p>
             <?php else : ?>
                 <h3><?php _e( 'Migration has already Run!', 'attachments' ); ?></h3>
                 <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
@@ -320,7 +509,6 @@ class AttachmentsMigrate extends Attachments
 
     function migrate_pro( $instance = array() )
     {
-        echo '<pre>';
         if( !is_array( $instance ) || empty( $instance ) )
             return false;
 
@@ -420,7 +608,6 @@ class AttachmentsMigrate extends Attachments
             }
         }
 
-        echo '</pre>';
         return $count;
     }
 
