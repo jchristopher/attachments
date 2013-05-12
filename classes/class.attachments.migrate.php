@@ -723,9 +723,9 @@ EOD;
 }
 <?php endif; endforeach; ?>
                 </textarea>
-                <p><?php _e( "This code snippet has also been emailed to you for future reference as the migration only runs once. When you have verified your meta boxes have been restored and Attachments is operating as expected, you should deactivate Attachments Pro.", 'attachments' ); ?></p>
+                <p><?php _e( "This code snippet has also been emailed to you for future reference as the migration only runs once. When you have verified your meta boxes have been restored and Attachments is operating as expected, you should <strong>deactivate Attachments Pro</strong>.", 'attachments' ); ?></p>
                 <h2><?php _e( 'The migration is STILL NOT COMPLETE', 'attachments' ); ?></h2>
-                <p><?php _e( 'While the data has been migrated and the meta boxes restored, <em>you still need to edit your template files where appropriate</em>. Please see the documentation for more information', 'attachments' ); ?></p>
+                <p><?php _e( 'While the data has been migrated and the meta boxes restored, <em>you still need to edit your template files where appropriate</em>. Please see the documentation for more information.', 'attachments' ); ?></p>
             <?php else : ?>
                 <h3><?php _e( 'Migration has already Run!', 'attachments' ); ?></h3>
                 <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
@@ -733,7 +733,7 @@ EOD;
         }
 
         // make sure the database knows the migration has run
-        // add_option( 'attachments_pro_migrated', true, '', 'no' );
+        add_option( 'attachments_pro_migrated', true, '', 'no' );
     }
 
 
