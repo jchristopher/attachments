@@ -4,6 +4,17 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 
 <dl>
 
+    <dt>3.5</dt>
+    <dd>Initial implementation of limiting the number of Attachments</dd>
+    <dd>You can now change an Attachment asset without having to remove the entire Attachment and re-add something new</dd>
+    <dd>New filter: <code>attachments_location_{my_instance}</code> (where <code><strong>{my_instance}</strong></code> is your instance name) allows for more fine-grained control over where meta boxes show up (e.g. limiting to your Home page)</dd>
+    <dd>New action: <code>attachments_extension</code> facilitates Attachments extensions</dd>
+    <dd>New extension: <a href="http://mondaybynoon.com/members/plugins/attachments-ui/">Attachments UI</a> to create "code-free" Instances in the WordPress admin</dd>
+    <dd>New method <code>width( $size )</code> to retrieve the width of the current Attachment</dd>
+    <dd>New method <code>height( $size )</code> to retrieve the height of the current Attachment</dd>
+    <dd>New document structure, various additions to documentation</dd>
+    <dd>Attachments Pro migration script. If you've been waiting to migrate from Attachments Pro please <strong>back up your database</strong> and run the migration script.</dd>
+
     <dt>3.4.3</dt>
     <dd>Attachments now takes into account media deleted outside Attachments meta boxes and removes deleted attachments automatically</dd>
     <dd>Added working Polish translation, props <a href="https://github.com/mleczakm">@mleczakm</a></dd>
