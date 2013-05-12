@@ -294,13 +294,12 @@ class AttachmentsMigrate extends Attachments
         if( is_array( $attachments_pro_settings['positions'] ) )
         {
             $totals = array();
+
             foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance )
-            {
                 $totals[] = $this->migrate_pro( $attachments_pro_instance );
-                print_r($attachments_pro_instance);
-            }
 
             $total_attachments = 0;
+
             if( !empty( $totals ) )
                 foreach( $totals as $instance_total )
                     $total_attachments += $instance_total['total'];
@@ -320,17 +319,22 @@ if( !function_exists( 'migrated_pro_attachments' ) )
         $fields = array(<?php if( is_array( $attachments_pro_instance['fields'] ) ) : foreach( $attachments_pro_instance['fields'] as $field ) : if( $field['type'] == 'textfield' ) { $field['type'] = 'text'; } ?>
 
             array(
-                'name'      => '<?php echo str_replace( '_', '-', sanitize_title( $field['label'] ) ); ?>',
+                'name'      => '<?php echo str_replace( '-', '_', sanitize_title( $field['label'] ) ); ?>',
                 'type'      => '<?php echo $field['type']; ?>',
                 'label'     => '<?php echo $field['label']; ?>',
                 'default'   => '<?php echo isset( $field['mapped_to'] ) ? $field['mapped_to'] : ''; ?>',
             ),<?php endforeach; echo "\n"; endif; ?>
         );
-
+<?php
+    $post_types = array();
+    if( isset( $attachments_pro_instance['conditions'] ) && is_array( $attachments_pro_instance['conditions'] ) && !empty( $attachments_pro_instance['conditions'] ) )
+        foreach( $attachments_pro_instance['conditions'] as $condition )
+            if( $condition['param'] == 'post_type' && $condition['operator'] == 'is' )
+                $post_types[] = $condition['limiter'];
+?>
         $args = array(
             'label'         => '<?php echo $attachments_pro_instance['label']; ?>',
-            'post_type'     => array( 'post', 'page' ),
-            'filetype'      => null,
+            'post_type'     => array( '<?php echo implode( "', '", array_unique( $post_types ) ); ?>' ),
             'note'          => '<?php echo $attachments_pro_instance['description']; ?>',
             'fields'        => $fields,
         );
@@ -341,6 +345,233 @@ if( !function_exists( 'migrated_pro_attachments' ) )
 }
 
 add_action( 'attachments_register', 'migrated_pro_attachments' );
+
+<?php
+    $integrate_conditions = false;
+    foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance )
+    {
+        if( isset( $attachments_pro_instance['conditions'] ) && is_array( $attachments_pro_instance['conditions'] ) && !empty( $attachments_pro_instance['conditions'] ) )
+        {
+            $integrate_conditions = true;
+            break;
+        }
+    }
+
+    if( $integrate_conditions ) : ?>
+/**
+ * Facilitate Attachments conditional inclusion of meta boxes for existing instances
+ */
+
+if( !function_exists( 'attachments_is_allowed' ) )
+{
+    function attachments_is_allowed( $conditions = array(), $match = 'any' )
+    {
+        global $post;
+
+        $match              = ( $match == 'any' ) ? 'any' : 'all';
+        $allowed            = false;
+        $short_circuit      = false;
+
+        if( is_array( $conditions ) && !empty( $conditions ) )
+        {
+            foreach( $conditions as $condition )
+            {
+                if( ( $match == 'all' && !$short_circuit ) || $match == 'any' )
+                {
+                    $parameter  = $condition['param'];
+                    $operator   = $condition['operator'];
+                    $limiter    = $condition['limiter'];
+
+                    switch( $parameter )
+                    {
+                        case 'post_type':
+                                if( $operator == 'is' )
+                                {
+                                    if( $post->post_type == $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if( $post->post_type != $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                            break;
+
+                        case 'post_format':
+                                $post_format = get_post_format( $post->ID );
+                                if( $operator == 'is' )
+                                {
+                                    if( $post_format == $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if( $post_format != $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                            break;
+
+                        case 'page':
+                                if( $operator == 'is' )
+                                {
+                                    if( $post->ID == $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if( $post->ID != $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                            break;
+
+                        case 'role':
+                                $current_user = wp_get_current_user();
+                                if( $operator == 'is' )
+                                {
+                                    if( array_search( strtolower( $limiter ), $current_user->roles ) !== false )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if( array_search( strtolower( $limiter ), $current_user->roles ) === false )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                            break;
+
+                        case 'template':
+                                $current_template = get_post_meta( $post->ID, '_wp_page_template', true );
+                                if( $operator == 'is' )
+                                {
+                                    if( $current_template == $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if( $current_template != $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                            break;
+
+                        case 'parent':
+                                if( $operator == 'is' )
+                                {
+                                    if( $post->post_parent == $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if( $post->post_parent != $limiter )
+                                    {
+                                        $allowed = true;
+                                    }
+                                    elseif( $match == 'all' )
+                                    {
+                                        $short_circuit = true;
+                                    }
+                                }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+        return ( $allowed && !$short_circuit ) ? true : false;
+    }
+}
+<?php endif; ?>
+
+<?php
+    foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance )
+    {
+        if( isset( $attachments_pro_instance['conditions'] ) && is_array( $attachments_pro_instance['conditions'] ) && !empty( $attachments_pro_instance['conditions'] ) )
+        { ?>
+function attachments_check_<?php echo $attachments_pro_instance['name']; ?>()
+{
+    $conditions = array(<?php foreach( $attachments_pro_instance['conditions'] as $condition ) : ?>
+
+        array(
+            'param'     => '<?php echo $condition['param']; ?>',
+            'operator'  => '<?php echo $condition['operator']; ?>',
+            'limiter'   => '<?php echo $condition['limiter']; ?>',
+        ),<?php endforeach; ?>
+
+    );
+
+    return attachments_is_allowed( $conditions, '<?php echo $attachments_pro_instance['match']; ?>' );
+}
+
+add_filter( "attachments_location_<?php echo $attachments_pro_instance; ?>", 'attachments_check_<?php echo $attachments_pro_instance['name']; ?>' );
+        <?php }
+    }
+?>
 
 <?php
     $integrate_auto_append = false;
@@ -544,24 +775,29 @@ EOD;
                     $post_attachments = array();
                     foreach( $existing_instances as $instance_name => $instance_attachments )
                     {
-                        $post_attachments[$instance_name] = array();
-                        $converted_attachment = array();
-                        foreach( $instance_attachments as $instance_attachment )
+                        if( $instance_name == $instance['name'] )
                         {
-                            $converted_attachment['id'] = $instance_attachment['id'];
-                            if( is_array( $instance_attachment['fields'] ) )
+                            $post_attachments[$instance_name] = array();
+                            $converted_attachment = array();
+                            foreach( $instance_attachments as $instance_attachment )
                             {
-                                $converted_attachment['fields'] = array();
-                                foreach( $instance_attachment['fields'] as $instance_attachment_field_key => $instance_attachment_field )
+                                $converted_attachment['id'] = $instance_attachment['id'];
+                                if( is_array( $instance_attachment['fields'] ) )
                                 {
-                                    $destination_field_name = $instance['fields'][$instance_attachment_field_key]['label'];
-                                    $destination_field_name = str_replace( '-', '_', sanitize_title( $destination_field_name ) );
+                                    $converted_attachment['fields'] = array();
+                                    foreach( $instance_attachment['fields'] as $instance_attachment_field_key => $instance_attachment_field )
+                                    {
+                                        $destination_field_name = $instance['fields'][$instance_attachment_field_key]['label'];
+                                        $destination_field_name = str_replace( '-', '_', sanitize_title( $destination_field_name ) );
 
-                                    $converted_attachment['fields'][$destination_field_name] = $instance_attachment_field;
+                                        $converted_attachment['fields'][$destination_field_name] = $instance_attachment_field;
+                                    }
+                                    unset( $instance_attachment_field_key );
                                 }
+                                unset( $instance_attachment );
+                                $post_attachments[$instance_name][] = $converted_attachment;
+                                $count['total']++;
                             }
-                            $post_attachments[$instance_name][] = $converted_attachment;
-                            $count['total']++;
                         }
                     }
 
