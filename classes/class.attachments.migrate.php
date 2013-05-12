@@ -725,7 +725,31 @@ EOD;
                 </textarea>
                 <p><?php _e( "This code snippet has also been emailed to you for future reference as the migration only runs once. When you have verified your meta boxes have been restored and Attachments is operating as expected, you should <strong>deactivate Attachments Pro</strong>.", 'attachments' ); ?></p>
                 <h2><?php _e( 'The migration is STILL NOT COMPLETE', 'attachments' ); ?></h2>
-                <p><?php _e( 'While the data has been migrated and the meta boxes restored, <em>you still need to edit your template files where appropriate</em>. Please see the documentation for more information.', 'attachments' ); ?></p>
+                <p><?php _e( 'While the data has been migrated and the meta boxes restored, <em>you still need to edit your template files where appropriate</em>. Please see the documentation for more information. The following sample code can be used as a starting point:', 'attachments' ); ?></p>
+                <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance ) : ?>
+&lt;?php $attachments = new Attachments( '<?php echo $attachments_pro_instance['name']; ?>' ); ?&gt;
+&lt;?php if( $attachments-&gt;exist() ) : ?&gt;
+    &lt;h3&gt;<?php echo $attachments_pro_instance['label']; ?>&lt;/h3&gt;
+    &lt;p&gt;Total <?php echo $attachments_pro_instance['label']; ?>: &lt;?php echo $attachments-&gt;total(); ?&gt;&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;?php while( $attachments-&gt;get() ) : ?&gt;
+            &lt;li&gt;
+                ID: &lt;?php echo $attachments-&gt;id(); ?&gt;&lt;br /&gt;
+                Type: &lt;?php echo $attachments-&gt;type(); ?&gt;&lt;br /&gt;
+                Subtype: &lt;?php echo $attachments-&gt;subtype(); ?&gt;&lt;br /&gt;
+                URL: &lt;?php echo $attachments-&gt;url(); ?&gt;&lt;br /&gt;
+                Image: &lt;?php echo $attachments-&gt;image( 'thumbnail' ); ?&gt;&lt;br /&gt;
+                Source: &lt;?php echo $attachments-&gt;src( 'full' ); ?&gt;&lt;br /&gt;
+                Size: &lt;?php echo $attachments-&gt;filesize(); ?&gt;&lt;br /&gt;<?php if( is_array( $attachments_pro_instance['fields'] ) ) : ?><?php foreach( $attachments_pro_instance['fields'] as $field ) : ?><?php if( $field['type'] == 'textfield' ) { $field['type'] = 'text'; } ?>
+
+                <?php echo $field['label']; ?>: &lt;?php echo $attachments-&gt;field( '<?php echo str_replace( '-', '_', sanitize_title( $field['label'] ) ); ?>' ); ?&gt;&lt;br /&gt;<?php endforeach; endif; ?>
+
+            &lt;/li&gt;
+        &lt;?php endwhile; ?&gt;
+    &lt;/ul&gt;
+&lt;?php endif; ?&gt;
+<?php endforeach; ?>
+                    </textarea>
             <?php else : ?>
                 <h3><?php _e( 'Migration has already Run!', 'attachments' ); ?></h3>
                 <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
