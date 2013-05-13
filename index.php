@@ -39,7 +39,7 @@ else
     else
     {
         define( 'ATTACHMENTS_DIR', plugin_dir_path( __FILE__ ) );
-        define( 'ATTACHMENTS_URL', plugins_url( 'attachments' ) );
+        define( 'ATTACHMENTS_URL', plugin_dir_url( __FILE__ ) );
 
         // load current version of Attachments
         require_once 'classes/class.attachments.php';

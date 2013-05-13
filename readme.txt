@@ -90,6 +90,7 @@ Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/at
 * New method `height( $size )` to retrieve the height of the current Attachment
 * New document structure, various additions to documentation
 * Attachments Pro migration script. If you've been waiting to migrate from Attachments Pro please  **back up your database** and run the migration script.
+* Fixed an asset URL issue if Attachments is added as a must-use plugin
 
 = 3.4.3 =
 * Attachments now takes into account media deleted outside Attachments meta boxes and removes deleted attachments automatically
