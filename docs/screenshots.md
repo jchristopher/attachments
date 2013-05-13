@@ -16,3 +16,7 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 
 ##### Drag and drop to sort
 ![Drag and drop to sort](http://mondaybynoon.com/images/attachments/screenshot-5.png)
+
+-----
+
+#### Next: [Frequently Asked Questions](faq.md)

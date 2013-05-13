@@ -81,3 +81,7 @@ function init_my_attachments_extension( $attachments )
 
 add_action( 'attachments_extension', 'init_my_attachments_extension', 10, 1 );
 ```
+
+-----
+
+#### Next: [Screenshots](screenshots.md)

@@ -26,7 +26,7 @@ Attachments allows you to simply append any number of items from your WordPress 
         * [Get Attachments](hooks.md#get-attachments) - Edit the order of Attachments in your theme
         * [Fine Tune Instance Location](hooks.md#fine-tune-instance-location) - Real-time control over whether or not to show your Instance
     * [Actions](hooks.md#actions)
-            * [Extend Attachments](hooks.md#extend-attachments) - Integrate your own extensions with Attachments
+        * [Extend Attachments](hooks.md#extend-attachments) - Integrate your own extensions with Attachments
 * [Screenshots](screenshots.md)
 * [Frequently Asked Questions](faq.md)
 * [Changelog](changelog.md)

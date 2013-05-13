@@ -296,3 +296,7 @@ $defaults = array(
 ```
 
 Once you've performed your search, you can loop through the returned Attachments as you normally would.
+
+-----
+
+#### Next: [Hooks](hooks.md)

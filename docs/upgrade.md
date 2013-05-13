@@ -10,3 +10,7 @@ define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments
 ```
 
 Version 3 is a **major** rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your databse prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
+
+-----
+
+#### Next: [Usage](usage.md)

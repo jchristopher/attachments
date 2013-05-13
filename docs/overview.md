@@ -39,3 +39,7 @@ The idea behind Attachments is to give developers the ability to directly associ
 ```
 
 That snippet will request all of the existing Attachments defined for the current Post within The Loop, and retrieve each itemized property for that Attachment. Using the provided details you're able to integrate the attached Media items in any way you please.
+
+-----
+
+#### Next: [Installation](installation.md)
