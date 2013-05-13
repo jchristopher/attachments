@@ -287,6 +287,10 @@ class AttachmentsMigrate extends Attachments
      */
     function init_pro_migration()
     {
+        global $current_user;
+
+        get_currentuserinfo();
+
         if( !wp_verify_nonce( $_GET['nonce'], 'attachments-pro-migrate-2') )
             wp_die( __( 'Invalid request', 'attachments' ) );
 
@@ -310,8 +314,7 @@ class AttachmentsMigrate extends Attachments
                 <p><?php _e( 'The data conversion has been completed successfully.', 'attachments' ); ?> <strong><?php _e( 'Converted', 'attachments'); ?>: <?php echo $total_attachments; ?> <?php echo ( $total_attachments == 1 ) ? __( 'Attachment', 'attachments' ) : __( 'Attachments', 'attachments' ); ?></strong></p>
                 <h2><?php _e( 'The migration is NOT COMPLETE', 'attachments' ); ?></h2>
                 <p><?php _e( "While the data migration has taken place, you still need to add the following to your <code>functions.php</code> in order to have Attachments' meta boxes show up where appropriate:", 'attachments' ); ?></p>
-                <textarea style="font-family:monospace; display:block; width:100%; height:300px;">
-if( !function_exists( 'migrated_pro_attachments' ) )
+<?php ob_start(); ?>if( !function_exists( 'migrated_pro_attachments' ) )
 {
     function migrated_pro_attachments( $attachments )
     {<?php foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance ) : ?>
@@ -721,12 +724,12 @@ EOD;
 
     add_filter( 'the_content', 'attachments_auto_append_<?php echo $attachments_pro_instance['name']; ?>' );
 }
-<?php endif; endforeach; ?>
-                </textarea>
+<?php endif; endforeach; ?><?php $code_for_functionsphp = ob_get_clean(); ?>
+                <textarea style="font-family:monospace; display:block; width:100%; height:300px;"><?php echo $code_for_functionsphp; ?></textarea>
                 <p><?php _e( "This code snippet has also been emailed to you for future reference as the migration only runs once. When you have verified your meta boxes have been restored and Attachments is operating as expected, you should <strong>deactivate Attachments Pro</strong>.", 'attachments' ); ?></p>
                 <h2><?php _e( 'The migration is STILL NOT COMPLETE', 'attachments' ); ?></h2>
                 <p><?php _e( 'While the data has been migrated and the meta boxes restored, <em>you still need to edit your template files where appropriate</em>. Please see the documentation for more information. The following sample code can be used as a starting point:', 'attachments' ); ?></p>
-                <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance ) : ?>
+                <?php ob_start(); foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance ) : ?>
 &lt;?php $attachments = new Attachments( '<?php echo $attachments_pro_instance['name']; ?>' ); ?&gt;
 &lt;?php if( $attachments-&gt;exist() ) : ?&gt;
     &lt;h3&gt;<?php echo $attachments_pro_instance['label']; ?>&lt;/h3&gt;
@@ -748,8 +751,23 @@ EOD;
         &lt;?php endwhile; ?&gt;
     &lt;/ul&gt;
 &lt;?php endif; ?&gt;
-<?php endforeach; ?>
-                    </textarea>
+<?php endforeach; $sample_template_code = ob_get_clean(); ?>
+                <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php echo $sample_template_code; ?></textarea>
+                <?php
+                    // send email with all code samples
+                    $message = __( "Please add the following to your theme's functions.php, it will reinstate your meta boxes now that the data has been migrated from Attachments Pro.", 'attachments' );
+                    $message .= "\n\n// ===== " . __( 'BEGIN functions.php COPY' ) . " ========================================\n\n";
+                    $message .= $code_for_functionsphp;
+                    $message .= "\n\n// ===== " . __( 'END functions.php COPY' ) . " ========================================\n\n";
+                    $message .= "\n\n";
+                    $message .= __( "You will also need to edit your theme template files where you want to use Attachments data. The syntax is quite different than it was for Attachments Pro, but you can use the code sample below to rebuild your output:", 'attachments' );
+                    $message .= "\n\n\n// ===== " . __( 'BEGIN TEMPLATE COPY' ) . " ========================================\n\n";
+                    $message .= html_entity_decode( $sample_template_code );
+                    $message .= "\n\n// ===== " . __( 'END TEMPLATE COPY' ) . " ========================================\n\n";
+
+                    $sent = wp_mail( $current_user->user_email, '[Attachments] ' . get_bloginfo( 'name' ) . ' - Code Samples', $message );
+                ?>
+                <p><?php _e( 'This code sample has been emailed to you for future reference as well.', 'attachments' ); ?>
             <?php else : ?>
                 <h3><?php _e( 'Migration has already Run!', 'attachments' ); ?></h3>
                 <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
