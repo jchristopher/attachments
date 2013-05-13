@@ -551,12 +551,7 @@ if( !function_exists( 'attachments_is_allowed' ) )
 }
 <?php endif; ?>
 
-<?php
-    foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance )
-    {
-        if( isset( $attachments_pro_instance['conditions'] ) && is_array( $attachments_pro_instance['conditions'] ) && !empty( $attachments_pro_instance['conditions'] ) )
-        { ?>
-function attachments_check_<?php echo $attachments_pro_instance['name']; ?>()
+<?php foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance ) { if( isset( $attachments_pro_instance['conditions'] ) && is_array( $attachments_pro_instance['conditions'] ) && !empty( $attachments_pro_instance['conditions'] ) ) { ?>function attachments_check_<?php echo $attachments_pro_instance['name']; ?>()
 {
     $conditions = array(<?php foreach( $attachments_pro_instance['conditions'] as $condition ) : ?>
 
@@ -571,7 +566,7 @@ function attachments_check_<?php echo $attachments_pro_instance['name']; ?>()
     return attachments_is_allowed( $conditions, '<?php echo $attachments_pro_instance['match']; ?>' );
 }
 
-add_filter( "attachments_location_<?php echo $attachments_pro_instance; ?>", 'attachments_check_<?php echo $attachments_pro_instance['name']; ?>' );
+add_filter( "attachments_location_<?php echo $attachments_pro_instance['name']; ?>", 'attachments_check_<?php echo $attachments_pro_instance['name']; ?>' );
         <?php }
     }
 ?>
