@@ -28,7 +28,9 @@ There's quite a bit of documentation available. I would suggest checking out the
 * [Changelog](docs/changelog.md)
 * [Roadmap](docs/roadmap.md)
 
-### Screenshot
+## Main Screenshot
+
+This is an Attachments Instance on a Post edit screen. The fields are fully customizable and you can have as many Instances as you'd like, anywhere.
 
 ![Attachments on an edit screen](http://mondaybynoon.com/images/attachments/main.png)
 
