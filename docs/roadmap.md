@@ -1,6 +1,6 @@
 This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
 
-## [Docs TOC](toc.md) / Roadmap
+## [Docs TOC](TOC.md) / Roadmap
 
 Planned feature additions include:
 

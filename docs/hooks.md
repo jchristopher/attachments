@@ -1,6 +1,6 @@
 This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
 
-# [Docs TOC](toc.md) / Hooks
+# [Docs TOC](TOC.md) / Hooks
 
 ## Filters
 

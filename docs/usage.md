@@ -1,6 +1,6 @@
 This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
 
-## [Docs TOC](toc.md) / Usage
+## [Docs TOC](TOC.md) / Usage
 
 Attachments is based on *instances* which correlate directly with the meta boxes that appear on edit screens of Posts, Pages, and Custom Post Types. By default Attachments ships with a single meta box that appears *only on Posts and Pages*. It has two fields: one for Title and one for Caption. If you would like to disable or customize the default instance, or you'd like to create additional instances with custom fields for different post types, please see [Setting Up Instances](#setting-up-instances).
 

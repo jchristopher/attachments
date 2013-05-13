@@ -1,6 +1,6 @@
 This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
 
-## [Docs TOC](toc.md) / Screenshots
+## [Docs TOC](TOC.md) / Screenshots
 
 ##### An Attachments meta box sitting below the content editor
 ![An Attachments meta box sitting below the content editor](http://mondaybynoon.com/images/attachments/screenshot-1.png)
