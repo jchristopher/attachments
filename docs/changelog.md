@@ -15,6 +15,7 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
     <dd>New document structure, various additions to documentation</dd>
     <dd>Attachments Pro migration script. If you've been waiting to migrate from Attachments Pro please <strong>back up your database</strong> and run the migration script.</dd>
     <dd>Fixed an asset URL issue if Attachments is added as a must-use plugin</dd>
+    <dd>Italian translation (props Marco Chiesi)</dd>
 
     <dt>3.4.3</dt>
     <dd>Attachments now takes into account media deleted outside Attachments meta boxes and removes deleted attachments automatically</dd>

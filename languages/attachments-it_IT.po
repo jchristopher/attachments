@@ -1,0 +1,321 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Attachments v3.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-09 18:09+0100\n"
+"PO-Revision-Date: 2013-05-09 18:58+0100\n"
+"Last-Translator: Marco <marco@blackstudio.it>\n"
+"Language-Team: Black Studio <info@blackstudio.it>\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_ngettext:1,2\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: index.php:30
+msgid ""
+"Attachments requires PHP 5.2+. Attachments has been automatically "
+"deactivated."
+msgstr ""
+"Attachments richiede PHP 5.2 o una versione successiva. Il plugin è stato "
+"automaticamente disattivato."
+
+#: classes/class.attachments.legacy.php:112
+msgid ""
+"<strong>Attachments has detected legacy Attachments data.</strong> A lot has "
+"changed since Attachments 1.x."
+msgstr ""
+"<strong>Attachments ha rilevato la presenza di dati di una versione "
+"precedente.</strong> Molte cose sono cambiate rispetto ad Attachments 1.x."
+
+#: classes/class.attachments.legacy.php:112
+msgid "Find out more"
+msgstr "Maggiori informazioni"
+
+#: classes/class.attachments.migrate.php:162
+#: classes/class.attachments.migrate.php:218 views/options.php:13
+msgid "Invalid request"
+msgstr "Richiesta non valida"
+
+#: classes/class.attachments.migrate.php:164
+msgid "Migration Step 1"
+msgstr "Migrazione - Passo 1"
+
+#: classes/class.attachments.migrate.php:165
+msgid ""
+"In order to migrate Attachments 1.x data, you need to set which instance and "
+"fields in version 3.0+ you'd like to use:"
+msgstr ""
+"Per migrare i dati di Attachments 1.x, devi impostare quale istanza e quali "
+"campi della versione 3.0+ vorresti utilizzare:"
+
+#: classes/class.attachments.migrate.php:174
+msgid "Attachments 3.x Instance"
+msgstr "Istanza di Attachments 3.x"
+
+#: classes/class.attachments.migrate.php:178
+msgid "The instance name you would like to use in the migration. Required."
+msgstr ""
+"Il nome dell'istanza che vorresti utilizzare nella migrazione. Necessario."
+
+#: classes/class.attachments.migrate.php:183
+msgid "Attachments 3.x Title"
+msgstr "Titolo Attachments 3.x"
+
+#: classes/class.attachments.migrate.php:187
+msgid ""
+"The <code>Title</code> field data will be migrated to this field name in "
+"Attachments 3.x. Leave empty to disregard."
+msgstr ""
+"Il campo <code>Titolo</code> sarà migrato a questo campo in Attachments 3.x. "
+"Lasciare vuoto per ignorare."
+
+#: classes/class.attachments.migrate.php:192
+msgid "Attachments 3.x Caption"
+msgstr "Didascalia Attachments 3.x"
+
+#: classes/class.attachments.migrate.php:196
+msgid ""
+"The <code>Caption</code> field data will be migrated to this field name in "
+"Attachments 3.x. Leave empty to disregard."
+msgstr ""
+"Il campo <code>Didascalia</code> sarà migrato a questo campo in Attachments "
+"3.x. Lasciare vuoto per ignorare."
+
+#: classes/class.attachments.migrate.php:224
+msgid "Migration Complete!"
+msgstr "Migrazione completata!"
+
+#: classes/class.attachments.migrate.php:225
+msgid "The migration has completed."
+msgstr "La migrazione è stata completata."
+
+#: classes/class.attachments.migrate.php:225
+msgid "Migrated"
+msgstr "Migrato"
+
+#: classes/class.attachments.migrate.php:227
+msgid "Migration has already Run!"
+msgstr "La migrazione è già stata eseguita!"
+
+#: classes/class.attachments.migrate.php:228
+msgid ""
+"The migration has already been run. The migration process has not been "
+"repeated."
+msgstr "La migrazione è già stata eseguita. Il processo non è stato ripetuto."
+
+#: classes/class.attachments.php:769 classes/class.attachments.php:843
+#: deprecated/attachments.php:365
+msgid "Title"
+msgstr "Titolo"
+
+#: classes/class.attachments.php:805 classes/class.attachments.php:1524
+#: deprecated/attachments.php:417 views/options.php:24
+msgid "Attachments"
+msgstr "Attachments"
+
+#: classes/class.attachments.php:830 classes/class.attachments.php:833
+#: deprecated/attachments.php:312
+msgid "Attach"
+msgstr "Allega"
+
+#: classes/class.attachments.php:849 deprecated/attachments.php:369
+msgid "Caption"
+msgstr "Didascalia"
+
+#: classes/class.attachments.php:1100
+msgid "Remove"
+msgstr "Rimuovi"
+
+#: classes/class.attachments.php:1101
+msgid "Toggle Fields"
+msgstr "Alterna campi"
+
+#: deprecated/attachments.php:51
+msgid ""
+"Attachments requires PHP 5.2 or higher, as does WordPress 3.2+. Attachments "
+"has been automatically deactivated."
+msgstr ""
+"Attachments richiede PHP 5.2 o superiore, così come WordPress 3.2+. "
+"Attachments è stato automaticamente disattivato."
+
+#: deprecated/attachments.php:361
+msgid "Delete"
+msgstr "Elimina"
+
+#: views/options.php:29
+msgid ""
+"<strong>Attachments has changed significantly since it's last update.</"
+"strong> These changes <em>will affect your themes and plugins</em>."
+msgstr ""
+"<strong>Attachments è cambiato significativamente dall'ultimo aggiornamento."
+"</strong> Queste modifiche <em>avranno effetto sui tuoi temi e plugin</em>."
+
+#: views/options.php:32
+msgid "Immediate Reversal to Attachments 1.x"
+msgstr "Torna subito ad Attachments 1.x"
+
+#: views/options.php:34
+msgid ""
+"If you would like to immediately <em>revert to the old version of "
+"Attachments</em> you may do so by downgrading the plugin install itself, or "
+"adding the following to your"
+msgstr ""
+"Se vuoi <em>ripristinare la vecchia versione di Attachments</em> lo puoi "
+"fare reinstallando la versione precedente, oppure aggiungendo il seguente "
+"codice al tuo"
+
+#: views/options.php:38
+msgid "Overview of changes from Attachments 1.x"
+msgstr "Panoramica delle modifiche rispetto ad Attachments 1.x"
+
+#: views/options.php:40
+msgid ""
+"A lot has changed since Attachments 1.x. The entire codebase was rewritten "
+"to not only make better use of the stellar Media updates in WordPress 3.5, "
+"but to also facilitate some exciting features coming down the line. With "
+"this rewrite came significant changes to the way you will work with "
+"Attachments. One of the biggest changes in Attachments 3.0 is the ability to "
+"create multiple meta boxes of Attachments, each with any number of custom "
+"fields you define. By default, Attachments will re-implement the meta box "
+"you've been using until now, but <strong>you will need to trigger a "
+"migration to the new format</strong>."
+msgstr ""
+"Molte cose sono cambiate rispetto ad Attachments 1.x. Tutto il codice è "
+"stato riscritto non solo per fare un uso migliore degli aggiornamenti della "
+"Libreria Media di Wordpress 3.5, ma anche per facilitare l'aggiunta di nuove "
+"funzionalità. Come conseguenza di questo ci sono significativi cambiamenti "
+"al modo con cui operare con Attachments. Una delle modifiche principali in "
+"Attachments 3.0 è la possibilità di creare istanze multiple di allegati, "
+"ognuna con un numero indefinito di campi personalizzati che si possono "
+"definire. Come impostazione predefinita, Attachments reimplementerà "
+"l'istanza che hai utilizzato fino ad ora, ma <strong>dovrai effettuare una "
+"migrazione al nuovo formato</strong>."
+
+#: views/options.php:42
+msgid "Migrating Attachments 1.x data to Attachments 3.x"
+msgstr "Migrazione da Attachments 1.x ad Attachments 3.x"
+
+#: views/options.php:44
+msgid ""
+"If you have existing Attachments 1.x data and are using it, a migration "
+"script has been bundled here and you can use it below. If you would like to "
+"directly migrate from Attachments 1.x to Attachments 3.x you can use the "
+"defaults put in place and your data will be migrated to the new format "
+"quickly and easily. Alternatively, if you'd like to customize the fields "
+"you're using a bit, you can do that first and then adjust the migration "
+"parameters to map the old fields to your new ones."
+msgstr ""
+"Se hai dei dati esistenti di Attachments 1.x e li stai utilizzando, è "
+"disponibile uno script di migrazione che puoi utilizzare qui sotto. Se vuoi "
+"migrare direttamente da Attachments 1.x ad Attachments 3.x puoi utilizzare "
+"le impostazioni predefinite ed i tuoi dati saranno migrati al nuovo formato "
+"in modo semplice e rapido. In alternativa, se vuoi personalizzare i campi in "
+"uso, lo puoi fare preventivamente ed in seguito impostare i parametri di "
+"migrazione per la corrispondenza tra i vecchi campi e quelli nuovi."
+
+#: views/options.php:46
+msgid "Setting up Instances"
+msgstr "Impostazione istanze"
+
+#: views/options.php:48
+msgid ""
+"Attachments 3.0 ships with what are called <em>instances</em>. An instance "
+"is equivalent to a meta box on an edit screen and it has a number of "
+"properties you can customize. Please read the README for more information."
+msgstr ""
+"Attachments 3.0 supporta le cosiddette <em>istanze</em>. Una istanza è "
+"l'equivalente di un riquadro (meta box) nella schermata di modifica ed ha "
+"delle caratteristiche personalizzabili. Leggere il file README per maggiori "
+"informazioni."
+
+#: views/options.php:48 views/options.php:52
+msgid "Additinoal instructions"
+msgstr "Istruzioni addizionali"
+
+#: views/options.php:50
+msgid "Retrieving Attachments in your theme"
+msgstr "Visualizzare gli allegati nel tuo tema"
+
+#: views/options.php:52
+msgid ""
+"As always has been the case with Attachments, editing your theme files is "
+"required. The syntax to do so has changed in Attachments 3.0. Please read the"
+msgstr ""
+"Così com'è sempre stato con Attachments, è necessario modificare i file del "
+"tuo tema. La sintassi per fare ciò è cambiata in Attachments 3.0. Leggi il"
+
+#: views/options.php:85
+msgid "Migrate legacy Attachments data"
+msgstr "Migrazione dati versione precedente di Attachments"
+
+#: views/options.php:86
+msgid ""
+"Attachments has found records from version 1.x. Would you like to migrate "
+"them to version 3?"
+msgstr ""
+"Attachments ha rilevato dei dati della versione 1.x. Vuoi effettuare la "
+"migrazione di questi alla versione 3?"
+
+#: views/options.php:87
+msgid "Migrate legacy data"
+msgstr "Migra dati precedenti"
+
+#: views/options.php:89
+msgid "You have already migrated your legacy Attachments data."
+msgstr "Hai già migrato i tuoi dati precedenti di Attachments."
+
+#: views/options.php:92
+msgid "Revert to version 1.x"
+msgstr "Ritorna alla versione 1.x"
+
+#: views/options.php:93
+msgid ""
+"If you would like to forcefully revert to the 1.x version branch of "
+"Attachments, add the following to your"
+msgstr ""
+"Se vuoi forzare l'utilizzo della versione 1.x di Attachments, aggiungi il "
+"seguente codice al tuo"
+
+#: views/options.php:95
+msgid "Meta box customization"
+msgstr "Personalizzazione meta box"
+
+#: views/options.php:96
+msgid ""
+"By default, Attachments implements a single meta box on Posts and Pages with "
+"two fields. You can disable this default instance by adding the following to "
+"your"
+msgstr ""
+"Come impostazione predefinita, Attachments implementa un singolo meta box "
+"negli Articoli e nella Pagine con due campi. Puoi disabilitare questa "
+"istanza di default aggiungendo il seguente codice al tuo"
+
+#: views/options.php:98
+msgid ""
+"Your Attachments meta box(es) can be customized by adding the following to "
+"your theme's"
+msgstr ""
+"Il tuo meta box può essere personalizzato aggiungendo il seguente codice al "
+"tuo"
+
+#: views/options.php:100
+msgid "Using Attachments data in your theme"
+msgstr "Visualizzare i dati degli allegati nel tuo tema"
+
+#: views/options.php:101
+msgid ""
+"Attachments does not directly integrate with your theme out of the box, you "
+"will need to edit your theme's template files where appropriate. You can add "
+"the following within The Loop to retrieve all Attachments data for the "
+"current post:"
+msgstr ""
+"Attachments non si integra direttamente con il tuo tema, ma dovrai "
+"modificare i file dei template del tuo tema in modo appropriato. Puoi "
+"aggiungere il seguente codice all'interno del \"Loop\" per recuperare i dati "
+"degli allegati per il post corrente."
