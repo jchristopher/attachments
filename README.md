@@ -27,3 +27,9 @@ There's quite a bit of documentation available. I would suggest checking out the
 * [Frequently Asked Questions](docs/faq.md)
 * [Changelog](docs/changelog.md)
 * [Roadmap](docs/roadmap.md)
+
+### Screenshot
+
+![Attachments on an edit screen](http://mondaybynoon.com/images/attachments/main.png)
+
+[View other Screenshots](docs/screenshots.md)
