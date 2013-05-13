@@ -1,6 +1,6 @@
 This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
 
-## Installation
+## [Docs TOC](toc.md) / Installation
 
 1. Download the plugin and extract the files
 1. Upload `attachments` to your `~/wp-content/plugins/` directory

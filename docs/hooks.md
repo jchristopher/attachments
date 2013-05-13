@@ -1,6 +1,6 @@
 This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
 
-# Hooks
+# [Docs TOC](toc.md) / Hooks
 
 ## Filters
 
@@ -46,3 +46,38 @@ add_filter( 'attachments_get_foo_bar', 'my_attachments_reverse' );
 ```
 
 Please keep in mind the instance name requirement when setting up this filter.
+
+### Fine Tune Instance Location
+
+Many times simply defining a post type for your Instance is too broad of a rule. You'll often want to limit your Attachments Instance to a single page or user role. The attachments_location_{my_instance} facilitates just that.
+
+```php
+function my_attachments_location_limit( $val )
+{
+    global $post;
+
+    // our home page ID is 10 and we only want this instance to show up there
+    return ( $post->ID == 10 ) ? true : false;
+}
+
+add_filter( 'attachments_location_my_attachments', 'my_attachments_location_limit' );
+```
+
+You can have your callback be as elaborate as you'd like, using any attributes WordPress has to offer at runtime.
+
+## Actions
+
+Actions allow you to integrate with the internals of Attachments without effecting the codebase itself.
+
+### Extend Attachments
+
+Attachments will load any extensible code you've written to enhance what you're aiming to do with the `attachments_extension` action.
+
+```php
+function init_my_attachments_extension( $attachments )
+{
+    // do your thing
+}
+
+add_action( 'attachments_extension', 'init_my_attachments_extension', 10, 1 );
+```

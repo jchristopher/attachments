@@ -22,8 +22,11 @@ Attachments allows you to simply append any number of items from your WordPress 
     * [Search](usage.md#search)
 * [Hooks](hooks.md)
     * [Filters](hooks.md#filters)
-        * [Post Meta Key](filters.md#post-meta-key) - Change the `meta_key` used to store Attachments' data
-        * [Get Attachments](filters.md#get-attachments) - Edit the order of Attachments in your theme
+        * [Post Meta Key](hooks.md#post-meta-key) - Change the `meta_key` used to store Attachments' data
+        * [Get Attachments](hooks.md#get-attachments) - Edit the order of Attachments in your theme
+        * [Fine Tune Instance Location](hooks.md#fine-tune-instance-location) - Real-time control over whether or not to show your Instance
+    * [Actions](hooks.md#actions)
+            * [Extend Attachments](hooks.md#extend-attachments) - Integrate your own extensions with Attachments
 * [Screenshots](screenshots.md)
 * [Frequently Asked Questions](faq.md)
 * [Changelog](changelog.md)

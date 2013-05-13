@@ -1,6 +1,6 @@
 This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
 
-## Frequently Asked Questions
+## [Docs TOC](toc.md) / Frequently Asked Questions
 
 #### Attachments isn't showing up on my edit screens
 
