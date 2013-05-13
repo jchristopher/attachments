@@ -766,11 +766,19 @@ EOD;
                     $message .= "\n\n// ===== " . __( 'END TEMPLATE COPY' ) . " ========================================\n\n";
 
                     $sent = wp_mail( $current_user->user_email, '[Attachments] ' . get_bloginfo( 'name' ) . ' - Code Samples', $message );
+
+                    // we're also going to store them in the database for future reference
+                    update_option( 'attachments_pro_functions', $code_for_functionsphp );
+                    update_option( 'attachments_pro_template', $sample_template_code );
                 ?>
                 <p><?php _e( 'This code sample has been emailed to you for future reference as well.', 'attachments' ); ?>
             <?php else : ?>
                 <h3><?php _e( 'Migration has already Run!', 'attachments' ); ?></h3>
                 <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
+                <h2><?php _e( 'Required code for your functions.php', 'attachments' ); ?></h2>
+                <textarea style="display:block; width:100%; font-family:monospace; height:300px;"><?php echo get_option( 'attachments_pro_functions '); ?></textarea>
+                <h2><?php _e( 'Starter code for your theme templates', 'attachments' ); ?></h2>
+                <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php echo get_option( 'attachments_pro_template '); ?></textarea>
             <?php endif;
         }
 

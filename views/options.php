@@ -117,7 +117,10 @@
                 <p><a href="?page=attachments&amp;migrate-pro=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-pro-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate Attachments Pro data', 'attachments' ); ?></a></p>
             <?php elseif( true == get_option( 'attachments_pro_migrated' ) ) : ?>
                 <p><?php _e( 'You have already migrated your Attachments Pro data.', 'attachments' ); ?></p>
-                <?php /* TODO: if possible, output necessary code here too */ ?>
+                <h2><?php _e( 'Moving from Attachments Pro: required code for your functions.php', 'attachments' ); ?></h2>
+                <textarea style="display:block; width:100%; font-family:monospace; height:300px;"><?php echo get_option( 'attachments_pro_functions '); ?></textarea>
+                <h2><?php _e( 'Moving from Attachments Pro: starter code for your theme templates', 'attachments' ); ?></h2>
+                <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php echo get_option( 'attachments_pro_template '); ?></textarea>
             <?php endif; ?>
 
             <h2><?php _e( 'Revert to version 1.x', 'attachments' ); ?></h2>
