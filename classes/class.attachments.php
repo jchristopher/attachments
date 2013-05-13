@@ -58,6 +58,7 @@ if( !class_exists( 'Attachments' ) ) :
             $this->version  = '3.5';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
+            $plugin         = 'attachments/index.php';
 
             // includes
             include_once( ATTACHMENTS_DIR . 'upgrade.php' );
@@ -70,6 +71,9 @@ if( !class_exists( 'Attachments' ) ) :
 
             // set our image sizes
             $this->image_sizes = array_merge( $this->image_sizes, get_intermediate_image_sizes() );
+
+            // add 'Extend' link
+            add_filter( "plugin_action_links_$plugin",  array( $this, 'plugin_settings_link' ) );
 
             // set up l10n
             add_action( 'plugins_loaded',               array( $this, 'l10n' ) );
@@ -111,6 +115,15 @@ if( !class_exists( 'Attachments' ) ) :
                 $this->attachments = $this->get_attachments( $instance, $post_id );
             }
 
+        }
+
+
+
+        function plugin_settings_link( $links )
+        {
+            $extend_link = '<a href="https://mondaybynoon.com/members/plugins/#attachments">'. __( 'Extend', 'attachments' ) . '</a>';
+            array_unshift( $links, $extend_link );
+            return $links;
         }
 
 
