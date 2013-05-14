@@ -12,7 +12,7 @@ Attachments allows you to simply append any number of items from your WordPress 
 
 == Description ==
 
-**Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/attachments/docs/usage.md)
+**Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/attachments/#attachments)
 
 Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types. This plugin *does not* directly interact with your theme, you will need to edit your template files.
 
