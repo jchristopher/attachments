@@ -55,7 +55,7 @@ if( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-            $this->version  = '3.5.1';
+            $this->version  = '3.5.1.1';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
             $plugin         = 'attachments/index.php';
@@ -106,7 +106,7 @@ if( !class_exists( 'Attachments' ) ) :
             // execution of actions varies depending on whether we're in the admin or not and an instance was passed
             if( is_admin() )
             {
-                add_action( 'after_setup_theme', array( $this, 'apply_init_filters' ) );
+                add_action( 'after_setup_theme', array( $this, 'apply_init_filters' ), 999 );
                 $this->attachments = $this->get_attachments( $instance, $post_id );
             }
             elseif( !is_null( $instance ) )

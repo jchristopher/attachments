@@ -3,6 +3,8 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 ## [Docs TOC](TOC.md) / Changelog
 
 <dl>
+    <dt>3.5.1.1</dt>
+    <dd>Fixed an issue where Featured Images may have become inadvertently disabled, props @deborre</dd>
 
     <dt>3.5.1</dt>
     <dd>Fixed an issue where changing an Attachment changed all attachments</dd>
