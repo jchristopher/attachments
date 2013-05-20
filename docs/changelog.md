@@ -15,7 +15,7 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
     <dd>You can now change an Attachment asset without having to remove the entire Attachment and re-add something new</dd>
     <dd>New filter: <code>attachments_location_{my_instance}</code> (where <code><strong>{my_instance}</strong></code> is your instance name) allows for more fine-grained control over where meta boxes show up (e.g. limiting to your Home page)</dd>
     <dd>New action: <code>attachments_extension</code> facilitates Attachments extensions</dd>
-    <dd>New extension: <a href="http://mondaybynoon.com/members/plugins/attachments-ui/">Attachments UI</a> to create "code-free" Instances in the WordPress admin</dd>
+    <dd>New extension: <a href="http://mondaybynoon.com/members/plugins/attachments-ui/?utm_campaign=Attachments&utm_term=changelog">Attachments UI</a> to create "code-free" Instances in the WordPress admin</dd>
     <dd>New method <code>width( $size )</code> to retrieve the width of the current Attachment</dd>
     <dd>New method <code>height( $size )</code> to retrieve the height of the current Attachment</dd>
     <dd>New document structure, various additions to documentation</dd>

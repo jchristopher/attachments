@@ -14,7 +14,11 @@ Attachments allows you to simply append any number of items from your WordPress 
 
 **Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/attachments/#attachments)
 
-Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types. This plugin *does not* directly interact with your theme, you will need to edit your template files.
+Attachments allows you to simply append any number of items from your WordPress Media Library to Posts, Pages, and Custom Post Types.
+
+= Extend Attachments with add-ons =
+
+This plugin *does not* directly interact with your theme, you will need to edit your template files. If you prefer working with a UI, take a look at <a href="https://mondaybynoon.com/members/plugins/attachments-ui/?utm_campaign=Attachments&utm_term=wp%2breadme">Attachments UI</a>
 
 = Associate Media items with posts =
 
@@ -66,6 +70,12 @@ There is a lot more information on [Attachments' GitHub page](https://github.com
 Version 3 is a *major* rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your database prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
 
 == Frequently Asked Questions ==
+
+= How do I customize this plugin? =
+
+Please use [Attachments UI](https://mondaybynoon.com/members/plugins/attachments-ui/?utm_campaign=Attachments&utm_term=wp%2breadme%2bFAQ) or see the [documentation](https://github.com/jchristopher/attachments#documentation)
+
+= This doesn't answer my question =
 
 Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues)
 

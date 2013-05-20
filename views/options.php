@@ -54,11 +54,11 @@
 
         <h3><?php _e( 'Setting up Instances', 'attachments' ); ?></h3>
 
-        <p><?php _e( 'Attachments 3.0 ships with what are called <em>instances</em>. An instance is equivalent to a meta box on an edit screen and it has a number of properties you can customize. Please read the README for more information.', 'attachments' ); ?> <a href="https://github.com/jchristopher/attachments/blob/master/README.md#usage"><?php _e( 'Additinoal instructions', 'attachments' ); ?>.</a></p>
+        <p><?php _e( 'Attachments 3.0 ships with what are called <em>instances</em>. An instance is equivalent to a meta box on an edit screen and it has a number of properties you can customize. Please read the README for more information.', 'attachments' ); ?> <a href="https://github.com/jchristopher/attachments/#attachments"><?php _e( 'Additional instructions', 'attachments' ); ?>.</a></p>
 
         <h3><?php _e( 'Retrieving Attachments in your theme', 'attachments' ); ?></h3>
 
-        <p><?php _e( 'As always has been the case with Attachments, editing your theme files is required. The syntax to do so has changed in Attachments 3.0. Please read the', 'attachments' ); ?> <a href="https://github.com/jchristopher/attachments/blob/master/README.md#usage"><?php _e( 'Additinoal instructions', 'attachments' ); ?></a>.</p>
+        <p><?php _e( 'As always has been the case with Attachments, editing your theme files is required. The syntax to do so has changed in Attachments 3.0. Please read the', 'attachments' ); ?> <a href="https://github.com/jchristopher/attachments/#attachments"><?php _e( 'Additional instructions', 'attachments' ); ?></a>.</p>
 
         <form action="options-general.php" method="get">
             <input type="hidden" name="page" value="attachments" />
@@ -108,7 +108,13 @@
                 <p><?php _e( 'Attachments has found records from version 1.x. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
                 <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy data', 'attachments' ); ?></a></p>
             <?php elseif( true == get_option( 'attachments_migrated' ) ) : ?>
-                <p><?php _e( 'You have already migrated your legacy Attachments data.', 'attachments' ); ?></p>
+                <p>
+                    <?php _e( 'You have already migrated your legacy Attachments data.', 'attachments' ); ?>
+                    <a class="attachments-toggle-trigger" href="#migrated-legacy"><?php _e( 'View more', 'attachments' ); ?></a>
+                </p>
+                <div id="migrated-legacy" class="attachments-toggle-target" style="display:none;">
+                    <p>Your legacy Attachments data has been migrated.</p>
+                </div>
             <?php endif; ?>
 
             <?php if( false == get_option( 'attachments_pro_migrated' ) && $legacy->legacy_pro ) : ?>
@@ -116,25 +122,60 @@
                 <p><?php _e( 'Attachments has found records stored in Attachments Pro. Would you like to migrate them to Attachments?', 'attachments' ); ?></p>
                 <p><a href="?page=attachments&amp;migrate-pro=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-pro-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate Attachments Pro data', 'attachments' ); ?></a></p>
             <?php elseif( true == get_option( 'attachments_pro_migrated' ) ) : ?>
-                <p><?php _e( 'You have already migrated your Attachments Pro data.', 'attachments' ); ?></p>
-                <h2><?php _e( 'Moving from Attachments Pro: required code for your functions.php', 'attachments' ); ?></h2>
-                <textarea style="display:block; width:100%; font-family:monospace; height:300px;"><?php echo get_option( 'attachments_pro_functions '); ?></textarea>
-                <h2><?php _e( 'Moving from Attachments Pro: starter code for your theme templates', 'attachments' ); ?></h2>
-                <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php echo get_option( 'attachments_pro_template '); ?></textarea>
+                <p>
+                    <?php _e( 'You have already migrated your Attachments Pro data.', 'attachments' ); ?>
+                    <a class="attachments-toggle-trigger" href="#migrated-legacy-pro"><?php _e( 'View more', 'attachments' ); ?></a>
+                </p>
+                <div id="migrated-legacy-pro" class="attachments-toggle-target" style="display:none;">
+                    <h2><?php _e( 'Moving from Attachments Pro: required code for your functions.php', 'attachments' ); ?></h2>
+                    <textarea style="display:block; width:100%; font-family:monospace; height:300px;"><?php echo get_option( 'attachments_pro_functions '); ?></textarea>
+                    <h2><?php _e( 'Moving from Attachments Pro: starter code for your theme templates', 'attachments' ); ?></h2>
+                    <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php echo get_option( 'attachments_pro_template '); ?></textarea>
+                </div>
             <?php endif; ?>
 
-            <h2><?php _e( 'Revert to version 1.x', 'attachments' ); ?></h2>
-            <p><?php _e( 'If you would like to forcefully revert to the 1.x version branch of Attachments, add the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
-            <p><code>define( 'ATTACHMENTS_LEGACY', true );</code></p>
-            <h2><?php _e( 'Meta box customization', 'attachments' ); ?></h2>
-            <p><?php _e( 'Attachments requires manual creation of meta boxes using code outlined in the documentation. If you would prefer a UI for managing Attachments Instances, please see', 'attachments' ); ?> <a href="http://mondaybynoon.com/members/plugins/attachments-ui/">Attachments UI</a>. <?php _e( 'By default, Attachments implements a single meta box on Posts and Pages with two fields. You can disable this default instance by adding the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
-            <p><code>define( 'ATTACHMENTS_DEFAULT_INSTANCE', false );</code></p>
-            <p><?php _e( "Your Attachments meta box(es) can be customized by adding the following to your theme's", 'attachments' ); ?> <code>functions.php</code>:</p>
-            <script src="https://gist.github.com/4217475.js"> </script>
-            <h2><?php _e( 'Using Attachments data in your theme', 'attachments' ); ?></h2>
-            <p><?php _e( "Attachments does not directly integrate with your theme out of the box, you will need to edit your theme's template files where appropriate. You can add the following within The Loop to retrieve all Attachments data for the current post:", 'attachments' ); ?></p>
-            <script src="https://gist.github.com/4217483.js"> </script>
+            <h2><?php _e( 'Usage', 'attachments' ); ?></h2>
+            <p>Full usage instructions are provided in <a href="">the official documentation</a>. You can also view the <a class="attachments-toggle-trigger" href="#usage">abridged version</a>.</p>
+            <div id="usage" class="attachments-toggle-target" style="display:none;">
+                <h2><?php _e( 'Revert to version 1.x', 'attachments' ); ?></h2>
+                <p><?php _e( 'If you would like to forcefully revert to the 1.x version branch of Attachments, add the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
+                <p><code>define( 'ATTACHMENTS_LEGACY', true );</code></p>
+                <h2><?php _e( 'Meta box customization', 'attachments' ); ?></h2>
+                <p><?php _e( 'Attachments requires manual creation of meta boxes using code outlined in the documentation. If you would prefer a UI for managing Attachments Instances, please see', 'attachments' ); ?> <a href="https://mondaybynoon.com/members/plugins/attachments-ui/?utm_campaign=Attachments&utm_term=Settings">Attachments UI</a>. <?php _e( 'By default, Attachments implements a single meta box on Posts and Pages with two fields. You can disable this default instance by adding the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
+                <p><code>define( 'ATTACHMENTS_DEFAULT_INSTANCE', false );</code></p>
+                <p><?php _e( "Your Attachments meta box(es) can be customized by adding the following to your theme's", 'attachments' ); ?> <code>functions.php</code>:</p>
+                <script src="https://gist.github.com/4217475.js"> </script>
+                <h2><?php _e( 'Using Attachments data in your theme', 'attachments' ); ?></h2>
+                <p><?php _e( "Attachments does not directly integrate with your theme out of the box, you will need to edit your theme's template files where appropriate. You can add the following within The Loop to retrieve all Attachments data for the current post:", 'attachments' ); ?></p>
+                <script src="https://gist.github.com/4217483.js"> </script>
+            </div>
+
+            <h2><?php _e( 'Extend Attachments', 'attachments' ); ?></h2>
+            <p><?php _e( 'Attachments can be extended using any number of the items listed here.', 'attachmentsui' ); ?></p>
+            <p><strong style="font-size:1.4em;display:block;padding:10px 0;"><a href="https://mondaybynoon.com/members/plugins/attachments-ui/?utm_campaign=Attachments&utm_term=Settings">Attachments UI</a></strong>
+            <?php _e( 'Attachments is a code-focused plugin, meaning it essentially has no UI. If you prefer using a UI with Attachments, Attachments UI is for you. Features include:', 'attachments' ); ?></p>
+            <ul style="list-style:disc;padding-left:40px">
+                <li><?php _e( 'Visually create Instances from within the WordPress admin', 'attachments' ); ?></li>
+                <li><?php _e( 'Fine-grained control over which edit screens each Instance appears on (e.g. limited to Home page)', 'attachments' ); ?></li>
+                <li><?php _e( 'Auto-append Attachments content to posts using an easy to understand template system', 'attachments' ); ?></li>
+                <li><?php _e( 'Automatic, custom code snippets to copy, paste, and customize', 'attachments' ); ?></li>
+                <li><a href="https://mondaybynoon.com/members/plugins/attachments-ui/?utm_campaign=Attachments&utm_term=Settings"><?php _e( 'More information', 'attachments' ); ?></a></li>
+            </ul>
         <?php }
     ?>
-
+    <script type="text/javascript">
+        jQuery(document).ready(function($){
+            $('.attachments-toggle-target').hide();
+            $('a.attachments-toggle-trigger').click(function(){
+                var $this = $(this);
+                var $target = $($this.attr('href'));
+                if($target.is(':visible')){
+                    $target.hide();
+                }else{
+                    $target.show();
+                }
+                return false;
+            });
+        });
+    </script>
 </div>
