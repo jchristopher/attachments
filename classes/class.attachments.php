@@ -145,7 +145,7 @@ if( !class_exists( 'Attachments' ) ) :
         {
             $settings_link = '<a href="options-general.php?page=attachments">'. __( 'Settings', 'attachments' ) . '</a>';
             array_unshift( $links, $settings_link );
-            $extend_link = '<a href="https://mondaybynoon.com/members/plugins/#attachments">'. __( 'Extend', 'attachments' ) . '</a>';
+            $extend_link = '<a href="https://mondaybynoon.com/members/plugins/?utm_campaign=Attachments&utm_term=Plugins%2bExtend#attachments">'. __( 'Extend', 'attachments' ) . '</a>';
             array_unshift( $links, $extend_link );
             return $links;
         }
