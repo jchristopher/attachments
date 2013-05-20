@@ -858,12 +858,17 @@ if( !class_exists( 'Attachments' ) ) :
                     });
 
                     $element.on( 'click', '.edit-attachment-asset', function( event ) {
+
                         event.preventDefault();
+
+                        var targetAttachment = $(event.target).parents(".attachments-attachment");
+
                         if ( editframe ) {
                             editframe.open();
                             editframe.content.mode(router);
                             return;
                         }
+
                         editframe = wp.media({
                             title: title,
                             multiple: false,
@@ -874,15 +879,15 @@ if( !class_exists( 'Attachments' ) ) :
                                 text: '<?php _e( "Change", 'attachments' ); ?>'
                             }
                         });
+
                         editframe.on( 'select', function(){
+
                             var selection = editframe.state().get('selection');
 
                             if ( ! selection )
                                 return;
 
                             selection.each( function( attachment ) {
-
-                                var targetAttachment = $(event.target).parents(".attachments-attachment");
 
                                 // update the ID
                                 targetAttachment.find('input.attachments-track-id').val(attachment.id);
