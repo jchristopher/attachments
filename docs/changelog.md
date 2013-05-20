@@ -4,6 +4,9 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 
 <dl>
 
+    <dt>3.5.1</dt>
+    <dd>Fixed an issue where changing an Attachment changed all attachments</dd>
+
     <dt>3.5</dt>
     <dd>Initial implementation of limiting the number of Attachments</dd>
     <dd>You can now change an Attachment asset without having to remove the entire Attachment and re-add something new</dd>

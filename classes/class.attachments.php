@@ -882,8 +882,10 @@ if( !class_exists( 'Attachments' ) ) :
 
                             selection.each( function( attachment ) {
 
+                                var targetAttachment = $(event.target).parents(".attachments-attachment");
+
                                 // update the ID
-                                $element.find('input.attachments-track-id').val(attachment.id);
+                                targetAttachment.find('input.attachments-track-id').val(attachment.id);
 
                                 // update the thumbnail
                                 var updatedThumb = false;
@@ -892,21 +894,21 @@ if( !class_exists( 'Attachments' ) ) :
                                         if(attachments_isset(attachment.attributes.sizes.thumbnail)){
                                             if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
                                                 updatedThumb = true;
-                                                $element.find('.attachment-thumbnail img').attr('src',attachment.attributes.sizes.thumbnail.url);
+                                                targetAttachment.find('.attachment-thumbnail img').attr('src',attachment.attributes.sizes.thumbnail.url);
                                             }
                                         }
                                     }
                                 }
                                 if( !updatedThumb ){
-                                    $element.find('.attachment-thumbnail img').attr('src','');
+                                    targetAttachment.find('.attachment-thumbnail img').attr('src','');
                                 }
 
                                 // update the name
-                                $element.find('.attachment-details .filename').text(attachment.attributes.filename);
+                                targetAttachment.find('.attachment-details .filename').text(attachment.attributes.filename);
 
                                 // update the dimensions
                                 if(attachments_isset(attachment.attributes.width)&&attachments_isset(attachment.attributes.height)){
-                                    $element.find('.attachment-details .dimensions').html(attachment.attributes.width + ' &times; ' + attachment.attributes.height).show();
+                                    targetAttachment.find('.attachment-details .dimensions').html(attachment.attributes.width + ' &times; ' + attachment.attributes.height).show();
                                 }
 
                             } );

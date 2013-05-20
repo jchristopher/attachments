@@ -81,6 +81,9 @@ Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues
 
 Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/docs/changelog.md)
 
+= 3.5.1 =
+* Fixed an issue where changing an Attachment changed all attachments
+
 = 3.5 =
 * Initial implementation of limiting the number of Attachments
 * You can now change an Attachment asset without having to remove the entire Attachment and re-add something new
