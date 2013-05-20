@@ -55,7 +55,7 @@ if( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-            $this->version  = '3.5';
+            $this->version  = '3.5.1';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
             $plugin         = 'attachments/index.php';
@@ -1554,8 +1554,9 @@ if( !class_exists( 'Attachments' ) ) :
             {
                 // we're going to store JSON (JSON_UNESCAPED_UNICODE is PHP 5.4+)
                 $attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $attachments );
-                
-                $attachments = str_replace('\\', '\\\\', $attachments);
+
+                // fix potentially encoded Unicode
+                $attachments = str_replace( '\\', '\\\\', $attachments );
 
                 // we're going to wipe out any existing Attachments meta (because we'll put it back)
                 return update_post_meta( $post_id, $this->meta_key, $attachments );

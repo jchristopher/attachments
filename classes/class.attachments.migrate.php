@@ -142,6 +142,9 @@ class AttachmentsMigrate extends Attachments
             // we're done! let's save everything in our new format
             $existing_attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $existing_attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $existing_attachments );
 
+            // fix potentially encoded Unicode
+            $existing_attachments = str_replace( '\\', '\\\\', $existing_attachments );
+
             // save it to the database
             update_post_meta( $query->post->ID, 'attachments', $existing_attachments );
 
@@ -882,6 +885,10 @@ EOD;
 
                         // now we can save
                         $existing_attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $existing_attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $existing_attachments );
+
+                        // fix potentially encoded Unicode
+                        $existing_attachments = str_replace( '\\', '\\\\', $existing_attachments );
+
                         update_post_meta( $query->post->ID, $this->get_meta_key(), $existing_attachments );
 
                     }

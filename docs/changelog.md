@@ -6,6 +6,7 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 
     <dt>3.5.1</dt>
     <dd>Fixed an issue where changing an Attachment changed all attachments</dd>
+    <dd>Fixed an issue where certain Unicode characters weren't decoded properly</dd>
 
     <dt>3.5</dt>
     <dd>Initial implementation of limiting the number of Attachments</dd>
