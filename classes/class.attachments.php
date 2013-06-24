@@ -193,17 +193,17 @@ if( !class_exists( 'Attachments' ) ) :
                         // we've got a hit (e.g. an existing post uses the deleted attachment)
                         while( $attachment = $this->get() )
                         {
-                            $post_id = $attachment->post_id;
+                            $post_id = $attachment['post_id'];
 
                             // we'll use the post ID to snag the details
                             $post_attachments = $this->get_attachments_metadata( $post_id );
 
-                            if( is_object( $post_attachments ) )
+                            if( is_array( $post_attachments ) )
                             {
                                 foreach( $post_attachments as $existing_instance => $existing_instance_attachments )
                                     foreach( $existing_instance_attachments as $existing_instance_attachment_key => $existing_instance_attachment )
-                                        if( $pid == intval( $existing_instance_attachment->id ) )
-                                            unset( $post_attachments->{$existing_instance}[$existing_instance_attachment_key] );
+                                        if( $pid == intval( $existing_instance_attachment['id'] ) )
+                                            unset( $post_attachments[$existing_instance][$existing_instance_attachment_key] );
 
                                 // saving routine assumes array from POST so we'll typecast it
                                 $post_attachments = (array) $post_attachments;
@@ -711,7 +711,7 @@ if( !class_exists( 'Attachments' ) ) :
                             foreach( $instance->attachments as $attachment )
                             {
                                 // we need to give our Attachment a uid to carry through to all the fields
-                                $attachment->uid = uniqid();
+                                $attachment['uid'] = uniqid();
 
                                 // we'll create the attachment
                                 $this->create_attachment( $instance->name, $attachment );
@@ -798,25 +798,25 @@ if( !class_exists( 'Attachments' ) ) :
                                 }
 
                                 // set our attributes to the template
-                                attachment.attributes.attachment_uid = attachments_uniqid( 'attachmentsjs' );
+                                attachment['attributes']['attachment_uid'] = attachments_uniqid( 'attachmentsjs' );
 
                                 // by default use the generic icon
-                                attachment.attributes.attachment_thumb = attachment.attributes.icon;
+                                attachment['attributes']['attachment_thumb'] = attachment['attributes']['icon'];
 
                                 // only thumbnails have sizes which is what we're on the hunt for
                                 // TODO: this is a mess
-                                if(attachments_isset(attachment.attributes)){
-                                    if(attachments_isset(attachment.attributes.sizes)){
-                                        if(attachments_isset(attachment.attributes.sizes.thumbnail)){
-                                            if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
+                                if(attachments_isset(attachment['attributes'])){
+                                    if(attachments_isset(attachment['attributes']['sizes'])){
+                                        if(attachments_isset(attachment['attributes']['sizes']['thumbnail'])){
+                                            if(attachments_isset(attachment['attributes']['sizes']['thumbnail']['url'])){
                                                 // use the thumbnail
-                                                attachment.attributes.attachment_thumb = attachment.attributes.sizes.thumbnail.url;
+                                                attachment['attributes']['attachment_thumb'] = attachment['attributes']['sizes']['thumbnail']['url'];
                                             }
                                         }
                                     }
                                 }
 
-                                var templateData = attachment.attributes;
+                                var templateData = attachment['attributes'];
 
                                 // append the template
                                 $element.find('.attachments-container').<?php if( $instance->append ) : ?>append<?php else : ?>prepend<?php endif; ?>(template(templateData));
@@ -834,9 +834,9 @@ if( !class_exists( 'Attachments' ) ) :
                                 $element.find('.attachments-attachment:last .attachments-fields input, .attachments-attachment:last .attachments-fields textarea').each(function(){
                                     if($(this).data('default')){
                                         var meta_for_default = $(this).data('default');
-                                        if(attachments_isset(attachment.attributes)){
-                                            if(attachments_isset(attachment.attributes[meta_for_default])){
-                                                $(this).val(attachment.attributes[meta_for_default]);
+                                        if(attachments_isset(attachment['attributes'])){
+                                            if(attachments_isset(attachment['attributes'][meta_for_default])){
+                                                $(this).val(attachment['attributes'][meta_for_default]);
                                             }
                                         }
                                     }
@@ -845,7 +845,7 @@ if( !class_exists( 'Attachments' ) ) :
                                 $('body').trigger('attachments/new');
 
                                 // if it wasn't an image we need to ditch the dimensions
-                                if(!attachments_isset(attachment.attributes.width)||!attachments_isset(attachment.attributes.height)){
+                                if(!attachments_isset(attachment['attributes']['width'])||!attachments_isset(attachment['attributes']['height'])){
                                     $element.find('.attachments-attachment:last .dimensions').hide();
                                 }
                             });
@@ -871,7 +871,7 @@ if( !class_exists( 'Attachments' ) ) :
                                 type: '<?php echo esc_attr( implode( ",", $instance->filetype ) ); ?>'
                             },
                             button: {
-                                text: '<?php _e( "Change", 'attachments' ); ?>'
+                                text: '<?php _e( "Change", "attachments" ); ?>'
                             }
                         });
                         editframe.on( 'select', function(){
@@ -887,12 +887,12 @@ if( !class_exists( 'Attachments' ) ) :
 
                                 // update the thumbnail
                                 var updatedThumb = false;
-                                if(attachments_isset(attachment.attributes)){
-                                    if(attachments_isset(attachment.attributes.sizes)){
-                                        if(attachments_isset(attachment.attributes.sizes.thumbnail)){
-                                            if(attachments_isset(attachment.attributes.sizes.thumbnail.url)){
+                                if(attachments_isset(attachment['attributes'])){
+                                    if(attachments_isset(attachment['attributes']['sizes'])){
+                                        if(attachments_isset(attachment['attributes']['sizes']['thumbnail'])){
+                                            if(attachments_isset(attachment['attributes']['sizes']['thumbnail']['url'])){
                                                 updatedThumb = true;
-                                                $element.find('.attachment-thumbnail img').attr('src',attachment.attributes.sizes.thumbnail.url);
+                                                $element.find('.attachment-thumbnail img').attr('src',attachment['attributes']['sizes']['thumbnail']['url']);
                                             }
                                         }
                                     }
@@ -902,11 +902,11 @@ if( !class_exists( 'Attachments' ) ) :
                                 }
 
                                 // update the name
-                                $element.find('.attachment-details .filename').text(attachment.attributes.filename);
+                                $element.find('.attachment-details .filename').text(attachment['attributes']['filename']);
 
                                 // update the dimensions
-                                if(attachments_isset(attachment.attributes.width)&&attachments_isset(attachment.attributes.height)){
-                                    $element.find('.attachment-details .dimensions').html(attachment.attributes.width + ' &times; ' + attachment.attributes.height).show();
+                                if(attachments_isset(attachment['attributes']['width'])&&attachments_isset(attachment['attributes']['height'])){
+                                    $element.find('.attachment-details .dimensions').html(attachment['attributes']['width'] + ' &times; ' + attachment['attributes']['height']).show();
                                 }
 
                             } );
@@ -1242,13 +1242,13 @@ if( !class_exists( 'Attachments' ) ) :
                 $label          = esc_html( $field['label'] );
                 $default        = isset( $field['default'] ) ? $field['default'] : false; // validated in the class
                 $meta           = isset( $field['meta'] ) ? $field['meta'] : array();
-                $value          = isset( $attachment->fields->$name ) ? $attachment->fields->$name : null;
+                $value          = isset( $attachment['fields'][$name] ) ? $attachment['fields'][$name] : null;
 
                 $field          = new $this->fields[$type]( $name, $label, $value, $meta );
                 $field->value   = $field->format_value_for_input( $field->value );
 
                 // does this field already have a unique ID?
-                $uid = ( isset( $attachment->uid ) ) ? $attachment->uid : null;
+                $uid = ( isset( $attachment['uid'] ) ) ? $attachment['uid'] : null;
 
                 // TODO: make sure we've got a registered instance
                 $field->set_field_instance( $instance, $field );
@@ -1301,34 +1301,34 @@ if( !class_exists( 'Attachments' ) ) :
         {
             ?>
                 <div class="attachments-attachment attachments-attachment-<?php echo $instance; ?>">
-                    <?php $array_flag = ( isset( $attachment->uid ) ) ? $attachment->uid : '{{ attachments.attachment_uid }}'; ?>
+                    <?php $array_flag = ( isset( $attachment['uid'] ) ) ? $attachment['uid'] : '{{ attachments["attachment_uid"] }}'; ?>
 
-                    <input type="hidden" class="attachments-track-id" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment->id ) ? $attachment->id : '{{ attachments.id }}' ; ?>" />
+                    <input type="hidden" class="attachments-track-id" name="attachments[<?php echo $instance; ?>][<?php echo $array_flag; ?>][id]" value="<?php echo isset( $attachment['id'] ) ? $attachment['id'] : '{{ attachments["id"] }}' ; ?>" />
 
                     <?php
                         // since attributes can change over time (image gets replaced, cropped, etc.) we'll pull that info
-                        if( isset( $attachment->id ) )
+                        if( isset( $attachment['id'] ) )
                         {
                             // we'll just use the full size since that's what Media in 3.5 uses
-                            $attachment_meta        = wp_get_attachment_metadata( $attachment->id );
+                            $attachment_meta        = wp_get_attachment_metadata( $attachment['id'] );
 
                             // only images return the 'file' key
                             if( !isset( $attachment_meta['file'] ))
-                                $attachment_meta['file'] = get_attached_file( $attachment->id );
+                                $attachment_meta['file'] = get_attached_file( $attachment['id'] );
 
-                            $attachment->width      = isset( $attachment_meta['width'] ) ? $attachment_meta['width'] : null;
-                            $attachment->height     = isset( $attachment_meta['height'] ) ? $attachment_meta['height'] : null;
-                            $attachment->filename   = end( explode( "/", $attachment_meta['file'] ) );
+                            $attachment['width']      = isset( $attachment_meta['width'] ) ? $attachment_meta['width'] : null;
+                            $attachment['height']     = isset( $attachment_meta['height'] ) ? $attachment_meta['height'] : null;
+                            $attachment['filename']   = end( explode( "/", $attachment_meta['file'] ) );
 
-                            $attachment_mime        = explode( '/', get_post_mime_type( $attachment->id ) );
-                            $attachment->type       = isset( $attachment_mime[0] ) ? $attachment_mime[0] : null;
-                            $attachment->subtype    = isset( $attachment_mime[1] ) ? $attachment_mime[1] : null;
+                            $attachment_mime        = explode( '/', get_post_mime_type( $attachment['id'] ) );
+                            $attachment['type']       = isset( $attachment_mime[0] ) ? $attachment_mime[0] : null;
+                            $attachment['subtype']    = isset( $attachment_mime[1] ) ? $attachment_mime[1] : null;
                         }
                     ?>
 
                     <div class="attachment-meta media-sidebar">
                         <?php
-                            $thumbnail = isset( $attachment->id ) ? wp_get_attachment_image_src( $attachment->id, 'thumbnail', true ) : false;
+                            $thumbnail = isset( $attachment['id'] ) ? wp_get_attachment_image_src( $attachment['id'], 'thumbnail', true ) : false;
 
                             $image = $thumbnail ? $thumbnail[0] : '{{ attachments.attachment_thumb }}';
                         ?>
@@ -1336,9 +1336,9 @@ if( !class_exists( 'Attachments' ) ) :
                             <img src="<?php echo $image; ?>" alt="Thumbnail" />
                         </div>
                         <div class="attachment-details attachment-info details">
-                            <div class="filename"><?php echo isset( $attachment->filename ) ? $attachment->filename : '{{ attachments.filename }}' ; ?></div>
-                            <?php if( ( isset( $attachment->id ) && isset( $attachment->width ) ) || !isset( $attachment->id ) ) : ?>
-                                <div class="dimensions"><?php echo isset( $attachment->width ) ? $attachment->width : '{{ attachments.width }}' ; ?> &times; <?php echo isset( $attachment->height ) ? $attachment->height : '{{ attachments.height }}' ; ?></div>
+                            <div class="filename"><?php echo isset( $attachment['filename'] ) ? $attachment['filename'] : '{{ attachments["filename"] }}' ; ?></div>
+                            <?php if( ( isset( $attachment['id'] ) && isset( $attachment['width'] ) ) || !isset( $attachment['id'] ) ) : ?>
+                                <div class="dimensions"><?php echo isset( $attachment['width'] ) ? $attachment['width'] : '{{ attachments["width"] }}' ; ?> &times; <?php echo isset( $attachment['height'] ) ? $attachment['height'] : '{{ attachments["height"] }}' ; ?></div>
                             <?php endif; ?>
                             <div class="edit-attachment-asset"><a href="#"><?php _e( 'Change', 'attachments' ); ?></a></div>
                             <div class="delete-attachment"><a href="#"><?php _e( 'Remove', 'attachments' ); ?></a></div>
@@ -1614,9 +1614,9 @@ if( !class_exists( 'Attachments' ) ) :
 
             // we need to decode the fields (that were encoded during save) and run them through
             // their format_value_for_input as defined in it's class
-            if( !is_null( $instance ) && is_string( $instance ) && isset( $attachments_raw->$instance ) )
+            if( !is_null( $instance ) && is_string( $instance ) && isset( $attachments_raw[$instance] ) )
             {
-                foreach( $attachments_raw->$instance as $attachment )
+                foreach( $attachments_raw[$instance] as $attachment )
                     $attachments[] = $this->process_attachment( $attachment, $instance );
             }
             elseif( is_null( $instance ) )
@@ -1635,7 +1635,7 @@ if( !class_exists( 'Attachments' ) ) :
 
             // tack on the post ID for each attachment
             for( $i = 0; $i < count( $attachments ); $i++ )
-                $attachments[$i]->post_id = $post_id;
+                $attachments[$i]['post_id'] = $post_id;
 
             // we don't want the filter to run on the admin side of things
             if( !is_admin() )
@@ -1657,7 +1657,7 @@ if( !class_exists( 'Attachments' ) ) :
         {
             $post_id = intval( $post_id );
 
-            return get_post_meta( $post_id, $this->meta_key );
+            return get_post_meta( $post_id, $this->meta_key, true );
         }
 
 
@@ -1705,12 +1705,12 @@ if( !class_exists( 'Attachments' ) ) :
          */
         function process_attachment( $attachment, $instance )
         {
-            if( !is_object( $attachment ) || !is_string( $instance ) )
+            if( !is_array( $attachment ) || !is_string( $instance ) )
                 return $attachment;
 
-            if( is_object( $attachment->fields ) )
+            if( is_array( $attachment['fields'] ) )
             {
-                foreach( $attachment->fields as $key => $value )
+                foreach( $attachment['fields'] as $key => $value )
                 {
                     // loop through the instance fields to get the type
                     if( isset( $this->instances[$instance]['fields'] ) )
@@ -1727,18 +1727,18 @@ if( !class_exists( 'Attachments' ) ) :
                         if( isset( $this->fields[$type] ) )
                         {
                             // we need to decode the html entities that were encoded for the save
-                            $attachment->fields->$key = $this->decode_field_value( $attachment->fields->$key );
+                            $attachment['fields'][$key] = $this->decode_field_value( $attachment['fields'][$key] );
                         }
                         else
                         {
                             // the type doesn't exist
-                            $attachment->fields->$key = false;
+                            $attachment['fields'][$key] = false;
                         }
                     }
                     else
                     {
                         // this was a theme file request, just grab it
-                        $attachment->fields->$key = $this->decode_field_value( $attachment->fields->$key );
+                        $attachment['fields'][$key] = $this->decode_field_value( $attachment['fields'][$key] );
                     }
                 }
             }
