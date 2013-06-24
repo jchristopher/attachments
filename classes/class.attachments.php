@@ -1550,11 +1550,7 @@ if( !class_exists( 'Attachments' ) ) :
 
             if( !empty( $attachments ) )
             {
-                // we're going to store JSON (JSON_UNESCAPED_UNICODE is PHP 5.4+)
-                $attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $attachments );
-                
-                $attachments = str_replace('\\', '\\\\', $attachments);
-
+              
                 // we're going to wipe out any existing Attachments meta (because we'll put it back)
                 return update_post_meta( $post_id, $this->meta_key, $attachments );
             }
@@ -1651,7 +1647,7 @@ if( !class_exists( 'Attachments' ) ) :
 
 
         /**
-         * Retrieves the post_meta record (saved as JSON) and processes it
+         * Retrieves the post_meta record and processes it
          * @param  int $post_id The post ID
          * @return object          Attachments for the post
          *
@@ -1661,11 +1657,7 @@ if( !class_exists( 'Attachments' ) ) :
         {
             $post_id = intval( $post_id );
 
-            // grab our JSON and decode it
-            $attachments_json   = get_post_meta( $post_id, $this->meta_key, true );
-            $attachments_raw    = is_string( $attachments_json ) ? json_decode( $attachments_json ) : false;
-
-            return $attachments_raw;
+            return get_post_meta( $post_id, $this->meta_key );
         }
 
 
