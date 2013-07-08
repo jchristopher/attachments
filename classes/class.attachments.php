@@ -809,7 +809,7 @@ if( !class_exists( 'Attachments' ) ) :
                             _.templateSettings = {
                                 variable : 'attachments',
                                 interpolate : /\{\{(.+?)\}\}/g
-                            }
+                            };
 
                             var template = _.template($('script#tmpl-attachments-<?php echo $instance->name; ?>').html());
 

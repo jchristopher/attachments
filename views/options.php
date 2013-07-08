@@ -135,7 +135,7 @@
             <?php endif; ?>
 
             <h2><?php _e( 'Usage', 'attachments' ); ?></h2>
-            <p>Full usage instructions are provided in <a href="">the official documentation</a>. You can also view the <a class="attachments-toggle-trigger" href="#usage">abridged version</a>.</p>
+            <p>Full usage instructions are provided in <a href="https://github.com/jchristopher/attachments#documentation">the official documentation</a>. You can also view the <a class="attachments-toggle-trigger" href="#usage">abridged version</a>.</p>
             <div id="usage" class="attachments-toggle-target" style="display:none;">
                 <h2><?php _e( 'Revert to version 1.x', 'attachments' ); ?></h2>
                 <p><?php _e( 'If you would like to forcefully revert to the 1.x version branch of Attachments, add the following to your', 'attachments' ); ?> <code>wp-config.php</code>:</p>
