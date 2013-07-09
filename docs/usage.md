@@ -6,7 +6,7 @@ Attachments is based on *instances* which correlate directly with the meta boxes
 
 ### Disable Settings Screen
 
-Attachments ships with a `Settings` screen (found under the `Settings` menu in the main WordPress admin navigation) that facilitates data migration from version 1.x and also offers some code snippets. If you would like to **disable the Settings screen** add the following to your theme's `functions.php`:
+Attachments ships with a `Settings` screen (found under the `Settings` menu in the main WordPress admin navigation) that facilitates data migration from version 1.x and also offers some code snippets. If you would like to *disable the Settings screen* add the following to your `wp-config.php` *before* `require_once(ABSPATH . 'wp-settings.php');`
 
 ```php
 define( 'ATTACHMENTS_SETTINGS_SCREEN', false ); // disable the Settings screen
