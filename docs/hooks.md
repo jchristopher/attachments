@@ -28,7 +28,8 @@ There may be a time where you'd like to alter Attachments' data before working w
 ```php
 function my_attachments_randomize( $attachments )
 {
-    return shuffle( $attachments );
+    shuffle( $attachments );
+    return $attachments;
 }
 
 add_filter( 'attachments_get_my_attachments', 'my_attachments_randomize' );
