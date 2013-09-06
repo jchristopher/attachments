@@ -1347,9 +1347,11 @@ if( !class_exists( 'Attachments' ) ) :
                             if( !isset( $attachment_meta['file'] ))
                                 $attachment_meta['file'] = get_attached_file( $attachment->id );
 
+														$filename = explode( "/", $attachment_meta['file'] );
+
                             $attachment->width      = isset( $attachment_meta['width'] ) ? $attachment_meta['width'] : null;
                             $attachment->height     = isset( $attachment_meta['height'] ) ? $attachment_meta['height'] : null;
-                            $attachment->filename   = end( explode( "/", $attachment_meta['file'] ) );
+                            $attachment->filename   = end( $filename );
 
                             $attachment_mime        = explode( '/', get_post_mime_type( $attachment->id ) );
                             $attachment->type       = isset( $attachment_mime[0] ) ? $attachment_mime[0] : null;
