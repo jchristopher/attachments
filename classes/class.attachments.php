@@ -274,7 +274,7 @@ if( !class_exists( 'Attachments' ) ) :
          */
         function l10n()
         {
-            load_plugin_textdomain( 'attachments', false, trailingslashit( ATTACHMENTS_DIR ) . 'languages' );
+	          load_plugin_textdomain( 'attachments', false, 'attachments/languages/' );
         }
 
 
@@ -1351,7 +1351,7 @@ if( !class_exists( 'Attachments' ) ) :
 
                             $attachment->width      = isset( $attachment_meta['width'] ) ? $attachment_meta['width'] : null;
                             $attachment->height     = isset( $attachment_meta['height'] ) ? $attachment_meta['height'] : null;
-                            $attachment->filename   = end( $filename );
+                            $attachment->filename   = basename( $attachment_meta['file'] );
 
                             $attachment_mime        = explode( '/', get_post_mime_type( $attachment->id ) );
                             $attachment->type       = isset( $attachment_mime[0] ) ? $attachment_mime[0] : null;
@@ -1543,7 +1543,7 @@ if( !class_exists( 'Attachments' ) ) :
                 // loop through each Attachment of this instance
                 foreach( $instance_attachments as $key => $attachment )
                 {
-                    $attachment_exists = get_post( $attachment['id'] );
+                    $attachment_exists = isset( $attachment['id'] ) ? get_post( $attachment['id'] ) : false;
                     // make sure the attachment exists
                     if( $attachment_exists )
                     {
@@ -1758,7 +1758,7 @@ if( !class_exists( 'Attachments' ) ) :
             if( !is_object( $attachment ) || !is_string( $instance ) )
                 return $attachment;
 
-            if( is_object( $attachment->fields ) )
+            if( isset( $attachment->fields ) && is_object( $attachment->fields ) )
             {
                 foreach( $attachment->fields as $key => $value )
                 {

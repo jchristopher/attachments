@@ -93,6 +93,8 @@ Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/at
 
 = 3.5.2 =
 * Fixed an issue where newline characters may not be properly retrieved
+* Fixed an issue with localization not initializing properly
+* Resolved a PHP Strict warning (props @bukka)
 
 = 3.5.1.1 =
 * Fixed an issue where Featured Images may have become inadvertently disabled, props @deborre
