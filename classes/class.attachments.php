@@ -55,7 +55,7 @@ if( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-            $this->version  = '3.5.1.1';
+            $this->version  = '3.5.2';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
             $plugin         = 'attachments/index.php';
@@ -1698,6 +1698,14 @@ if( !class_exists( 'Attachments' ) ) :
             // grab our JSON and decode it
             $attachments_json   = get_post_meta( $post_id, $this->meta_key, true );
             $attachments_raw    = is_string( $attachments_json ) ? json_decode( $attachments_json ) : false;
+
+	          // convert field newline characters properly
+	          if( !empty( $attachments_raw ) )
+		          foreach( $attachments_raw as $instanceKey => $instance )
+								foreach( $instance as $attachmentKey => $attachment )
+									if( isset( $attachment->fields ) )
+										foreach( $attachment->fields as $fieldKey => $fieldValue )
+											$attachment->fields->$fieldKey = str_replace( '\\n', "\n", $fieldValue );
 
             return $attachments_raw;
         }
