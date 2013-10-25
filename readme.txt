@@ -3,8 +3,8 @@ Contributors: jchristopher
 Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
-Tested up to: 3.6.1
-Stable tag: 3.5.2
+Tested up to: 3.7
+Stable tag: 3.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,6 +90,11 @@ Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues
 == Changelog ==
 
 Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/docs/changelog.md)
+
+= 3.5.3 =
+* Cleaned up PHP Warning/Notice (props Mike C.)
+* Fixed a potential fatal error triggered by deleting something from the Media library that was an Attachment
+* Tested with WordPress 3.7
 
 = 3.5.2 =
 * Fixed an issue where newline characters may not be properly retrieved

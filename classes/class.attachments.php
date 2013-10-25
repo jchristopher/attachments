@@ -55,7 +55,7 @@ if( !class_exists( 'Attachments' ) ) :
             global $_wp_additional_image_sizes;
 
             // establish our environment variables
-            $this->version  = '3.5.2';
+            $this->version  = '3.5.3';
             $this->url      = ATTACHMENTS_URL;
             $this->dir      = ATTACHMENTS_DIR;
             $plugin         = 'attachments/index.php';
@@ -1543,7 +1543,18 @@ if( !class_exists( 'Attachments' ) ) :
                 // loop through each Attachment of this instance
                 foreach( $instance_attachments as $key => $attachment )
                 {
-                    $attachment_exists = isset( $attachment['id'] ) ? get_post( $attachment['id'] ) : false;
+	                  // see if it was pulled as JSON from a delete cleanup
+	                  if( is_object( $attachment ) )
+	                  {
+		                    $attachment = get_object_vars( $attachment );
+		                    if( is_array( $attachment ) && !empty( $attachment ) )
+		                    {
+			                      if( isset( $attachment['fields'] ) && is_object( $attachment['fields'] ) )
+				                        $attachment['fields'] = get_object_vars( $attachment['fields'] );
+		                    }
+	                  }
+
+		                $attachment_exists = isset( $attachment['id'] ) ? get_post( absint( $attachment['id'] ) ) : false;
                     // make sure the attachment exists
                     if( $attachment_exists )
                     {
