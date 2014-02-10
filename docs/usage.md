@@ -241,7 +241,9 @@ If you don't want to use the above implementation to loop through your Attachmen
         URL: <?php echo $attachments->url( $my_index ); ?><br />
         Image: <?php echo $attachments->image( 'thumbnail', $my_index ); ?><br />
         Source: <?php echo $attachments->src( 'full', $my_index ); ?><br />
-        Size: <?php echo $attachments->filesize( $my_index ); ?><br />
+        Size: <?php echo $attachments->filesize( $my_index ); ?><br />'
+        Width: <?php echo $attachments->width('thumbnail', $my_index ); ?><br />
+        Height: <?php echo $attachments->height('thumbnail', $my_index ); ?><br />
         Title Field: <?php echo $attachments->field( 'title', $my_index ); ?><br />
         Caption Field: <?php echo $attachments->field( 'caption', $my_index ); ?>
       </li>
