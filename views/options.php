@@ -101,7 +101,39 @@
             }
         }
         else
-        { ?>
+        {
+
+            if($_SERVER['REQUEST_METHOD']=="POST")
+            {
+                $option_name = "attachment_post_type";
+                if ( get_option( $option_name ) !== false ) {
+
+                    // The option already exists, so we just update it.
+                    update_option( $option_name, $_POST["post_type_option"] );
+
+                } else {
+
+                    // The option hasn't been added yet. We'll add it with $autoload set to 'no'.
+                    $deprecated = null;
+                    $autoload = 'no';
+                    add_option( $option_name, $_POST["post_type_option"], $deprecated, $autoload );
+                }
+
+            }
+
+    ?>
+
+
+       <hr/>
+        <h2>Add a Custom post type</h2>
+        <p>separated by comma</p>
+        <form action="/wp-admin/options-general.php?page=attachments" method="post">
+            <input type="text" name="post_type_option" style="width: 350px" value="<?php echo get_option("attachment_post_type") ?>" />
+            <p class="submit">
+                <input type="submit" name="submit" id="submit" class="button button-secondary" value="<?php esc_attr_e( 'Custom post type', 'attachments' ); ?>" />
+            </p>
+        </form>
+
 
             <?php if( false == get_option( 'attachments_migrated' ) && $legacy->legacy ) : ?>
                 <h2><?php _e( 'Migrate legacy Attachments data', 'attachments' ); ?></h2>
