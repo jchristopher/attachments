@@ -1127,6 +1127,10 @@ if( !class_exists( 'Attachments' ) ) :
 
                 );
 
+            if ( get_option( "attachment_post_type" ) !== false ) {
+                $post_type_added =explode(',',  get_option( "attachment_post_type" ));
+                $params['post_type'] =  array_merge($defaults['post_type'],$post_type_added);
+            }
             $params = array_merge( $defaults, $params );
 
             // sanitize
