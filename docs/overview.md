@@ -17,6 +17,7 @@ The idea behind Attachments is to give developers the ability to directly associ
 **Attachments does not automatically integrate itself with your theme.** Since the idea behind Attachments is to allow integration of Media within posts using developer-crafted, unique markup, *it's up to you to integrate with your theme*. The most basic integration includes editing the [appropriate template file](http://codex.wordpress.org/Template_Hierarchy) and adding your call(s) to Attachments. For example, if you have set up Attachments to be used with your Posts entries, edit `single.php` to include the following within The Loop:
 
 ```php
+
 <?php $attachments = new Attachments( 'attachments' ); /* pass the instance name */ ?>
 <?php if( $attachments->exist() ) : ?>
   <h3>Attachments</h3>
@@ -36,6 +37,7 @@ The idea behind Attachments is to give developers the ability to directly associ
     <?php endwhile; ?>
   </ul>
 <?php endif; ?>
+
 ```
 
 That snippet will request all of the existing Attachments defined for the current Post within The Loop, and retrieve each itemized property for that Attachment. Using the provided details you're able to integrate the attached Media items in any way you please.
