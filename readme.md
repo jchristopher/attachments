@@ -1,4 +1,5 @@
 === Attachments ===
+
 Contributors: jchristopher
 Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
@@ -65,7 +66,11 @@ There is a lot more information on [Attachments' GitHub page](https://github.com
 
 **You will need to update your theme files that use Attachments 3.0**. Version 1.x of Attachments has been **fully deprecated** but is still available *and included with Attachments 3.x*. If you would like to continue to use the (no longer supported) 1.x version you may add the following to your `wp-config.php`:
 
-`define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments`
+```php
+
+  define( 'ATTACHMENTS_LEGACY', true ); // force the legacy version of Attachments`
+
+```
 
 Version 3 is a *major* rewrite. While I've taken precautions in ensuring you won't lose any saved data it is important to back up your database prior to upgrading in case something goes wrong. This version is a complete rewrite so all legacy data will be left in place, but a migration must take place to match the new data storage model and workflow.
 
@@ -90,6 +95,9 @@ Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues
 == Changelog ==
 
 Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/docs/changelog.md)
+
+= 3.6.0 =
+* add custom post type option in backoffice
 
 = 3.5.3 =
 * Cleaned up PHP Warning/Notice (props Mike C.)
