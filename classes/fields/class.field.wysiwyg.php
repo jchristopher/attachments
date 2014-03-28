@@ -97,7 +97,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
 
                             tinyMCE.settings.theme_advanced_buttons2 += ',code';
                             tinyMCE.settings.wpautop = false;
-                            tinyMCE.execCommand('mceAddControl', false, input_id);
+                            tinyMCE.execCommand('mceAddEditor', false, input_id);
                             tinyMCE.settings.wpautop = wpautop;
                         });
                     };
@@ -105,13 +105,13 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
                     $(document).on('attachments/sortable_start', function(event, ui) {
                         tinyMCE.settings.wpautop = false;
                         $('.attachments-field-wysiwyg').each(function() {
-                            tinyMCE.execCommand('mceRemoveControl', false, $(this).attr('id'));
+                            tinyMCE.execCommand('mceRemoveEditor', false, $(this).attr('id'));
                         });
                     });
 
                     $(document).on('attachments/sortable_stop', function(event, ui) {
                         $('.attachments-field-wysiwyg').each(function() {
-                            tinyMCE.execCommand('mceAddControl', false, $(this).attr('id'));
+                            tinyMCE.execCommand('mceAddEditor', false, $(this).attr('id'));
                         });
                         tinyMCE.settings.wpautop = wpautop;
                     });
