@@ -337,6 +337,18 @@ if( !class_exists( 'Attachments' ) ) :
 
 
         /**
+         * Resets the attachment index
+         *
+         * @since 3.6
+         */
+        function rewind()
+        {
+            $this->attachments_ref = -1;
+        }
+
+
+
+        /**
          * Returns the next Attachment for the current object and increments the index
          *
          * @since 3.0
