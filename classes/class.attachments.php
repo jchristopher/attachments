@@ -696,21 +696,22 @@ if( !class_exists( 'Attachments' ) ) :
                     $position           = isset($instance->position) ? $instance->position : 'normal';
                     $priority           = isset($instance->priority) ? $instance->priority : 'high';
 
-                    if( $applicable )
-                        add_meta_box(
-                            'attachments-' . $instance_name,
-                            __( esc_attr( $instance->label ) ),
-                            array( $this, 'meta_box_markup' ),
-                            $this->get_post_type(),
-                            $position,
-                            $priority,
-                            array(
-                                'instance'      => $instance,
-                                'setup_nonce'   => !$nonce_sent
-                            )
-                        );
+                    if( $applicable ) {
+	                    add_meta_box(
+		                    'attachments-' . $instance_name,
+		                    __( esc_attr( $instance->label ) ),
+		                    array( $this, 'meta_box_markup' ),
+		                    $this->get_post_type(),
+		                    $position,
+		                    $priority,
+		                    array(
+			                    'instance'      => $instance,
+			                    'setup_nonce'   => !$nonce_sent
+		                    )
+	                    );
+	                    $nonce_sent = true;
+                    }
 
-                    $nonce_sent = true;
                 }
             }
         }
