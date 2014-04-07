@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Attachments v3.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-09 18:09+0100\n"
-"PO-Revision-Date: 2013-05-09 18:58+0100\n"
+"PO-Revision-Date: 2013-11-15 23:58+0100\n"
 "Last-Translator: Marco <marco@blackstudio.it>\n"
 "Language-Team: Black Studio <info@blackstudio.it>\n"
 "Language: it_IT\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: index.php:30
@@ -114,6 +114,10 @@ msgstr "La migrazione è già stata eseguita. Il processo non è stato ripetuto.
 msgid "Title"
 msgstr "Titolo"
 
+#: classes/class.attachments.php:769
+msgid "Currently limited to"
+msgstr "Limite impostato a"
+
 #: classes/class.attachments.php:805 classes/class.attachments.php:1524
 #: deprecated/attachments.php:417 views/options.php:24
 msgid "Attachments"
@@ -127,6 +131,10 @@ msgstr "Allega"
 #: classes/class.attachments.php:849 deprecated/attachments.php:369
 msgid "Caption"
 msgstr "Didascalia"
+
+#: classes/class.attachments.php:903
+msgid "Change"
+msgstr "Cambia"
 
 #: classes/class.attachments.php:1100
 msgid "Remove"
