@@ -9,7 +9,7 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 	<dd>Added <code>rewind()</code> method to reset Attachments reference array (props joost de keijzer)</dd>
 	<dd>TinyMCE fix to support WordPress 3.9+</dd>
 	<dd>Fixed an issue where nonce was potentially wrongly flagged as sent if an instance was filtered</dd>
-	<dd>Added `post_parent` argument support for instances, setting to `true` will populate the <strong>Uploaded to</strong> column in Media</dd>
+	<dd>Added <code>post_parent</code> argument support for instances, setting to <code>true</code> will populate the <strong>Uploaded to</strong> column in Media</dd>
 	<dd>New filter: <code>attachments_default_instance</code> to disable the default instance (<code>ATTACHMENTS_DEFAULT_INSTANCE</code> constant is deprecated)</dd>
 	<dd>Fixed an issue where Attachments meta box(es) would not show up when creating new posts whose <code>post_type</code> had a dash in it</dd>
 	<dd>Updated Italian translation (props Luca Speranza)</dd>
