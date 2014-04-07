@@ -734,8 +734,8 @@ if( !class_exists( 'Attachments' ) ) :
             ?>
 
             <div id="attachments-<?php echo $instance->name; ?>" class="attachments-parent-container<?php if( $instance->append == false ) : ?> attachments-prepend<?php endif; ?>">
-                <?php if( !empty( $instance->note ) ) : ?>
-                    <div class="attachments-note"><?php echo apply_filters( 'the_content', $instance->note ); ?></div>
+                <?php if( ! empty( $instance->note ) ) : ?>
+                    <div class="attachments-note"><?php echo wpautop( $instance->note ); ?></div>
                 <?php endif; ?>
                 <?php if( $instance->append == false ) : ?>
                     <div class="attachments-invoke-wrapper">
