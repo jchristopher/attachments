@@ -84,6 +84,9 @@ function my_attachments( $attachments )
     // which tab should be the default in the modal (string) (browse|upload)
     'router'        => 'browse',
 
+    // whether Attachments should set 'Uploaded to' (if not already set)
+	'post_parent'   => false,
+
     // fields array
     'fields'        => $fields,
 

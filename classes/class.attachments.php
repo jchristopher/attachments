@@ -1556,18 +1556,20 @@ if( !class_exists( 'Attachments' ) ) :
                 // loop through each Attachment of this instance
                 foreach( $instance_attachments as $key => $attachment )
                 {
-	                  // see if it was pulled as JSON from a delete cleanup
-	                  if( is_object( $attachment ) )
-	                  {
-		                    $attachment = get_object_vars( $attachment );
-		                    if( is_array( $attachment ) && !empty( $attachment ) )
-		                    {
-			                      if( isset( $attachment['fields'] ) && is_object( $attachment['fields'] ) )
-				                        $attachment['fields'] = get_object_vars( $attachment['fields'] );
-		                    }
-	                  }
+	                // see if it was pulled as JSON from a delete cleanup
+	                if( is_object( $attachment ) )
+	                {
+		                $attachment = get_object_vars( $attachment );
+		                if( is_array( $attachment ) && !empty( $attachment ) )
+		                {
+			                if( isset( $attachment['fields'] ) && is_object( $attachment['fields'] ) ) {
+		                        $attachment['fields'] = get_object_vars( $attachment['fields'] );
+			                }
+		                }
+	                }
 
-		                $attachment_exists = isset( $attachment['id'] ) ? get_post( absint( $attachment['id'] ) ) : false;
+		            $attachment_exists = isset( $attachment['id'] ) ? get_post( absint( $attachment['id'] ) ) : false;
+
                     // make sure the attachment exists
                     if( $attachment_exists )
                     {
@@ -1599,6 +1601,19 @@ if( !class_exists( 'Attachments' ) ) :
                                 $attachment['fields'][$key] = $field_value;
                             }
                         }
+
+	                    // set the post parent if applicable
+	                    // need to first check to make sure we're not overwriting a native Attach
+	                    $attach_post_ref = $attachment_exists;
+	                    if( $attach_post_ref->post_parent == 0 && !empty( $this->instances[$instance]['post_parent'] ) ) {
+		                    // no current Attach, we can add ours
+		                    $attach_post = array(
+			                    'ID'            => absint( $attachment['id'] ),
+			                    'post_parent'   => $post_id,
+		                    );
+
+		                    wp_update_post( $attach_post );
+	                    }
 
                         $attachments[$instance][] = $attachment;
                     }
