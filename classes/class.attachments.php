@@ -637,8 +637,10 @@ if( !class_exists( 'Attachments' ) ) :
         function setup_instances()
         {
             // implement our default instance if appropriate
-            if( !defined( 'ATTACHMENTS_DEFAULT_INSTANCE' ) )
-                $this->register();
+	        $filtered = apply_filters( 'attachments_default_instance', true );
+            if( $filtered && ( ! defined( 'ATTACHMENTS_DEFAULT_INSTANCE' ) || true == ATTACHMENTS_DEFAULT_INSTANCE ) ) {
+	            $this->register();
+            }
 
             // facilitate user-defined instance registration
             do_action( 'attachments_register', $this );

@@ -21,10 +21,10 @@ When Attachments is first activated, a default instance is created titled Attach
 
 #### Disable the Default Instance
 
-If you would like to *disable the default instance* (meta box titled 'Attachments' with a 'Title' and 'Caption' field) add the following to your `wp-config.php` *before* `require_once(ABSPATH . 'wp-settings.php');`:
+If you would like to *disable the default instance* (meta box titled 'Attachments' with a 'Title' and 'Caption' field) add the following to your theme's `functions.php`:
 
 ```php
-define( 'ATTACHMENTS_DEFAULT_INSTANCE', false );
+add_filter( 'attachments_default_instance', '__return_false' );
 ```
 
 #### Create Custom Instances
