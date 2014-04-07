@@ -1237,7 +1237,7 @@ if( !class_exists( 'Attachments' ) ) :
             // TODO: Retrieving the post_type at this point is ugly to say the least. This needs major cleanup.
             if( empty( $post->ID ) && isset( $_GET['post_type'] ) )
             {
-                $post_type = str_replace( '-', '_', sanitize_title( $_GET['post_type'] ) ); // TODO: Better sanitization
+                $post_type = esc_attr( $_GET['post_type'] );
             }
             elseif( !empty( $post->ID ) )
             {
