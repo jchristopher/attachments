@@ -98,8 +98,7 @@ if( !class_exists( 'Attachments' ) ) :
             add_action( 'save_post',                    array( $this, 'save' ) );
 
             // only show the Settings screen if it hasn't been explicitly disabled
-            if( !( defined( 'ATTACHMENTS_SETTINGS_SCREEN' ) && ATTACHMENTS_SETTINGS_SCREEN === false ) )
-                add_action( 'admin_menu',               array( $this, 'admin_page' ) );
+            add_action( 'admin_menu',                   array( $this, 'admin_page' ) );
 
             add_action( 'admin_head',                   array( $this, 'field_inits' ) );
             add_action( 'admin_print_footer_scripts',   array( $this, 'field_assets' ) );
@@ -1877,9 +1876,12 @@ if( !class_exists( 'Attachments' ) ) :
          *
          * @since 3.0
          */
-        function admin_page()
-        {
-            add_options_page( 'Settings', __( 'Attachments', 'attachments' ), 'manage_options', 'attachments', array( $this, 'options_page' ) );
+        function admin_page() {
+	        if( !( defined( 'ATTACHMENTS_SETTINGS_SCREEN' ) && ATTACHMENTS_SETTINGS_SCREEN === false ) ) {
+		        if( apply_filters( 'attachments_settings_screen', true ) ) {
+			        add_options_page( 'Settings', __( 'Attachments', 'attachments' ), 'manage_options', 'attachments', array( $this, 'options_page' ) );
+		        }
+	        }
         }
 
 
