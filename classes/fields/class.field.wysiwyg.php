@@ -75,46 +75,55 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
             <script>
                 (function($) {
 
-                    var wpautop = true;
+	                    var wpautop = true;
 
-                    // handle both initial and subsequent additions
-                    $(function() {
-                        wpautop = tinyMCE.settings.wpautop;
-                        $(document).on( 'attachments/new', function( event ) {
-                            $('.attachments-field-wysiwyg:not(.ready)').init_wysiwyg();
-                        });
-                        $('.attachments-field-wysiwyg').init_wysiwyg();
-                    });
+	                    // handle both initial and subsequent additions
+	                    $(function() {
+		                    if (typeof tinyMCE !== 'undefined') {
+		                        wpautop = tinyMCE.settings.wpautop;
+		                        $(document).on( 'attachments/new', function( event ) {
+		                            $('.attachments-field-wysiwyg:not(.ready)').init_wysiwyg();
+		                        });
+		                        $('.attachments-field-wysiwyg').init_wysiwyg();
+		                    }
+	                    });
 
-                    $.fn.init_wysiwyg = function() {
-                        this.each(function() {
+	                    $.fn.init_wysiwyg = function() {
+		                    if (typeof tinyMCE !== 'undefined') {
+		                        this.each(function() {
 
-                            $(this).addClass('ready');
+		                            $(this).addClass('ready');
 
-                            var input_id = $(this).attr('id');
+		                            var input_id = $(this).attr('id');
 
-                            // create wysiwyg
+		                            // create wysiwyg
 
-                            tinyMCE.settings.theme_advanced_buttons2 += ',code';
-                            tinyMCE.settings.wpautop = false;
-                            tinyMCE.execCommand('mceAddEditor', false, input_id);
-                            tinyMCE.settings.wpautop = wpautop;
-                        });
-                    };
+		                            tinyMCE.settings.theme_advanced_buttons2 += ',code';
+		                            tinyMCE.settings.wpautop = false;
+		                            tinyMCE.execCommand('mceAddEditor', false, input_id);
+		                            tinyMCE.settings.wpautop = wpautop;
+		                        });
+		                    }
+	                    };
 
-                    $(document).on('attachments/sortable_start', function(event, ui) {
-                        tinyMCE.settings.wpautop = false;
-                        $('.attachments-field-wysiwyg').each(function() {
-                            tinyMCE.execCommand('mceRemoveEditor', false, $(this).attr('id'));
-                        });
-                    });
+	                    $(document).on('attachments/sortable_start', function(event, ui) {
+		                    if (typeof tinyMCE !== 'undefined') {
+		                        tinyMCE.settings.wpautop = false;
+		                        $('.attachments-field-wysiwyg').each(function() {
+		                            tinyMCE.execCommand('mceRemoveEditor', false, $(this).attr('id'));
+		                        });
+		                    }
+	                    });
 
-                    $(document).on('attachments/sortable_stop', function(event, ui) {
-                        $('.attachments-field-wysiwyg').each(function() {
-                            tinyMCE.execCommand('mceAddEditor', false, $(this).attr('id'));
-                        });
-                        tinyMCE.settings.wpautop = wpautop;
-                    });
+	                    $(document).on('attachments/sortable_stop', function(event, ui) {
+		                    if (typeof tinyMCE !== 'undefined') {
+		                        $('.attachments-field-wysiwyg').each(function() {
+		                            tinyMCE.execCommand('mceAddEditor', false, $(this).attr('id'));
+		                        });
+		                        tinyMCE.settings.wpautop = wpautop;
+		                    }
+	                    });
+
                 })(jQuery);
                 </script>
         <?php
