@@ -3,6 +3,28 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 ## [Docs TOC](TOC.md) / Changelog
 
 <dl>
+	<dt>3.5.4</dt>
+	<dd>Fixed assumption of field keys (props bukka)</dd>
+	<dd>Improved documentation (props Lane Goldberg, Roman Kokarev, Ore Landau)</dd>
+	<dd>Added <code>rewind()</code> method to reset Attachments reference array (props joost de keijzer)</dd>
+	<dd>TinyMCE fix to support WordPress 3.9+</dd>
+	<dd>Fixed an issue where nonce was potentially wrongly flagged as sent if an instance was filtered</dd>
+	<dd>Added `post_parent` argument support for instances, setting to `true` will populate the <strong>Uploaded to</strong> column in Media</dd>
+	<dd>New filter: <code>attachments_default_instance</code> to disable the default instance (<code>ATTACHMENTS_DEFAULT_INSTANCE</code> constant is deprecated)</dd>
+	<dd>Fixed an issue where Attachments meta box(es) would not show up when creating new posts whose <code>post_type</code> had a dash in it</dd>
+	<dd>Updated Italian translation (props Luca Speranza)</dd>
+
+	<dt>3.5.3</dt>
+	<dd>Fixed a Fatal error when deleting Media that was attached to a post (props Clearsite)</dd>
+	<dd>Warning cleanup</dd>
+
+	<dt>3.5.2</dt>
+	<dd>Added ability to force an instance name</dd>
+	<dd>Documentation updates</dd>
+	<dd>Warning and Notice cleanup</dd>
+	<dd>Fixed an issue with newline character retrieval</dd>
+	<dd>Fixed assumption of array (props Jakub Zelenka)</dd>
+
     <dt>3.5.1.1</dt>
     <dd>Fixed an issue where Featured Images may have become inadvertently disabled, props @deborre</dd>
 
