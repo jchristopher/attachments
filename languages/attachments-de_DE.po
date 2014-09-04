@@ -2,9 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: attachments-0.1\n"
 "POT-Creation-Date: 2013-04-10 01:55+0100\n"
-"PO-Revision-Date: 2014-09-04 17:18+0100\n"
-"Last-Translator: \n"
-"Language-Team: Michał Mleczko <mleczakm91@gmail.com>\n"
+"PO-Revision-Date: 2014-09-04 17:42+0100\n"
+"Last-Translator: Bernhard Essl <bernhardessl@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -38,7 +37,7 @@ msgstr ""
 
 #: ../classes/class.attachments.legacy.php:112
 msgid "Find out more"
-msgstr "Mehr herrausfinden"
+msgstr "Mehr herausfinden"
 
 #: ../classes/class.attachments.migrate.php:162
 #: ../classes/class.attachments.migrate.php:218 ../views/options.php:13
