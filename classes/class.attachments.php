@@ -1332,7 +1332,7 @@ if ( ! class_exists( 'Attachments' ) ) :
                             $image = $thumbnail ? $thumbnail[0] : '{{ attachments.attachment_thumb }}';
                         ?>
                         <div class="attachment-thumbnail">
-                            <img src="<?php echo esc_url( $image ); ?>" alt="Thumbnail" />
+                            <img src="<?php echo $image; ?>" alt="Thumbnail" />
                         </div>
                         <div class="attachment-details attachment-info details">
                             <div class="filename"><?php echo isset( $attachment->filename ) ? esc_html( $attachment->filename ) : '{{ attachments.filename }}' ; ?></div>
