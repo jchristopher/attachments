@@ -1,18 +1,18 @@
 <?php
 
 // Exit if accessed directly
-if( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
 * Migration class for legacy Attachments data
 *
 * @since 3.1.3
 */
-class AttachmentsMigrate extends Attachments
-{
+class AttachmentsMigrate extends Attachments {
 
-    function __construct()
-    {
+    function __construct() {
         parent::__construct();
     }
 
@@ -21,11 +21,11 @@ class AttachmentsMigrate extends Attachments
      *
      * @since 3.0
      */
-    function migrate( $instance = null, $title = null, $caption = null )
-    {
+    function migrate( $instance = null, $title = null, $caption = null ) {
         // sanitize
-        if( is_null( $instance ) || empty( $instance ) || is_null( $title ) || is_null( $caption ) )
+        if( is_null( $instance ) || empty( $instance ) || is_null( $title ) || is_null( $caption ) ) {
             return false;
+        }
 
         $instance   = str_replace( '-', '_', sanitize_title( $instance ) );
         $title      = empty( $title ) ? false : str_replace( '-', '_', sanitize_title( $title ) );
@@ -38,15 +38,16 @@ class AttachmentsMigrate extends Attachments
 
         $query = false;
 
-        if( $legacy_attachments_settings && is_array( $legacy_attachments_settings['post_types'] ) && count( $legacy_attachments_settings['post_types'] ) )
-        {
+        if ( $legacy_attachments_settings && is_array( $legacy_attachments_settings['post_types'] ) && count( $legacy_attachments_settings['post_types'] ) ) {
             // we have legacy settings, so we're going to use the post types
             // that Attachments is currently utilizing
 
             // the keys are the actual CPT names, so we need those
-            foreach( $legacy_attachments_settings['post_types'] as $post_type => $value )
-                if( $value )
+            foreach ( $legacy_attachments_settings['post_types'] as $post_type => $value ) {
+                if ( $value ) {
                     $post_types[] = $post_type;
+                }
+            }
 
             // set up our WP_Query args to grab anything with legacy data
             $args = array(
@@ -63,94 +64,96 @@ class AttachmentsMigrate extends Attachments
         $count = 0;
 
         // loop through each post
-        if( $query ) { while( $query->have_posts() )
-        {
-            // set up postdata
-            $query->the_post();
+        if ( $query ) {
+            while( $query->have_posts() ) {
 
-            // let's first decode our Attachments data
-            $existing_attachments = get_post_meta( $query->post->ID, '_attachments', false );
+                // set up postdata
+                $query->the_post();
 
-            $post_attachments = array();
+                // let's first decode our Attachments data
+                $existing_attachments = get_post_meta( $query->post->ID, '_attachments', false );
 
-            // check to make sure we've got data
-            if( is_array( $existing_attachments ) && count( $existing_attachments ) > 0 )
-            {
-                // loop through each existing attachment
-                foreach( $existing_attachments as $attachment )
-                {
-                    // decode and unserialize the data
-                    $data = unserialize( base64_decode( $attachment ) );
+                $post_attachments = array();
 
-                    array_push( $post_attachments, array(
-                        'id'        => stripslashes( $data['id'] ),
-                        'title'     => stripslashes( $data['title'] ),
-                        'caption'   => stripslashes( $data['caption'] ),
-                        'order'     => stripslashes( $data['order'] )
-                        ));
+                // check to make sure we've got data
+                if ( is_array( $existing_attachments ) && count( $existing_attachments ) > 0 ) {
+                    // loop through each existing attachment
+                    foreach( $existing_attachments as $attachment ) {
+                        // decode and unserialize the data
+                        $data = unserialize( base64_decode( $attachment ) );
+
+                        array_push( $post_attachments, array(
+                            'id'        => stripslashes( $data['id'] ),
+                            'title'     => stripslashes( $data['title'] ),
+                            'caption'   => stripslashes( $data['caption'] ),
+                            'order'     => stripslashes( $data['order'] )
+                            )
+                        );
+                    }
+
+                    // sort attachments
+                    if ( count( $post_attachments ) > 1 ) {
+                        usort( $post_attachments, 'attachments_cmp' );
+                    }
                 }
 
-                // sort attachments
-                if( count( $post_attachments ) > 1 )
-                {
-                    usort( $post_attachments, 'attachments_cmp' );
+                // we have our Attachments entries
+
+                // let's check to see if we're migrating after population has taken place
+                $existing_attachments = get_post_meta( $query->post->ID, $this->get_meta_key(), false );
+
+                if ( ! isset( $existing_attachments[0] ) ) {
+                    $existing_attachments[0] = '';
                 }
+
+                $existing_attachments = json_decode( $existing_attachments[0] );
+
+                if ( ! is_object( $existing_attachments ) ) {
+                    $existing_attachments = new stdClass();
+                }
+
+                // we'll loop through the legacy Attachments and save them in the new format
+                foreach ( $post_attachments as $legacy_attachment ) {
+                    // convert to the new format
+                    $converted_attachment = array( 'id' => $legacy_attachment['id'] );
+
+                    // fields are technically optional so we'll add those separately
+                    // we're also going to encode them in the same way the main class does
+                    if ( $title ) {
+                        $converted_attachment['fields'][$title] = htmlentities( stripslashes( $legacy_attachment['title'] ), ENT_QUOTES, 'UTF-8' );
+                    }
+
+                    if ( $caption ) {
+                        $converted_attachment['fields'][$caption] = htmlentities( stripslashes( $legacy_attachment['caption'] ), ENT_QUOTES, 'UTF-8' );
+                    }
+
+                    // check to see if the existing Attachments have our target instance
+                    if ( ! isset( $existing_attachments->$instance ) ) {
+                        // the instance doesn't exist so we need to create it
+                        $existing_attachments->$instance = array();
+                    }
+
+                    // we need to convert our array to an object
+                    $converted_attachment['fields'] = (object) $converted_attachment['fields'];
+                    $converted_attachment = (object) $converted_attachment;
+
+                    // append this legacy attachment to the existing instance
+                    array_push( $existing_attachments->$instance, $converted_attachment );
+                }
+
+                // we're done! let's save everything in our new format
+                $existing_attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $existing_attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $existing_attachments );
+
+                // fix potentially encoded Unicode
+                $existing_attachments = str_replace( '\\', '\\\\', $existing_attachments );
+
+                // save it to the database
+                update_post_meta( $query->post->ID, 'attachments', $existing_attachments );
+
+                // increment our counter
+                $count++;
             }
-
-            // we have our Attachments entries
-
-            // let's check to see if we're migrating after population has taken place
-            $existing_attachments = get_post_meta( $query->post->ID, $this->get_meta_key(), false );
-
-            if( !isset( $existing_attachments[0] ) )
-                $existing_attachments[0] = '';
-
-            $existing_attachments = json_decode( $existing_attachments[0] );
-
-            if( !is_object( $existing_attachments ) )
-                $existing_attachments = new stdClass();
-
-            // we'll loop through the legacy Attachments and save them in the new format
-            foreach( $post_attachments as $legacy_attachment )
-            {
-                // convert to the new format
-                $converted_attachment = array( 'id' => $legacy_attachment['id'] );
-
-                // fields are technically optional so we'll add those separately
-                // we're also going to encode them in the same way the main class does
-                if( $title )
-                    $converted_attachment['fields'][$title] = htmlentities( stripslashes( $legacy_attachment['title'] ), ENT_QUOTES, 'UTF-8' );
-
-                if( $caption )
-                    $converted_attachment['fields'][$caption] = htmlentities( stripslashes( $legacy_attachment['caption'] ), ENT_QUOTES, 'UTF-8' );
-
-                // check to see if the existing Attachments have our target instance
-                if( !isset( $existing_attachments->$instance ) )
-                {
-                    // the instance doesn't exist so we need to create it
-                    $existing_attachments->$instance = array();
-                }
-
-                // we need to convert our array to an object
-                $converted_attachment['fields'] = (object) $converted_attachment['fields'];
-                $converted_attachment = (object) $converted_attachment;
-
-                // append this legacy attachment to the existing instance
-                array_push( $existing_attachments->$instance, $converted_attachment );
-            }
-
-            // we're done! let's save everything in our new format
-            $existing_attachments = version_compare( PHP_VERSION, '5.4.0', '>=' ) ? json_encode( $existing_attachments, JSON_UNESCAPED_UNICODE ) : json_encode( $existing_attachments );
-
-            // fix potentially encoded Unicode
-            $existing_attachments = str_replace( '\\', '\\\\', $existing_attachments );
-
-            // save it to the database
-            update_post_meta( $query->post->ID, 'attachments', $existing_attachments );
-
-            // increment our counter
-            $count++;
-        } }
+        }
 
         return $count;
     }
@@ -162,10 +165,10 @@ class AttachmentsMigrate extends Attachments
      *
      * @since 3.2
      */
-    function prepare_migration()
-    {
-        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-1') ) wp_die( __( 'Invalid request', 'attachments' ) );
-        ?>
+    function prepare_migration() {
+        if ( ! wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-1') ) {
+            wp_die( __( 'Invalid request', 'attachments' ) );
+        } ?>
             <h3><?php _e( 'Migration Step 1', 'attachments' ); ?></h3>
             <p><?php _e( "In order to migrate Attachments 1.x data, you need to set which instance and fields in version 3.0+ you'd like to use:", 'attachments' ); ?></p>
             <form action="options-general.php" method="get">
@@ -217,21 +220,20 @@ class AttachmentsMigrate extends Attachments
      *
      * @since 3.2
      */
-    function init_migration()
-    {
-        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-2') )
+    function init_migration() {
+        if ( ! wp_verify_nonce( $_GET['nonce'], 'attachments-migrate-2') ) {
             wp_die( __( 'Invalid request', 'attachments' ) );
+        }
 
         $total = $this->migrate( $_GET['attachments-instance'], $_GET['attachments-title'], $_GET['attachments-caption'] );
 
-        if( false == get_option( 'attachments_migrated' ) ) :
-        ?>
+        if( false == get_option( 'attachments_migrated' ) ) { ?>
             <h3><?php _e( 'Migration Complete!', 'attachments' ); ?></h3>
             <p><?php _e( 'The migration has completed.', 'attachments' ); ?> <strong><?php _e( 'Migrated', 'attachments'); ?>: <?php echo $total; ?></strong>.</p>
-        <?php else : ?>
+        <?php } else { ?>
             <h3><?php _e( 'Migration has already Run!', 'attachments' ); ?></h3>
             <p><?php _e( 'The migration has already been run. The migration process has not been repeated.', 'attachments' ); ?></p>
-        <?php endif;
+        <?php }
 
         // make sure the database knows the migration has run
         add_option( 'attachments_migrated', true, '', 'no' );
@@ -244,10 +246,10 @@ class AttachmentsMigrate extends Attachments
      *
      * @since 3.5
      */
-    function prepare_pro_migration()
-    {
-        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-pro-migrate-1') ) wp_die( __( 'Invalid request', 'attachments' ) );
-        ?>
+    function prepare_pro_migration() {
+        if ( ! wp_verify_nonce( $_GET['nonce'], 'attachments-pro-migrate-1') ) {
+            wp_die( __( 'Invalid request', 'attachments' ) );
+        } ?>
         <h3><?php _e( 'Migration Step 1', 'attachments' ); ?></h3>
         <form action="options-general.php" method="get">
             <input type="hidden" name="page" value="attachments" />
@@ -262,11 +264,11 @@ class AttachmentsMigrate extends Attachments
                 $attachments_pro_settings = get_option( '_iti_apro_settings' );
             ?>
 
-            <?php if( is_array( $attachments_pro_settings['positions'] ) ) : ?>
+            <?php if ( is_array( $attachments_pro_settings['positions'] ) ) : ?>
                 <p><?php _e( 'The following Attachments Pro Instances will be migrated:', 'attachments' ); ?></p>
                 <ul style="padding-left:32px;list-style:disc;">
                     <?php foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance ) : ?>
-                        <li><?php echo $attachments_pro_instance['label']; ?></li>
+                        <li><?php echo esc_html( $attachments_pro_instance['label'] ); ?></li>
                     <?php endforeach; ?>
                 </ul>
                 <h2><?php _e( 'Note: this is a multi-step process', 'attachments' ); ?></h2>
@@ -288,30 +290,32 @@ class AttachmentsMigrate extends Attachments
      *
      * @since 3.5
      */
-    function init_pro_migration()
-    {
+    function init_pro_migration() {
         global $current_user;
 
         get_currentuserinfo();
 
-        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-pro-migrate-2') )
+        if ( ! wp_verify_nonce( $_GET['nonce'], 'attachments-pro-migrate-2') ) {
             wp_die( __( 'Invalid request', 'attachments' ) );
+        }
 
         $attachments_pro_settings = get_option( '_iti_apro_settings' );
-        if( is_array( $attachments_pro_settings['positions'] ) )
-        {
+        if ( is_array( $attachments_pro_settings['positions'] ) ) {
             $totals = array();
 
-            foreach( $attachments_pro_settings['positions'] as $attachments_pro_instance )
+            foreach ( $attachments_pro_settings['positions'] as $attachments_pro_instance ) {
                 $totals[] = $this->migrate_pro( $attachments_pro_instance );
+            }
 
             $total_attachments = 0;
 
-            if( !empty( $totals ) )
-                foreach( $totals as $instance_total )
+            if ( ! empty( $totals ) ) {
+                foreach ( $totals as $instance_total ) {
                     $total_attachments += $instance_total['total'];
+                }
+            }
 
-            if( false == get_option( 'attachments_pro_migrated' ) ) :
+            if ( false == get_option( 'attachments_pro_migrated' ) ) :
                 ?>
                 <h3><?php _e( 'Data conversion complete!', 'attachments' ); ?></h3>
                 <p><?php _e( 'The data conversion has been completed successfully.', 'attachments' ); ?> <strong><?php _e( 'Converted', 'attachments'); ?>: <?php echo $total_attachments; ?> <?php echo ( $total_attachments == 1 ) ? __( 'Attachment', 'attachments' ) : __( 'Attachments', 'attachments' ); ?></strong></p>
@@ -326,15 +330,15 @@ class AttachmentsMigrate extends Attachments
 
             array(
                 'name'      => '<?php echo str_replace( '-', '_', sanitize_title( $field['label'] ) ); ?>',
-                'type'      => '<?php echo $field['type']; ?>',
-                'label'     => '<?php echo $field['label']; ?>',
-                'default'   => '<?php echo isset( $field['mapped_to'] ) ? $field['mapped_to'] : ''; ?>',
+                'type'      => '<?php echo esc_html( $field['type'] ); ?>',
+                'label'     => '<?php echo esc_html( $field['label'] ); ?>',
+                'default'   => '<?php echo isset( $field['mapped_to'] ) ? esc_html( $field['mapped_to'] ) : ''; ?>',
             ),<?php endforeach; echo "\n"; endif; ?>
         );
 <?php
     $post_types = array();
-    if( isset( $attachments_pro_instance['conditions'] ) && is_array( $attachments_pro_instance['conditions'] ) && !empty( $attachments_pro_instance['conditions'] ) )
-        foreach( $attachments_pro_instance['conditions'] as $condition )
+    if ( isset( $attachments_pro_instance['conditions'] ) && is_array( $attachments_pro_instance['conditions'] ) && ! empty( $attachments_pro_instance['conditions'] ) )
+        foreach ( $attachments_pro_instance['conditions'] as $condition )
             if( $condition['param'] == 'post_type' && $condition['operator'] == 'is' )
                 $post_types[] = $condition['limiter'];
 ?>

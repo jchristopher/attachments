@@ -1,7 +1,9 @@
 <?php
 
 // Exit if accessed directly
-if( !defined( 'ABSPATH' ) ) exit;
+if ( !defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 /**
  * Compares two array values with the same key "order"
@@ -11,21 +13,15 @@ if( !defined( 'ABSPATH' ) ) exit;
  * @return int
  * @author Jonathan Christopher
  */
-function attachments_cmp($a, $b)
-{
+function attachments_cmp($a, $b) {
     $a = intval( $a['order'] );
     $b = intval( $b['order'] );
 
-    if( $a < $b )
-    {
+    if ( $a < $b ) {
         return -1;
-    }
-    else if( $a > $b )
-    {
+    } else if( $a > $b ) {
         return 1;
-    }
-    else
-    {
+    } else {
         return 0;
     }
 }
@@ -41,10 +37,10 @@ function attachments_cmp($a, $b)
 function attachments_get_filesize_formatted( $path = NULL )
 {
     $formatted = '0 bytes';
-    if( file_exists( $path ) )
-    {
+    if ( file_exists( $path ) ) {
         $formatted = size_format( @filesize( $path ) );
     }
+
     return $formatted;
 }
 
@@ -58,27 +54,22 @@ function attachments_get_filesize_formatted( $path = NULL )
  * @author JR Tashjian
  */
 
-function attachments_get_attachments( $post_id=null )
-{
+function attachments_get_attachments( $post_id = null ) {
     global $post;
 
-    if( $post_id==null )
-    {
+    if ( $post_id == null ) {
         $post_id = $post->ID;
     }
 
     // get all attachments
-    $existing_attachments = get_post_meta( $post_id, '_attachments', false );
+    $existing_attachments = get_post_meta( absint( $post_id ), '_attachments', false );
 
     // We can now proceed as normal, all legacy data should now be upgraded
 
     $post_attachments = array();
 
-    if( is_array( $existing_attachments ) && count( $existing_attachments ) > 0 )
-    {
-
-        foreach ($existing_attachments as $attachment)
-        {
+    if ( is_array( $existing_attachments ) && count( $existing_attachments ) > 0 ) {
+        foreach ( $existing_attachments as $attachment ) {
             // decode and unserialize the data
             $data = unserialize( base64_decode( $attachment ) );
 
@@ -95,8 +86,7 @@ function attachments_get_attachments( $post_id=null )
         }
 
         // sort attachments
-        if( count( $post_attachments ) > 1 )
-        {
+        if ( count( $post_attachments ) > 1 ) {
             usort( $post_attachments, "attachments_cmp" );
         }
     }

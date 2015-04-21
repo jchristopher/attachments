@@ -7,8 +7,7 @@
  * @subpackage Main
  */
 
-class Attachments_Field_Text extends Attachments_Field
-{
+class Attachments_Field_Text extends Attachments_Field {
 
     /**
      * Constructor
@@ -16,8 +15,7 @@ class Attachments_Field_Text extends Attachments_Field
      * @param string $label Field label
      * @param mixed $value Field value
      */
-    function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() )
-    {
+    function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() ) {
         parent::__construct( $name, $label, $value, $meta );
     }
 
@@ -28,8 +26,7 @@ class Attachments_Field_Text extends Attachments_Field
      * @param  Attachments_Field $field The field object
      * @return void
      */
-    function html( $field )
-    {
+    function html( $field ) {
     ?>
         <input type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" value="<?php esc_attr_e( $field->value ); ?>" data-default="<?php esc_attr_e( $field->default ); ?>" />
     <?php
@@ -43,8 +40,7 @@ class Attachments_Field_Text extends Attachments_Field
      * @param  Attachments_field $field The field object
      * @return string        The formatted value
      */
-    function format_value_for_input( $value, $field = null  )
-    {
+    function format_value_for_input( $value, $field = null  ) {
         return htmlspecialchars( $value, ENT_QUOTES );
     }
 
@@ -54,8 +50,7 @@ class Attachments_Field_Text extends Attachments_Field
      * Fires once per field type per instance and outputs any additional assets (e.g. external JavaScript)
      * @return void
      */
-    public function assets()
-    {
+    public function assets() {
         return;
     }
 
@@ -65,8 +60,7 @@ class Attachments_Field_Text extends Attachments_Field
      * Hook into WordPress' init action
      * @return void
      */
-    function init()
-    {
+    function init() {
         return;
     }
 

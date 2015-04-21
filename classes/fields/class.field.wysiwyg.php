@@ -7,8 +7,7 @@
  * @subpackage Main
  */
 
-class Attachments_Field_WYSIWYG extends Attachments_Field
-{
+class Attachments_Field_WYSIWYG extends Attachments_Field {
 
     /**
      * Constructor
@@ -16,8 +15,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
      * @param string $label Field label
      * @param mixed $value Field value
      */
-    function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() )
-    {
+    function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() ) {
         parent::__construct( $name, $label, $value, $meta );
 
         add_filter( 'wp_default_editor',    array( $this, 'wp_default_editor' ) );
@@ -29,16 +27,16 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
      * Hook into WordPress' init action
      * @return void
      */
-    function init()
-    {
+    function init() {
         global $post;
 
         // ensure we've got TinyMCE to work with
         $has_editor = post_type_supports( $post->post_type, 'editor' );
         add_post_type_support( $post->post_type, 'editor' );
 
-        if( !$has_editor )
+        if ( ! $has_editor ) {
             echo '<style type="text/css">#poststuff .postarea { display:none; }</style>';
+        }
     }
 
 
@@ -48,8 +46,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
      * @param  Attachments_Field $field The field object
      * @return void
      */
-    function html( $field )
-    {
+    function html( $field ) {
     ?>
         <div class="wp-editor-wrap attachments-field-wysiwyg-editor-wrap">
             <div class="wp-editor-container">
@@ -65,9 +62,8 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
      * Fires once per field type per instance and outputs any additional assets (e.g. external JavaScript)
      * @return void
      */
-    function assets()
-    {
-        if( 'true' == get_user_meta( get_current_user_id(), 'rich_editing', true ) ) :
+    function assets() {
+        if ( 'true' == get_user_meta( get_current_user_id(), 'rich_editing', true ) ) :
         ?>
             <style type="text/css">
                 .attachments-field-wysiwyg-editor-wrap { background:#fff; }
@@ -138,8 +134,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
      * @param  Attachments_field $field The field object
      * @return string        The formatted value
      */
-    function format_value_for_input( $value, $field = null  )
-    {
+    function format_value_for_input( $value, $field = null  ) {
         return wp_richedit_pre( $value );
     }
 
@@ -149,8 +144,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field
      * Callback for 'wp_default_editor' action in constructor. Sets the default editor to TinyMCE.
      * @return string Editor name
      */
-    function wp_default_editor()
-    {
+    function wp_default_editor() {
         return 'tinymce'; // html or tinymce
     }
 

@@ -7,19 +7,19 @@
     include_once( ATTACHMENTS_DIR . '/classes/class.attachments.legacy.php' );
     $legacy = new AttachmentsLegacyHandler();
 
-    if( isset( $_GET['dismiss'] ) )
-    {
-        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-dismiss') )
+    if ( isset( $_GET['dismiss'] ) ) {
+        if ( ! wp_verify_nonce( $_GET['nonce'], 'attachments-dismiss') ) {
             wp_die( __( 'Invalid request', 'attachments' ) );
+        }
 
         // set our flag that the user wants to ignore the migration message
         add_option( 'attachments_ignore_migration', true, '', 'no' );
     }
 
-    if( isset( $_GET['dismiss-pro'] ) )
-    {
-        if( !wp_verify_nonce( $_GET['nonce'], 'attachments-pro-dismiss') )
+    if ( isset( $_GET['dismiss-pro'] ) ) {
+        if ( ! wp_verify_nonce( $_GET['nonce'], 'attachments-pro-dismiss') ) {
             wp_die( __( 'Invalid request', 'attachments' ) );
+        }
 
         // set our flag that the user wants to ignore the migration message
         add_option( 'attachments_pro_ignore_migration', true, '', 'no' );
@@ -32,7 +32,7 @@
 
     <h2><?php _e( 'Attachments', 'attachments' ); ?></h2>
 
-    <?php if( isset( $_GET['overview'] ) ) : ?>
+    <?php if ( isset( $_GET['overview'] ) ) : ?>
 
         <div class="message updated" id="message">
             <p><?php _e( "<strong>Attachments has changed significantly since it's last update.</strong> These changes <em>will affect your themes and plugins</em>.", 'attachments' ); ?></p>
@@ -74,10 +74,8 @@
 
     <?php
         // check to see if we're migrating
-        if( isset( $_GET['migrate'] ) )
-        {
-            switch( intval( $_GET['migrate'] ) )
-            {
+        if ( isset( $_GET['migrate'] ) ) {
+            switch( intval( $_GET['migrate'] ) ) {
                 case 1:
                     $migrator->prepare_migration();
                     break;
@@ -86,11 +84,8 @@
                     $migrator->init_migration();
                     break;
             }
-        }
-        elseif( isset( $_GET['migrate-pro'] ) )
-        {
-            switch( intval( $_GET['migrate-pro'] ) )
-            {
+        } elseif( isset( $_GET['migrate-pro'] ) ) {
+            switch( intval( $_GET['migrate-pro'] ) ) {
                 case 1:
                     $migrator->prepare_pro_migration();
                     break;
@@ -99,15 +94,13 @@
                     $migrator->init_pro_migration();
                     break;
             }
-        }
-        else
-        { ?>
+        } else { ?>
 
-            <?php if( false == get_option( 'attachments_migrated' ) && $legacy->legacy ) : ?>
+            <?php if ( false == get_option( 'attachments_migrated' ) && $legacy->legacy ) : ?>
                 <h2><?php _e( 'Migrate legacy Attachments data', 'attachments' ); ?></h2>
                 <p><?php _e( 'Attachments has found records from version 1.x. Would you like to migrate them to version 3?', 'attachments' ); ?></p>
                 <p><a href="?page=attachments&amp;migrate=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate legacy data', 'attachments' ); ?></a></p>
-            <?php elseif( true == get_option( 'attachments_migrated' ) ) : ?>
+            <?php elseif ( true == get_option( 'attachments_migrated' ) ) : ?>
                 <p>
                     <?php _e( 'You have already migrated your legacy Attachments data.', 'attachments' ); ?>
                     <a class="attachments-toggle-trigger" href="#migrated-legacy"><?php _e( 'View more', 'attachments' ); ?></a>
@@ -117,20 +110,20 @@
                 </div>
             <?php endif; ?>
 
-            <?php if( false == get_option( 'attachments_pro_migrated' ) && $legacy->legacy_pro ) : ?>
+            <?php if ( false == get_option( 'attachments_pro_migrated' ) && $legacy->legacy_pro ) : ?>
                 <h2><?php _e( 'Migrate Attachments Pro data', 'attachments' ); ?></h2>
                 <p><?php _e( 'Attachments has found records stored in Attachments Pro. Would you like to migrate them to Attachments?', 'attachments' ); ?></p>
                 <p><a href="?page=attachments&amp;migrate-pro=1&amp;nonce=<?php echo wp_create_nonce( 'attachments-pro-migrate-1' ); ?>" class="button-primary button"><?php _e( 'Migrate Attachments Pro data', 'attachments' ); ?></a></p>
-            <?php elseif( true == get_option( 'attachments_pro_migrated' ) ) : ?>
+            <?php elseif ( true == get_option( 'attachments_pro_migrated' ) ) : ?>
                 <p>
                     <?php _e( 'You have already migrated your Attachments Pro data.', 'attachments' ); ?>
                     <a class="attachments-toggle-trigger" href="#migrated-legacy-pro"><?php _e( 'View more', 'attachments' ); ?></a>
                 </p>
                 <div id="migrated-legacy-pro" class="attachments-toggle-target" style="display:none;">
                     <h2><?php _e( 'Moving from Attachments Pro: required code for your functions.php', 'attachments' ); ?></h2>
-                    <textarea style="display:block; width:100%; font-family:monospace; height:300px;"><?php echo get_option( 'attachments_pro_functions '); ?></textarea>
+                    <textarea style="display:block; width:100%; font-family:monospace; height:300px;"><?php echo esc_textarea( get_option( 'attachments_pro_functions' ) ); ?></textarea>
                     <h2><?php _e( 'Moving from Attachments Pro: starter code for your theme templates', 'attachments' ); ?></h2>
-                    <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php echo get_option( 'attachments_pro_template '); ?></textarea>
+                    <textarea style="display:block; width:100%; font-family:monospace; height:200px;"><?php echo esc_textarea( get_option( 'attachments_pro_template' ) ); ?></textarea>
                 </div>
             <?php endif; ?>
 

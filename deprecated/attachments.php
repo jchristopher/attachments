@@ -21,12 +21,15 @@
  */
 
  // Exit if accessed directly
- if( !defined( 'ABSPATH' ) ) exit;
+ if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 
 // constant definition
-if( !defined( 'IS_ADMIN' ) )
+if ( ! defined( 'IS_ADMIN' ) ) {
     define( 'IS_ADMIN',  is_admin() );
+}
 
 define( 'ATTACHMENTS_PREFIX',   'attachments_' );
 define( 'ATTACHMENTS_VERSION',  '1.6.2.1' );
@@ -42,31 +45,26 @@ global $wpdb;
 
 // environment check
 $wp_version = get_bloginfo( 'version' );
-if( !version_compare( PHP_VERSION, '5.2', '>=' ) || !version_compare( $wp_version, '3.0', '>=' ) )
-{
-    if( IS_ADMIN && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
-    {
+if ( ! version_compare( PHP_VERSION, '5.2', '>=' ) || !version_compare( $wp_version, '3.0', '>=' ) ) {
+    if ( IS_ADMIN && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
         require_once ABSPATH.'/wp-admin/includes/plugin.php';
         deactivate_plugins( __FILE__ );
         wp_die( __('Attachments requires PHP 5.2 or higher, as does WordPress 3.2+. Attachments has been automatically deactivated.') );
-    }
-    else
-    {
+    } else {
         return;
     }
 }
 
 
 // we moved all attachments_get_attachments() functions to an external file in version 3.0
-include_once 'get-attachments.php';
+include_once dirname( __FILE__ ) . '/get-attachments.php';
 
 
 // =========
 // = HOOKS =
 // =========
 
-if( IS_ADMIN )
-{
+if ( is_admin() ) {
 
     // pre-flight check
     add_action( 'init',                     'attachments_pre_init' );
@@ -93,20 +91,19 @@ if( IS_ADMIN )
 }
 
 
-function attachments_localization()
-{
+function attachments_localization() {
     load_plugin_textdomain( 'attachments', false, ATTACHMENTS_DIR . '/languages/' );
 }
 
 
 
-function attachments_enqueues( $hook )
-{
+function attachments_enqueues( $hook ) {
 
     wp_enqueue_style( 'attachments', trailingslashit( ATTACHMENTS_URL ) . 'css/attachments.css' );
 
-    if( 'edit.php' != $hook && 'post.php' != $hook && 'post-new.php' != $hook )
+    if ( 'edit.php' != $hook && 'post.php' != $hook && 'post-new.php' != $hook ) {
         return;
+    }
 
     wp_enqueue_script( 'handlebars', trailingslashit( ATTACHMENTS_URL ) . 'js/handlebars.js', null, '1.0.beta.6', false );
     wp_enqueue_script( 'attachments', trailingslashit( ATTACHMENTS_URL ) . 'js/attachments.js', array( 'handlebars', 'jquery', 'thickbox' ), ATTACHMENTS_VERSION, true );
@@ -121,11 +118,9 @@ function attachments_enqueues( $hook )
 // = FUNCTIONS =
 // =============
 
-function attachments_pre_init()
-{
+function attachments_pre_init() {
     // as of version 1.6 we'll be storing a proper settings array
-    if( !get_option( ATTACHMENTS_PREFIX . 'settings' ) )
-    {
+    if ( ! get_option( ATTACHMENTS_PREFIX . 'settings' ) ) {
         $settings = array();
 
         // we've got a version < 1.6 and therefore no real settings
@@ -133,13 +128,10 @@ function attachments_pre_init()
 
         $post_parent = get_option( 'attachments_store_native' );
 
-        if( $post_parent === false )
-        {
+        if( $post_parent === false ) {
             // it wasn't set
             $settings['post_parent'] = false;
-        }
-        else
-        {
+        } else {
             $settings['post_parent'] = true;
         }
 
@@ -159,19 +151,14 @@ function attachments_pre_init()
         $post_types['page']->labels->name   = 'Pages';
         $post_types['page']->name           = 'page';
 
-        if( count( $post_types ) )
-        {
-            foreach( $post_types as $post_type )
-            {
+        if ( count( $post_types ) ) {
+            foreach( $post_types as $post_type ) {
                 $post_parent = get_option( 'attachments_cpt_' . $post_type->name );
 
-                if( $post_parent === false )
-                {
+                if( $post_parent === false ) {
                     // it wasn't set
                     $settings['post_types'][$post_type->name] = false;
-                }
-                else
-                {
+                } else {
                     $settings['post_types'][$post_type->name] = true;
                 }
             }
@@ -183,8 +170,7 @@ function attachments_pre_init()
 }
 
 
-function attachments_register_settings()
-{
+function attachments_register_settings() {
     // flag our settings
     register_setting(
         ATTACHMENTS_PREFIX . 'settings',
@@ -218,17 +204,15 @@ function attachments_register_settings()
     );
 }
 
-function attachments_edit_options()
-{  }
+function attachments_edit_options() {}
 
-function attachments_validate_settings($input)
-{
+function attachments_validate_settings($input) {
     $input['version'] = ATTACHMENTS_VERSION;
+
     return $input;
 }
 
-function attachments_edit_post_parent()
-{
+function attachments_edit_post_parent() {
     $settings = get_option( ATTACHMENTS_PREFIX . 'settings' );
     ?>
     <div>
@@ -238,8 +222,7 @@ function attachments_edit_post_parent()
     </div>
 <?php }
 
-function attachments_edit_post_types()
-{
+function attachments_edit_post_types() {
     $settings = get_option( ATTACHMENTS_PREFIX . 'settings' );
     $args           = array(
                         'public'    => true,
@@ -256,10 +239,10 @@ function attachments_edit_post_types()
     $post_types['page']->labels->name   = 'Pages';
     $post_types['page']->name           = 'page';
 
-    if( count( $post_types ) ) : foreach($post_types as $post_type) : ?>
+    if ( count( $post_types ) ) : foreach( $post_types as $post_type ) : ?>
         <div>
             <label for="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]">
-                <input name="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]" type="checkbox" id="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]" value="1"<?php if( isset( $settings['post_types'][$post_type->name] ) && $settings['post_types'][$post_type->name] ) : ?> checked="checked"<?php endif; ?> /> <?php echo $post_type->labels->name; ?>
+                <input name="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]" type="checkbox" id="<?php echo ATTACHMENTS_PREFIX; ?>settings[post_types][<?php echo $post_type->name; ?>]" value="1"<?php if( isset( $settings['post_types'][$post_type->name] ) && $settings['post_types'][$post_type->name] ) : ?> checked="checked"<?php endif; ?> /> <?php echo esc_html( $post_type->labels->name ); ?>
             </label>
         </div>
     <?php endforeach; endif; ?>
@@ -272,9 +255,8 @@ function attachments_edit_post_types()
  * @return void
  * @author Jonathan Christopher
  */
-function attachments_options()
-{
-    include 'attachments.options.php';
+function attachments_options() {
+    include  dirname( __FILE__ ) . '/attachments.options.php';
 }
 
 
@@ -284,8 +266,7 @@ function attachments_options()
  * @return void
  * @author Jonathan Christopher
  */
-function attachments_menu()
-{
+function attachments_menu() {
     add_options_page('Settings', 'Attachments', 'manage_options', __FILE__, 'attachments_options');
 }
 
@@ -296,8 +277,7 @@ function attachments_menu()
  * @return void
  * @author Jonathan Christopher
  */
-function attachments_add()
-{ ?>
+function attachments_add() { ?>
 
     <div id="attachments-inner">
 
@@ -315,25 +295,20 @@ function attachments_add()
                 </ul>
 
                 <div id="attachments-list">
-                    <input type="hidden" name="attachments_nonce" id="attachments_nonce" value="<?php echo wp_create_nonce( plugin_basename(__FILE__) ); ?>" />
+                    <input type="hidden" name="attachments_nonce" id="attachments_nonce" value="<?php echo esc_attr( wp_create_nonce( plugin_basename(__FILE__) ) ); ?>" />
                     <ul>
                         <?php
-                    if( !empty($_GET['post']) )
-                    {
+                    if ( ! empty( $_GET['post'] ) ) {
                         // get all attachments
                         $existing_attachments = attachments_get_attachments( intval( $_GET['post'] ) );
 
-                        if( is_array($existing_attachments) && !empty($existing_attachments) )
-                        {
-                            foreach ($existing_attachments as $attachment)
-                            {
+                        if ( is_array( $existing_attachments ) && ! empty( $existing_attachments ) ) {
+                            foreach ( $existing_attachments as $attachment ) {
                                 // TODO: Better handle this when examining Handlebars template
-                                if( empty( $attachment['title'] ) )
-                                {
+                                if ( empty( $attachment['title'] ) ) {
                                     $attachment['title'] = ' ';
                                 }
-                                if( empty( $attachment['caption'] ) )
-                                {
+                                if ( empty( $attachment['caption'] ) ) {
                                     $attachment['caption'] = ' ';
                                 }
                                 attachments_attachment_markup( $attachment['name'], $attachment['title'], $attachment['caption'], $attachment['id'], $attachment['order'] );
@@ -350,15 +325,20 @@ function attachments_add()
 <?php }
 
 
-function attachments_attachment_markup( $name = null, $title = null, $caption = null, $id = null, $order = null )
-{ ?>
+function attachments_attachment_markup( $name = null, $title = null, $caption = null, $id = null, $order = null ) { ?>
+    <?php
+        $name = esc_attr( $name );
+        $title = esc_attr( $title );
+        $id = esc_attr( $id );
+        $order = absint( $order );
+    ?>
     <li class="attachments-file">
         <h2>
             <a href="#" class="attachment-handle">
-                <span class="attachment-handle-icon"><img src="<?php echo WP_PLUGIN_URL; ?>/attachments/deprecated/images/handle.gif" alt="Drag" /></span>
+                <span class="attachment-handle-icon"><img src="<?php echo esc_url( WP_PLUGIN_URL ); ?>/attachments/deprecated/images/handle.gif" alt="Drag" /></span>
             </a>
-            <span class="attachment-name"><?php echo empty( $name ) ? '{{name}}' : $name; ?></span>
-            <span class="attachment-delete"><a href="#"><?php _e("Delete", "attachments")?></a></span>
+            <span class="attachment-name"><?php echo empty( $name ) ? '{{name}}' : esc_html( $name ); ?></span>
+            <span class="attachment-delete"><a href="#"><?php _e( "Delete", "attachments" )?></a></span>
         </h2>
         <div class="attachments-fields">
             <div class="textfield" id="field_attachment_title_<?php echo empty( $id ) ? '{{id}}' : $id; ?>">
@@ -395,11 +375,9 @@ function attachments_attachment_markup( $name = null, $title = null, $caption = 
  * @return void
  * @author Jonathan Christopher
  */
-function attachments_meta_box()
-{
+function attachments_meta_box() {
     // for custom post types
-    if( function_exists( 'get_post_types' ) )
-    {
+    if ( function_exists( 'get_post_types' ) ) {
         $settings = get_option( ATTACHMENTS_PREFIX . 'settings' );
 
         $args = array(
@@ -410,10 +388,8 @@ function attachments_meta_box()
         $operator       = 'and';
         $post_types     = get_post_types( $args, $output, $operator );
 
-        foreach($post_types as $post_type)
-        {
-            if( isset( $settings['post_types'][$post_type->name] ) && $settings['post_types'][$post_type->name] )
-            {
+        foreach( $post_types as $post_type ) {
+            if ( isset( $settings['post_types'][$post_type->name] ) && $settings['post_types'][ $post_type->name ] ) {
                 add_meta_box( 'attachments_list', __( 'Attachments', 'attachments' ), 'attachments_add', $post_type->name, 'normal' );
             }
         }
@@ -430,7 +406,7 @@ function attachments_meta_box()
 function attachments_init_js()
 {
     echo '<script type="text/javascript" charset="utf-8">';
-    echo '  var attachments_base = "' . WP_PLUGIN_URL . '/attachments"; ';
+    echo '  var attachments_base = "' . esc_url( WP_PLUGIN_URL ) . '/attachments"; ';
     echo '  var attachments_media = ""; ';
     echo '</script>';
 }
@@ -444,39 +420,30 @@ function attachments_init_js()
  * @author Jonathan Christopher
  * @author JR Tashjian
  */
-function attachments_save($post_id)
-{
+function attachments_save($post_id) {
     // verify this came from the our screen and with proper authorization,
     // because save_post can be triggered at other times
-    if( !isset( $_POST['attachments_nonce'] ) )
-    {
+    if ( ! isset( $_POST['attachments_nonce'] ) ) {
         return $post_id;
     }
 
-    if( !wp_verify_nonce( $_POST['attachments_nonce'], plugin_basename(__FILE__) ) )
-    {
+    if ( ! wp_verify_nonce( $_POST['attachments_nonce'], plugin_basename(__FILE__) ) ) {
         return $post_id;
     }
 
     // verify if this is an auto save routine. If it is our form has not been submitted, so we dont want
     // to do anything
-    if( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
-    {
+    if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
         return $post_id;
     }
 
     // Check permissions
-    if( 'page' == $_POST['post_type'] )
-    {
-        if( !current_user_can( 'edit_page', $post_id ) )
-        {
+    if ( 'page' == $_POST['post_type'] ) {
+        if ( ! current_user_can( 'edit_page', $post_id ) ) {
             return $post_id;
         }
-    }
-    else
-    {
-        if( !current_user_can( 'edit_post', $post_id ) )
-        {
+    } else {
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
             return $post_id;
         }
     }
@@ -492,25 +459,19 @@ function attachments_save($post_id)
     $attachment_ids = array();
 
     // We'll build our array of attachments
-    foreach( $_POST as $key => $data )
-    {
+    foreach ( $_POST as $key => $data ) {
         // Arbitrarily using the id
-        if( substr($key, 0, 14) == 'attachment_id_' )
-        {
+        if( substr($key, 0, 14) == 'attachment_id_' ) {
             array_push( $attachment_ids, substr( $key, 14, strlen( $key ) ) );
         }
 
     }
 
     // If we have attachments, there's work to do
-    if( !empty( $attachment_ids ) )
-    {
-
-        foreach ( $attachment_ids as $i )
-        {
-            if( !empty( $_POST['attachment_id_' . $i] ) )
-            {
-                $attachment_id      = intval( $_POST['attachment_id_' . $i] );
+    if ( !empty( $attachment_ids ) ) {
+        foreach ( $attachment_ids as $i ) {
+            if ( ! empty( $_POST['attachment_id_' . $i] ) ) {
+                $attachment_id = intval( $_POST['attachment_id_' . $i] );
 
                 $attachment_details = array(
                     'id'        => $attachment_id,
@@ -527,13 +488,11 @@ function attachments_save($post_id)
 
                 // save native Attach
                 $settings = get_option( ATTACHMENTS_PREFIX . 'settings' );
-                if( isset( $settings['post_parent'] ) && $settings['post_parent'] )
-                {
+                if ( isset( $settings['post_parent'] ) && $settings['post_parent'] ) {
                     // need to first check to make sure we're not overwriting a native Attach
                     $attach_post_ref = get_post( $attachment_id );
 
-                    if( $attach_post_ref->post_parent == 0 )
-                    {
+                    if ( $attach_post_ref->post_parent == 0 ) {
                         // no current Attach, we can add ours
                         $attach_post                    = array();
                         $attach_post['ID']              = $attachment_id;

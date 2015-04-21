@@ -7,14 +7,19 @@
  * @subpackage Main
  */
 
+// exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 // Declare our class
-if ( !class_exists( 'Attachments_Field' ) ) :
+if ( ! class_exists( 'Attachments_Field' ) ) :
 
     /**
      * Attachments_Field
      */
-    abstract class Attachments_Field
-    {
+    abstract class Attachments_Field {
+
         public $instance;       // the instance this field is used within
         public $name;           // the user-defined field name
         public $field_name;     // the name attribute to be used
@@ -35,8 +40,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
          * @param string $label Field label
          * @param mixed $value Field value
          */
-        function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() )
-        {
+        function __construct( $name = 'name', $label = 'Name', $value = null, $meta = array() ) {
             $this->name     = sanitize_title( $name );
             $this->label    = __( esc_attr( $label) );
             $this->value    = $value;
@@ -53,8 +57,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
          * @param string $instance The instance name
          * @param Attachments_Field $field    The field object
          */
-        function set_field_instance( $instance, $field )
-        {
+        function set_field_instance( $instance, $field ) {
             $field->instance = $instance;
         }
 
@@ -65,16 +68,16 @@ if ( !class_exists( 'Attachments_Field' ) ) :
          * @param Attachments_Field $field The field object
          * @param string $uid   Existing UID if applicable
          */
-        function set_field_identifiers( $field, $uid = null )
-        {
+        function set_field_identifiers( $field, $uid = null ) {
             // we MUST have an instance
-            if( empty( $field->instance ) )
+            if ( empty( $field->instance ) ) {
                 return false;
+            }
 
             // if we're pulling an existing Attachment (field has a value) we're going to use
             // a PHP uniqid to set up our array flags but if we're setting up our Underscore
             // template we need to use a variable flag to be processed later
-            $this->uid = !is_null( $uid ) ? $uid : '{{ attachments.attachment_uid }}';
+            $this->uid = ! is_null( $uid ) ? $uid : '{{ attachments.attachment_uid }}';
 
             // set the name
             $field->field_name = "attachments[$field->instance][$this->uid][fields][$field->name]";
@@ -89,8 +92,7 @@ if ( !class_exists( 'Attachments_Field' ) ) :
          * Sets the field type of the field
          * @param string $field_type Registered field type name
          */
-        function set_field_type( $field_type )
-        {
+        function set_field_type( $field_type ) {
             $this->type = $field_type;
         }
 
@@ -100,10 +102,10 @@ if ( !class_exists( 'Attachments_Field' ) ) :
          * Sets the WordPress meta attribute to be used as the default
          * @param string $default One of the approved defauls (title, caption, alt, description)
          */
-        function set_field_default( $default = '' )
-        {
-            if( is_string( $default ) && !empty( $default ) && in_array( strtolower( $default ), $this->defaults ) )
+        function set_field_default( $default = '' ) {
+            if ( is_string( $default ) && ! empty( $default ) && in_array( strtolower( $default ), $this->defaults ) ) {
                 $this->default = strtolower( $default );
+            }
         }
 
 
