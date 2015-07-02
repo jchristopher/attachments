@@ -1518,6 +1518,8 @@ if ( ! class_exists( 'Attachments' ) ) :
             // final data store
             $attachments = array();
 
+	        $attachments_meta = apply_filters( 'attachments_meta_before_save', $attachments_meta, $post_id );
+
             // loop through each submitted instance
             foreach ( $attachments_meta as $instance => $instance_attachments ) {
                 // loop through each Attachment of this instance
