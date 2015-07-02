@@ -785,7 +785,14 @@ if ( ! class_exists( 'Attachments' ) ) :
                             button: {
                                 // Set the text of the button.
                                 text: button
-                            }
+                            },
+                            
+                            // Enable filters
+                            states: [
+                                new wp.media.controller.Library({
+                                    filterable: 'all'
+                                })
+                            ]
                         });
 
                         // set up our select handler
@@ -892,7 +899,12 @@ if ( ! class_exists( 'Attachments' ) ) :
                             },
                             button: {
                                 text: '<?php _e( "Change", 'attachments' ); ?>'
-                            }
+                            },
+                            states: [
+                                new wp.media.controller.Library({
+                                    filterable: 'all'
+                                })
+                            ]
                         });
 
                         editframe.on( 'select', function(){
