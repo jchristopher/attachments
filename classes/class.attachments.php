@@ -879,11 +879,13 @@ if ( ! class_exists( 'Attachments' ) ) :
 
                     });
 
+	                var targetAttachment;
+
                     $element.on( 'click', '.edit-attachment-asset', function( event ) {
 
                         event.preventDefault();
 
-                        var targetAttachment = $(event.target).parents(".attachments-attachment");
+                        targetAttachment = $(event.target).parents(".attachments-attachment");
 
                         if ( editframe ) {
                             editframe.open();
@@ -950,8 +952,6 @@ if ( ! class_exists( 'Attachments' ) ) :
                     } );
 
                     $element.on( 'click', '.delete-attachment a', function( event ) {
-
-                        var targetAttachment;
 
                         event.preventDefault();
 
