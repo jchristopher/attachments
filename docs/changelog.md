@@ -3,6 +3,12 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 ## [Docs TOC](TOC.md) / Changelog
 
 <dl>
+    <dt>3.5.6</dt>
+    <dd>Fixed an issue where changing an Attachment on more than one Attachment would continually update the first Attachment</dd>
+    <dd>Media modal now includes filters (props marcochiesi)</dd>
+    <dd>Added German translation (props bessl)</dd>
+    <dt>3.5.5</dt>
+    <dd>Fixed an issue where field values were improperly overwritten when the instance was set to prepend in some cases</dd>
 	<dt>3.5.4</dt>
 	<dd>Fixed assumption of field keys (props bukka)</dd>
 	<dd>Improved documentation (props Lane Goldberg, Roman Kokarev, Ore Landau)</dd>

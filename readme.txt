@@ -91,6 +91,11 @@ Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues
 
 Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/docs/changelog.md)
 
+= 3.5.6 =
+* Fixed an issue where changing an Attachment on more than one Attachment would continually update the first Attachment
+* Media modal now includes filters (props marcochiesi)
+* Added German translation (props bessl)
+
 = 3.5.5 =
 * Fixed an issue where field values were improperly overwritten when the instance was set to prepend in some cases
 
