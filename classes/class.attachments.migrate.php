@@ -27,9 +27,9 @@ class AttachmentsMigrate extends Attachments {
             return false;
         }
 
-        $instance   = str_replace( '-', '_', sanitize_title( $instance ) );
-        $title      = empty( $title ) ? false : str_replace( '-', '_', sanitize_title( $title ) );
-        $caption    = empty( $caption ) ? false : str_replace( '-', '_', sanitize_title( $caption ) );
+        $instance   = sanitize_text_field( $instance );
+        $title      = empty( $title ) ? false : sanitize_text_field( $title ) ;
+        $caption    = empty( $caption ) ? false : sanitize_text_field( $caption );
 
         // we need our deprecated functions
         include_once( ATTACHMENTS_DIR . '/deprecated/get-attachments.php' );
@@ -329,7 +329,7 @@ class AttachmentsMigrate extends Attachments {
         $fields = array(<?php if( is_array( $attachments_pro_instance['fields'] ) ) : foreach( $attachments_pro_instance['fields'] as $field ) : if( $field['type'] == 'textfield' ) { $field['type'] = 'text'; } ?>
 
             array(
-                'name'      => '<?php echo str_replace( '-', '_', sanitize_title( $field['label'] ) ); ?>',
+                'name'      => '<?php echo esc_html( sanitize_text_field( $field['label'] ) ); ?>',
                 'type'      => '<?php echo esc_html( $field['type'] ); ?>',
                 'label'     => '<?php echo esc_html( $field['label'] ); ?>',
                 'default'   => '<?php echo isset( $field['mapped_to'] ) ? esc_html( $field['mapped_to'] ) : ''; ?>',
@@ -747,7 +747,7 @@ EOD;
                 Source: &lt;?php echo $attachments-&gt;src( 'full' ); ?&gt;&lt;br /&gt;
                 Size: &lt;?php echo $attachments-&gt;filesize(); ?&gt;&lt;br /&gt;<?php if( is_array( $attachments_pro_instance['fields'] ) ) : ?><?php foreach( $attachments_pro_instance['fields'] as $field ) : ?><?php if( $field['type'] == 'textfield' ) { $field['type'] = 'text'; } ?>
 
-                <?php echo $field['label']; ?>: &lt;?php echo $attachments-&gt;field( '<?php echo str_replace( '-', '_', sanitize_title( $field['label'] ) ); ?>' ); ?&gt;&lt;br /&gt;<?php endforeach; endif; ?>
+                <?php echo $field['label']; ?>: &lt;?php echo $attachments-&gt;field( '<?php echo esc_html( sanitize_text_field( $field['label'] ) ); ?>' ); ?&gt;&lt;br /&gt;<?php endforeach; endif; ?>
 
             &lt;/li&gt;
         &lt;?php endwhile; ?&gt;
@@ -840,7 +840,7 @@ EOD;
                                     foreach( $instance_attachment['fields'] as $instance_attachment_field_key => $instance_attachment_field )
                                     {
                                         $destination_field_name = $instance['fields'][$instance_attachment_field_key]['label'];
-                                        $destination_field_name = str_replace( '-', '_', sanitize_title( $destination_field_name ) );
+                                        $destination_field_name = sanitize_text_field( $destination_field_name );
 
                                         $converted_attachment['fields'][$destination_field_name] = $instance_attachment_field;
                                     }

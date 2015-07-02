@@ -1052,7 +1052,7 @@ if ( ! class_exists( 'Attachments' ) ) :
 
             // sanitize
             if ( isset( $params['name'] ) ) {
-               $params['name'] = str_replace( '-', '_', sanitize_title( $params['name'] ) );
+               $params['name'] = sanitize_text_field( $params['name'] );
             }
 
             if ( isset( $params['label'] ) ) {
@@ -1161,7 +1161,7 @@ if ( ! class_exists( 'Attachments' ) ) :
             }
 
             // make sure the instance name is proper
-            $instance = str_replace( '-', '_', sanitize_title( $name ) );
+            $instance = sanitize_text_field( $name );
 
             // register the fields
             if ( isset( $params['fields'] ) && is_array( $params['fields'] ) && count( $params['fields'] ) ) {
