@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 4.2
-Stable tag: 3.5.5
+Stable tag: 3.5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,9 @@ Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/at
 * Fixed an issue where changing an Attachment on more than one Attachment would continually update the first Attachment
 * Media modal now includes filters (props marcochiesi)
 * Added German translation (props bessl)
+* Added filter to manipulate Attachments metadata before it's saved: `attachments_meta_before_save`
+* Underscores are no longer enforced over hyphens
+* More entropy for Attachments uid's to prevent collisions (props sketchpad)
 
 = 3.5.5 =
 * Fixed an issue where field values were improperly overwritten when the instance was set to prepend in some cases

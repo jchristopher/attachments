@@ -7,6 +7,9 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
     <dd>Fixed an issue where changing an Attachment on more than one Attachment would continually update the first Attachment</dd>
     <dd>Media modal now includes filters (props marcochiesi)</dd>
     <dd>Added German translation (props bessl)</dd>
+    <dd>Added filter to manipulate Attachments metadata before it's saved: <code>attachments_meta_before_save</code></dd>
+    <dd>Underscores are no longer enforced over hyphens</dd>
+    <dd>More entropy for Attachments uid's to prevent collisions (props sketchpad)</dd>
     <dt>3.5.5</dt>
     <dd>Fixed an issue where field values were improperly overwritten when the instance was set to prepend in some cases</dd>
 	<dt>3.5.4</dt>
