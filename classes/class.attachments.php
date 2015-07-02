@@ -726,7 +726,7 @@ if ( ! class_exists( 'Attachments' ) ) :
                         if ( isset( $instance->attachments ) && !empty( $instance->attachments ) ) {
                             foreach( $instance->attachments as $attachment ) {
                                 // we need to give our Attachment a uid to carry through to all the fields
-                                $attachment->uid = uniqid();
+	                            $attachment->uid = esc_attr( str_replace( '.', '', uniqid( '', true ) ) );
 
                                 // we'll create the attachment
                                 $this->create_attachment( $instance->name, $attachment );
