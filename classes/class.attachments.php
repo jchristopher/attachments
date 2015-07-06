@@ -786,10 +786,13 @@ if ( ! class_exists( 'Attachments' ) ) :
                                 // Set the text of the button.
                                 text: button
                             },
-                            
+
                             // Enable filters
                             states: [
                                 new wp.media.controller.Library({
+	                                <?php if( $instance->limit < 0 || $instance->limit > 1 ) : ?>
+	                                    multiple: true,
+	                                <?php endif; ?>
                                     filterable: 'all'
                                 })
                             ]
