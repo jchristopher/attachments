@@ -1003,27 +1003,19 @@ if ( ! class_exists( 'Attachments' ) ) :
             foreach ( $field_types as $type => $path ) {
                 // proceed with inclusion
                 if ( file_exists( $path ) ) {
+                    // Store a list of all declared classes before we include the file
+                    $existing_classes = get_declared_classes();
+                    
                     // include the file
                     include_once( $path );
 
-                    // store the registered classes so we can single out what gets added
-                    $existing_classes = get_declared_classes();
+                    // Get the new list of classes and find which ones are new
+                    $new_classes = array_diff( get_declared_classes(), $existing_classes );
 
-                    // we're going to use our Attachments class as a reference because
-                    // during subsequent instantiations of Attachments (e.g. within template files)
-                    // these field classes WILL NOT be added to the array again because
-                    // we're using include_once() so that strategy is no longer useful
-
-                    // determine it's class
-                    $flag = array_search( 'Attachments_Field', $existing_classes );
-
-                    // the field's class is next
-                    $field_class = $existing_classes[$flag + $field_index + 1];
-
-                    // create our link using our new field class
-                    $field_types[ $type ] = $field_class;
-
-                    $field_index++;
+                    // Add the first class to $field_types
+                    if ( ! empty( $new_classes ) ) {                    
+                        $field_types[ $type ] = $new_classes[0];
+                    }
                 }
             }
 
