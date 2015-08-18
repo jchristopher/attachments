@@ -329,7 +329,7 @@ class AttachmentsMigrate extends Attachments {
         $fields = array(<?php if( is_array( $attachments_pro_instance['fields'] ) ) : foreach( $attachments_pro_instance['fields'] as $field ) : if( $field['type'] == 'textfield' ) { $field['type'] = 'text'; } ?>
 
             array(
-                'name'      => '<?php echo esc_html( sanitize_text_field( $field['label'] ) ); ?>',
+                'name'      => '<?php echo esc_html( str_replace( '-', '_', sanitize_title( $field['label'] ) ) ); ?>',
                 'type'      => '<?php echo esc_html( $field['type'] ); ?>',
                 'label'     => '<?php echo esc_html( $field['label'] ); ?>',
                 'default'   => '<?php echo isset( $field['mapped_to'] ) ? esc_html( $field['mapped_to'] ) : ''; ?>',
@@ -747,7 +747,7 @@ EOD;
                 Source: &lt;?php echo $attachments-&gt;src( 'full' ); ?&gt;&lt;br /&gt;
                 Size: &lt;?php echo $attachments-&gt;filesize(); ?&gt;&lt;br /&gt;<?php if( is_array( $attachments_pro_instance['fields'] ) ) : ?><?php foreach( $attachments_pro_instance['fields'] as $field ) : ?><?php if( $field['type'] == 'textfield' ) { $field['type'] = 'text'; } ?>
 
-                <?php echo $field['label']; ?>: &lt;?php echo $attachments-&gt;field( '<?php echo esc_html( sanitize_text_field( $field['label'] ) ); ?>' ); ?&gt;&lt;br /&gt;<?php endforeach; endif; ?>
+                <?php echo $field['label']; ?>: &lt;?php echo $attachments-&gt;field( '<?php echo esc_html( str_replace( '-', '_', sanitize_title( $field['label'] ) ) ); ?>' ); ?&gt;&lt;br /&gt;<?php endforeach; endif; ?>
 
             &lt;/li&gt;
         &lt;?php endwhile; ?&gt;
@@ -797,6 +797,9 @@ EOD;
 
         $post_types = get_post_types();
 
+        $instance_name = $instance['name'];
+        $instance_fields = $instance['fields'];
+
         // set up our WP_Query args to grab anything (really anything) with legacy data
         $args = array(
             'post_type'         => !empty( $post_types ) ? $post_types : array( 'post', 'page' ),
@@ -808,7 +811,7 @@ EOD;
 
         $query = new WP_Query( $args );
 
-        $count = array( 'instance' => $instance['name'], 'total' => 0 );
+        $count = array( 'instance' => $instance_name, 'total' => 0 );
 
         if( $query )
         {
@@ -827,10 +830,11 @@ EOD;
                     $post_attachments = array();
                     foreach( $existing_instances as $instance_name => $instance_attachments )
                     {
-                        if( $instance_name == $instance['name'] )
+                        if( $instance_name == $instance_name )
                         {
                             $post_attachments[$instance_name] = array();
                             $converted_attachment = array();
+
                             foreach( $instance_attachments as $instance_attachment )
                             {
                                 $converted_attachment['id'] = $instance_attachment['id'];
@@ -839,8 +843,8 @@ EOD;
                                     $converted_attachment['fields'] = array();
                                     foreach( $instance_attachment['fields'] as $instance_attachment_field_key => $instance_attachment_field )
                                     {
-                                        $destination_field_name = $instance['fields'][$instance_attachment_field_key]['label'];
-                                        $destination_field_name = sanitize_text_field( $destination_field_name );
+                                        $destination_field_name = $instance_fields[$instance_attachment_field_key]['label'];
+                                        $destination_field_name = str_replace( '-', '_', sanitize_title( $destination_field_name ) );
 
                                         $converted_attachment['fields'][$destination_field_name] = $instance_attachment_field;
                                     }
