@@ -4,7 +4,7 @@ Donate link: http://mondaybynoon.com/donate/
 Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
 Requires at least: 3.0
 Tested up to: 4.2
-Stable tag: 3.5.7
+Stable tag: 3.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,6 +90,9 @@ Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues
 == Changelog ==
 
 Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/docs/changelog.md)
+
+= 3.5.8 =
+* Fixed a potential issue when migrating from Attachments Pro
 
 = 3.5.7 =
 * Fixed a regression that prevented attaching multiple files at once

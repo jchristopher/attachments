@@ -3,6 +3,8 @@ This is a WordPress plugin. [Official download available on WordPress.org](http:
 ## [Docs TOC](TOC.md) / Changelog
 
 <dl>
+    <dt>3.5.8</dt>
+    <dd>Fixed a potential issue when migrating from Attachments Pro</dd>
     <dt>3.5.7</dt>
     <dd>Fixed a regression that prevented attaching multiple files at once</dd>
     <dt>3.5.6</dt>
