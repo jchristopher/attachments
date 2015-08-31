@@ -990,36 +990,23 @@ if ( ! class_exists( 'Attachments' ) ) :
          **/
         function get_field_types() {
             $field_types = array(
-                'text'      => ATTACHMENTS_DIR . 'classes/fields/class.field.text.php',
-                'textarea'  => ATTACHMENTS_DIR . 'classes/fields/class.field.textarea.php',
-                'select'    => ATTACHMENTS_DIR . 'classes/fields/class.field.select.php',
-                'wysiwyg'   => ATTACHMENTS_DIR . 'classes/fields/class.field.wysiwyg.php',
+                'text'      => 'Attachments_Field_Text',
+                'textarea'  => 'Attachments_Field_Textarea',
+                'select'    => 'Attachments_Field_Select',
+                'wysiwyg'   => 'Attachments_Field_WYSIWYG',
             );
 
-            // support custom field types
-            // $field_types = apply_filters( 'attachments_fields', $field_types );
-
-            $field_index = 0;
-            foreach ( $field_types as $type => $path ) {
+            foreach ( $field_types as $type => $name ) {
                 // proceed with inclusion
+                $path = ATTACHMENTS_DIR . "classes/fields/class.field.{$type}.php"
                 if ( file_exists( $path ) ) {
-                    // Store a list of all declared classes before we include the file
-                    $existing_classes = get_declared_classes();
-                    
                     // include the file
                     include_once( $path );
-
-                    // Get the new list of classes and find which ones are new
-                    $new_classes = array_diff( get_declared_classes(), $existing_classes );
-
-                    // Add the first class to $field_types
-                    if ( ! empty( $new_classes ) ) {                    
-                        $field_types[ $type ] = $new_classes[0];
-                    }
+                } else {
+                    unset( $field_types[$type] );
                 }
             }
-
-            // send it back
+            
             return $field_types;
         }
 
