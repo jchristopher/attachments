@@ -987,6 +987,7 @@ if ( ! class_exists( 'Attachments' ) ) :
          * @since 3.0
          **/
         function get_field_types() {
+
             $field_types = array(
                 'text'      => 'Attachments_Field_Text',
                 'textarea'  => 'Attachments_Field_Textarea',
@@ -995,8 +996,8 @@ if ( ! class_exists( 'Attachments' ) ) :
             );
 
             foreach ( $field_types as $type => $name ) {
-                // proceed with inclusion
                 $path = ATTACHMENTS_DIR . "classes/fields/class.field.{$type}.php"
+
                 if ( file_exists( $path ) ) {
                     // include the file
                     include_once( $path );
@@ -1004,7 +1005,7 @@ if ( ! class_exists( 'Attachments' ) ) :
                     unset( $field_types[$type] );
                 }
             }
-            
+
             return $field_types;
         }
 
