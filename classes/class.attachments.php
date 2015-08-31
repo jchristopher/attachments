@@ -982,10 +982,8 @@ if ( ! class_exists( 'Attachments' ) ) :
 
 
         /**
-         * Support the inclusion of custom, user-defined field types
-         * Borrowed implementation from Custom Field Suite by Matt Gibbs
-         *      https://uproot.us/docs/creating-custom-field-types/
-         *
+         * Include the basic attachment fields for Text, Textarea, Select, and WYSIWYG
+         * 
          * @since 3.0
          **/
         function get_field_types() {
