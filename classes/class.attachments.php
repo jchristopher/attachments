@@ -983,7 +983,7 @@ if ( ! class_exists( 'Attachments' ) ) :
 
         /**
          * Include the basic attachment fields for Text, Textarea, Select, and WYSIWYG
-         * 
+         *
          * @since 3.0
          **/
         function get_field_types() {
@@ -996,7 +996,7 @@ if ( ! class_exists( 'Attachments' ) ) :
             );
 
             foreach ( $field_types as $type => $name ) {
-                $path = ATTACHMENTS_DIR . "classes/fields/class.field.{$type}.php"
+                $path = ATTACHMENTS_DIR . "classes/fields/class.field.{$type}.php";
 
                 if ( file_exists( $path ) ) {
                     // include the file
