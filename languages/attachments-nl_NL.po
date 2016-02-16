@@ -1,0 +1,336 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: attachments-0.1\n"
+"POT-Creation-Date: 2013-04-10 01:55+0100\n"
+"PO-Revision-Date: 2016-01-11 16:33+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n:1,2;_n_noop:1,2;"
+"_nx:1,2;_nx_noop:1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language-Team: \n"
+"Last-Translator: Dennis Hunink <dennishunink@me.com>\n"
+"Language: nl\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ../views\n"
+"X-Poedit-SearchPath-2: ../classes\n"
+"X-Poedit-SearchPath-3: ../classes/fields\n"
+"X-Poedit-SearchPath-4: ..\n"
+
+#: ../index.php:30
+msgid ""
+"Attachments requires PHP 5.2+. Attachments has been automatically "
+"deactivated."
+msgstr ""
+"Attachments vereist PHP 5.2 of nieuw. Attachments is automatisch "
+"uitgeschakeld."
+
+#: ../classes/class.attachments.legacy.php:112
+msgid ""
+"<strong>Attachments has detected legacy Attachments data.</strong> A lot has "
+"changed since Attachments 1.x."
+msgstr ""
+"<strong>Attachments heeft verouderde Attachments data gevonden.</strong> Er "
+"is een een heleboel veranderd sinds versie 1.x."
+
+#: ../classes/class.attachments.legacy.php:112
+msgid "Find out more"
+msgstr "Meer te weten komen"
+
+#: ../classes/class.attachments.migrate.php:162
+#: ../classes/class.attachments.migrate.php:218 ../views/options.php:13
+msgid "Invalid request"
+msgstr "Ongeldig verzoek"
+
+#: ../classes/class.attachments.migrate.php:164
+msgid "Migration Step 1"
+msgstr "Migratie stap 1"
+
+#: ../classes/class.attachments.migrate.php:165
+msgid ""
+"In order to migrate Attachments 1.x data, you need to set which instance and "
+"fields in version 3.0+ you'd like to use:"
+msgstr ""
+"Om Attachments 1.x data te migreren moet je aangeven welke instance en "
+"velden van versie 3.0+ je wilt gebruiken: "
+
+#: ../classes/class.attachments.migrate.php:174
+msgid "Attachments 3.x Instance"
+msgstr "Attachments 3.x Instance"
+
+#: ../classes/class.attachments.migrate.php:178
+msgid "The instance name you would like to use in the migration. Required."
+msgstr "De naam van de instance die je wilt migreren. Verplicht."
+
+#: ../classes/class.attachments.migrate.php:183
+msgid "Attachments 3.x Title"
+msgstr "Attachments 3.x Titel"
+
+#: ../classes/class.attachments.migrate.php:187
+msgid ""
+"The <code>Title</code> field data will be migrated to this field name in "
+"Attachments 3.x. Leave empty to disregard."
+msgstr ""
+"De data van het <code>Titel</code> veld zal worden gemigreerd naar deze "
+"veldnaam in Attachments 3.x. Laat leeg om te negeren."
+
+#: ../classes/class.attachments.migrate.php:192
+msgid "Attachments 3.x Caption"
+msgstr "Attachments 3.x onderschrift"
+
+#: ../classes/class.attachments.migrate.php:196
+msgid ""
+"The <code>Caption</code> field data will be migrated to this field name in "
+"Attachments 3.x. Leave empty to disregard."
+msgstr ""
+"De data van het <code>Onderschrift</code> veld zal worden gemigreerd naar "
+"deze veldnaam in Attachments 3.x. Laat leeg om te negeren."
+
+#: ../classes/class.attachments.migrate.php:224
+msgid "Migration Complete!"
+msgstr "Migratie voltooid!"
+
+#: ../classes/class.attachments.migrate.php:225
+msgid "The migration has completed."
+msgstr "De migratie is voltooid."
+
+#: ../classes/class.attachments.migrate.php:225
+msgid "Migrated"
+msgstr "Gemigreerd"
+
+#: ../classes/class.attachments.migrate.php:227
+msgid "Migration has already Run!"
+msgstr "Migratie is al uitgevoerd!"
+
+#: ../classes/class.attachments.migrate.php:228
+msgid ""
+"The migration has already been run. The migration process has not been "
+"repeated."
+msgstr ""
+"De migratie is al een keer uitgevoerd. Het migratie proces dient niet "
+"meermaals uitgevoerd te worden."
+
+#: ../classes/class.attachments.php:769 ../classes/class.attachments.php:843
+#: ../deprecated/attachments.php:365 ../languages/class.attachments.php:769
+#: ../languages/class.attachments.php:843
+msgid "Title"
+msgstr "Titel"
+
+#: ../classes/class.attachments.php:805 ../classes/class.attachments.php:1524
+#: ../deprecated/attachments.php:417 ../languages/class.attachments.php:805
+#: ../languages/class.attachments.php:1524 ../views/options.php:24
+msgid "Attachments"
+msgstr "Bijlagen"
+
+#: ../classes/class.attachments.php:830 ../classes/class.attachments.php:833
+#: ../deprecated/attachments.php:312 ../languages/class.attachments.php:830
+#: ../languages/class.attachments.php:833
+msgid "Attach"
+msgstr "Voeg toe"
+
+#: ../classes/class.attachments.php:849 ../deprecated/attachments.php:369
+#: ../languages/class.attachments.php:849
+msgid "Caption"
+msgstr "Bijschrift"
+
+#: ../classes/class.attachments.php:1100
+#: ../languages/class.attachments.php:1100
+msgid "Remove"
+msgstr "Verwijder"
+
+#: ../classes/class.attachments.php:1101
+#: ../languages/class.attachments.php:1101
+msgid "Toggle Fields"
+msgstr "Velden tonen/verbergen"
+
+#: ../deprecated/attachments.php:51
+msgid ""
+"Attachments requires PHP 5.2 or higher, as does WordPress 3.2+. Attachments "
+"has been automatically deactivated."
+msgstr ""
+"Attachments vereist PHP 5.2 of nieuwer, net zoals Wordpress 3.2+. "
+"Attachments is automatisch gedeactiveerd."
+
+#: ../deprecated/attachments.php:361
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: ../views/options.php:29
+msgid ""
+"<strong>Attachments has changed significantly since it's last update.</"
+"strong> These changes <em>will affect your themes and plugins</em>."
+msgstr ""
+"<strong>Attachments is behoorlijk veranderd sinds de laatste update.</"
+"strong> Deze aanpassingen hebben <em>flinke</em> invloed op je thema’s en "
+"plugins."
+
+#: ../views/options.php:32
+msgid "Immediate Reversal to Attachments 1.x"
+msgstr "Direct teruggaan naar Attachments 1.x"
+
+#: ../views/options.php:34
+msgid ""
+"If you would like to immediately <em>revert to the old version of "
+"Attachments</em> you may do so by downgrading the plugin install itself, or "
+"adding the following to your"
+msgstr ""
+"Als je direct terug wilt gaan naar de <em>oude versie van Attachments</em> "
+"dan kan dat door de plugin te downgraden of door het volgende toe te voegen "
+"aan je"
+
+#: ../views/options.php:38
+msgid "Overview of changes from Attachments 1.x"
+msgstr "Overzicht van de veranderingen sinds Attachments 1.x"
+
+#: ../views/options.php:40
+msgid ""
+"A lot has changed since Attachments 1.x. The entire codebase was rewritten "
+"to not only make better use of the stellar Media updates in WordPress 3.5, "
+"but to also facilitate some exciting features coming down the line. With "
+"this rewrite came significant changes to the way you will work with "
+"Attachments. One of the biggest changes in Attachments 3.0 is the ability to "
+"create multiple meta boxes of Attachments, each with any number of custom "
+"fields you define. By default, Attachments will re-implement the meta box "
+"you've been using until now, but <strong>you will need to trigger a "
+"migration to the new format</strong>."
+msgstr ""
+"Er is een hoop veranderd sinds Attachments 1.x. De volledig code is "
+"herschreven om zo optimaal mogelijk gebruik te maken van de Media updates "
+"van WordPress 3.5 en om een aantal nieuwe toepassingen mogelijk te maken. "
+"Doordat de code helemaal is herschreven, is de manier waarop je werkt met "
+"Attachments flink anders geworden. Misschien wel de meest belangrijke "
+"verandering is de mogelijkheid om meerdere meta-boxes voor Attachments toe "
+"te voegen, waarbij elke meta-box zijn eigen velden kan hebben. De "
+"Attachments plugin zal standaard de meta-box die je nu gebruikt opnieuw "
+"toepassen, maar je <strong>moet daarvoor wel eenmalig een migratieproces "
+"starten</strong> om alle data aan te passen naar het nieuwe formaat."
+
+#: ../views/options.php:42
+msgid "Migrating Attachments 1.x data to Attachments 3.x"
+msgstr "Attachments 1.x data aan het migreren naar Attachments 3.x"
+
+#: ../views/options.php:44
+msgid ""
+"If you have existing Attachments 1.x data and are using it, a migration "
+"script has been bundled here and you can use it below. If you would like to "
+"directly migrate from Attachments 1.x to Attachments 3.x you can use the "
+"defaults put in place and your data will be migrated to the new format "
+"quickly and easily. Alternatively, if you'd like to customize the fields "
+"you're using a bit, you can do that first and then adjust the migration "
+"parameters to map the old fields to your new ones."
+msgstr ""
+"Mocht je al Attachments 1.x data hebben die je gebruikt dan kun je gebruik "
+"maken van het migratie script dat hieronder beschikbaar is. Als je direct "
+"wil migreren van Attachments 1.x naar Attachments 3.x dan kun je de "
+"standaard waarden gebruiken. Je data wordt dan eenvoudig en snel omgezet "
+"naar het nieuwe formaat. Je kunt er echter ook voor kiezen om de velden die "
+"je gebruikt aan te passen. In dat geval pas je hieronder de migratie "
+"instellingen aan zodat je oude velden worden omgezet naar nieuwe."
+
+#: ../views/options.php:46
+msgid "Setting up Instances"
+msgstr "Instances gebruiken"
+
+#: ../views/options.php:48
+msgid ""
+"Attachments 3.0 ships with what are called <em>instances</em>. An instance "
+"is equivalent to a meta box on an edit screen and it has a number of "
+"properties you can customize. Please read the README for more information."
+msgstr ""
+"Attachments 3.0 werkt op basis van zogenaamde <em>instances</em>. Een enkele "
+"instance komt overeen met een metabox zoals je die ziet in het scherm waarin "
+"je berichten en pagina’s bewerkt. Elke instance heeft een reeks "
+"eigenschappen die je naar eigen inzicht kunt aanpassen. Lees het README "
+"bestand voor meer informatie."
+
+#: ../views/options.php:48 ../views/options.php:52
+msgid "Additinoal instructions"
+msgstr "Overige instructies"
+
+#: ../views/options.php:50
+msgid "Retrieving Attachments in your theme"
+msgstr "Bijlagen tonen in een thema"
+
+#: ../views/options.php:52
+msgid ""
+"As always has been the case with Attachments, editing your theme files is "
+"required. The syntax to do so has changed in Attachments 3.0. Please read the"
+msgstr ""
+"Het is noodzakelijk om de bestanden van je thema aan te passen, zoals dat "
+"altijd al zo is geweest bij het gebruik van Attachments. De manier waarop je "
+"die aanpassingen doet is echter wel veranderd sinds versie 3.0. Lees "
+"alsjeblieft de documentatie."
+
+#: ../views/options.php:85
+msgid "Migrate legacy Attachments data"
+msgstr "Migreer verouderde Attachments data"
+
+#: ../views/options.php:86
+msgid ""
+"Attachments has found records from version 1.x. Would you like to migrate "
+"them to version 3?"
+msgstr ""
+"Attachments heeft data gevonden van v1.x. Wil je deze data migreren naar "
+"versie 3?"
+
+#: ../views/options.php:87
+msgid "Migrate legacy data"
+msgstr "Migreer verouderde data"
+
+#: ../views/options.php:89
+msgid "You have already migrated your legacy Attachments data."
+msgstr "Je hebt de verouderde data al gemigreerd."
+
+#: ../views/options.php:92
+msgid "Revert to version 1.x"
+msgstr "Terug naar versie 1.x"
+
+#: ../views/options.php:93
+msgid ""
+"If you would like to forcefully revert to the 1.x version branch of "
+"Attachments, add the following to your"
+msgstr ""
+"Mocht je geforceerd terug willen naar versie 1.x van Attachments, voeg dan "
+"het volgende toe"
+
+#: ../views/options.php:95
+msgid "Meta box customization"
+msgstr "Meta-box aanpassingen"
+
+#: ../views/options.php:96
+msgid ""
+"By default, Attachments implements a single meta box on Posts and Pages with "
+"two fields. You can disable this default instance by adding the following to "
+"your"
+msgstr ""
+"Attachments voegt standaard een meta-box toe aan je Berichten en Pagina’s "
+"bewerk pagina. Deze meta-box heeft standaard twee velden. Je kunt deze "
+"standaard meta-box uitschakelen door het volgende toe te voegen"
+
+#: ../views/options.php:98
+msgid ""
+"Your Attachments meta box(es) can be customized by adding the following to "
+"your theme's"
+msgstr ""
+"Je Attachments meta-box(en) kunnen aangepast worden door het volgende toe te "
+"voegen aan je thema"
+
+#: ../views/options.php:100
+msgid "Using Attachments data in your theme"
+msgstr "Attachments gebruiken in je thema"
+
+#: ../views/options.php:101
+msgid ""
+"Attachments does not directly integrate with your theme out of the box, you "
+"will need to edit your theme's template files where appropriate. You can add "
+"the following within The Loop to retrieve all Attachments data for the "
+"current post:"
+msgstr ""
+"Attachments is niet direct geïntegreerd in je thema nadat je de plugin hebt "
+"geïnstalleerd. Je zult de template bestanden van je thema aan moeten passen. "
+"Voeg het volgende toe aan de Loop om alle Attachment data op te halen voor "
+"het huidige bericht:"
