@@ -982,52 +982,30 @@ if ( ! class_exists( 'Attachments' ) ) :
 
 
         /**
-         * Support the inclusion of custom, user-defined field types
-         * Borrowed implementation from Custom Field Suite by Matt Gibbs
-         *      https://uproot.us/docs/creating-custom-field-types/
+         * Include the basic attachment fields for Text, Textarea, Select, and WYSIWYG
          *
          * @since 3.0
          **/
         function get_field_types() {
+
             $field_types = array(
-                'text'      => ATTACHMENTS_DIR . 'classes/fields/class.field.text.php',
-                'textarea'  => ATTACHMENTS_DIR . 'classes/fields/class.field.textarea.php',
-                'select'    => ATTACHMENTS_DIR . 'classes/fields/class.field.select.php',
-                'wysiwyg'   => ATTACHMENTS_DIR . 'classes/fields/class.field.wysiwyg.php',
+                'text'      => 'Attachments_Field_Text',
+                'textarea'  => 'Attachments_Field_Textarea',
+                'select'    => 'Attachments_Field_Select',
+                'wysiwyg'   => 'Attachments_Field_WYSIWYG',
             );
 
-            // support custom field types
-            // $field_types = apply_filters( 'attachments_fields', $field_types );
+            foreach ( $field_types as $type => $name ) {
+                $path = ATTACHMENTS_DIR . "classes/fields/class.field.{$type}.php";
 
-            $field_index = 0;
-            foreach ( $field_types as $type => $path ) {
-                // proceed with inclusion
                 if ( file_exists( $path ) ) {
                     // include the file
                     include_once( $path );
-
-                    // store the registered classes so we can single out what gets added
-                    $existing_classes = get_declared_classes();
-
-                    // we're going to use our Attachments class as a reference because
-                    // during subsequent instantiations of Attachments (e.g. within template files)
-                    // these field classes WILL NOT be added to the array again because
-                    // we're using include_once() so that strategy is no longer useful
-
-                    // determine it's class
-                    $flag = array_search( 'Attachments_Field', $existing_classes );
-
-                    // the field's class is next
-                    $field_class = $existing_classes[$flag + $field_index + 1];
-
-                    // create our link using our new field class
-                    $field_types[ $type ] = $field_class;
-
-                    $field_index++;
+                } else {
+                    unset( $field_types[$type] );
                 }
             }
 
-            // send it back
             return $field_types;
         }
 
