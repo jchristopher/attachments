@@ -402,8 +402,21 @@ if ( ! class_exists( 'Attachments' ) ) :
 
             return $asset;
         }
+        
+        
 
-
+        /**
+         * Returns the original title
+         *
+         * @since 3.0.8.2
+         */
+        function title()
+        {
+            $asset = get_the_title( $this->attachments[$this->attachments_ref]->id );
+            return $asset;
+        }
+        
+        
 
         /**
          * Returns the date for the current Attachment
