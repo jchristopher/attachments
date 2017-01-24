@@ -994,6 +994,7 @@ if ( ! class_exists( 'Attachments' ) ) :
                 'textarea'  => ATTACHMENTS_DIR . 'classes/fields/class.field.textarea.php',
                 'select'    => ATTACHMENTS_DIR . 'classes/fields/class.field.select.php',
                 'wysiwyg'   => ATTACHMENTS_DIR . 'classes/fields/class.field.wysiwyg.php',
+                'date'      => ATTACHMENTS_DIR . 'classes/fields/class.field.date.php',
             );
 
             // support custom field types

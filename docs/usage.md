@@ -100,12 +100,13 @@ add_action( 'attachments_register', 'my_attachments' );
 
 #### Fields Reference
 
-At this time there are **four** field types available:
+At this time there are **five** field types available:
 
 1. `text`
 1. `textarea`
 1. `select`
 1. `wysiwyg`
+1. `date`
 
 When declaring fields for your instance, you'll be composing an array of fields, each with an array of parameters that set the various attributes of each field. Here is a full example of all available parameters for all available fields:
 
@@ -156,6 +157,13 @@ $fields         = array(
     'label'     => __( 'Description', 'attachments' ),  // label to display
     'default'   => 'description',                       // default value upon selection
   ),
+  array(
+    'name'      => 'date',                              // unique field name
+    'type'      => 'date',                              // registered field type
+    'label'     => __( 'Date', 'attachments' ),         // label to display
+    'default'   => 'date',                              // default value upon selection
+  ),
+
 );
 ```
 
