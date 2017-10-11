@@ -18,7 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-if( ( defined( 'ATTACHMENTS_LEGACY' ) && ATTACHMENTS_LEGACY === true ) || version_compare( $wp_version, '3.5', '<' ) ) {
+$wp_version = get_bloginfo( 'version' );
+
+if ( ( defined( 'ATTACHMENTS_LEGACY' ) && ATTACHMENTS_LEGACY === true ) || version_compare( $wp_version, '3.5', '<' ) ) {
   // load deprecated version of Attachments
   require_once dirname( __FILE__ ) . '/deprecated/attachments.php';
 } else {
