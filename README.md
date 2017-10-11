@@ -1,4 +1,4 @@
-This is a WordPress plugin. [Official download available on WordPress.org](http://wordpress.org/extend/plugins/attachments/).
+This is a WordPress plugin. [Official download available on WordPress.org](https://wordpress.org/plugins/attachments/).
 
 # Attachments
 
