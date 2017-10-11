@@ -1322,7 +1322,7 @@ if ( ! class_exists( 'Attachments' ) ) :
                         // since attributes can change over time (image gets replaced, cropped, etc.) we'll pull that info
                         if ( isset( $attachment->id ) ) {
                             // we'll just use the full size since that's what Media in 3.5 uses
-                            $attachment_meta        = wp_get_attachment_metadata( $attachment->id );
+                            $attachment_meta        = (array)wp_get_attachment_metadata( $attachment->id );
 
                             // only images return the 'file' key
                             if ( ! isset( $attachment_meta['file'] ) ) {
