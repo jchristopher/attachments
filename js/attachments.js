@@ -96,4 +96,23 @@ jQuery(document).ready(function($){
         $(this).parents('.attachments-attachment').find('.attachments-fields').toggle();
         return false;
     });
+    $('.attachments-container').each(function(){
+      $(this).append('<span class="attachments-toggler">Collapse</span>');
+    });
+    $('body').on('click', '.attachments-toggler', function(e) {
+      e.stopPropagation();
+      var $this = $(this);
+      var $parent = $this.parents('.postbox');
+      var $attachments = $parent.find('.attachments-attachment');
+      if(!$parent.data('collapsed')){
+        $attachments.find('.attachments-fields').height(105)
+        $parent.data('collapsed', true);
+        $this.text('Expand');
+      } else {
+        $attachments.find('.attachments-fields').css('height','');
+        $parent.data('collapsed', false);
+        $this.text('Collapse');
+      }
+      return false;
+    });
 });

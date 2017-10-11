@@ -301,3 +301,19 @@ a.attachments-invoke {
 .attachment-details .delete-attachment {
     float:right;
 }
+
+.attachments-container {
+    position: relative;
+}
+
+.attachments-toggler {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+.attachments-toggler:only-child {
+    display: none;
+}
