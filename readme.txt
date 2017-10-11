@@ -95,6 +95,7 @@ Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/at
 * Added link to collapse Attachments to make sorting easier
 * Fixes PHP Notice on installation
 * Fixes illegal offset error on PHP7
+* Added Dutch translation
 
 = 3.5.8 =
 * Fixed a potential issue when migrating from Attachments Pro
