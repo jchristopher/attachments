@@ -317,3 +317,19 @@ a.attachments-invoke {
 .attachments-toggler:only-child {
     display: none;
 }
+
+.attachments-attachment .select-attachment {
+    display: inline-block;
+    position: absolute;
+    top: 48px;
+    left: 2px;
+}
+
+a.button.attachments-batch-remove {
+    color: #a00;
+    border-color: #a00;
+}
+a.button.attachments-batch-remove:hover{
+    color: #a00;
+    border-color: #ff0000;
+}

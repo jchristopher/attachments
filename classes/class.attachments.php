@@ -736,6 +736,7 @@ if ( ! class_exists( 'Attachments' ) ) :
                 <?php if( $instance->append == true ) : ?>
                     <div class="attachments-invoke-wrapper">
                         <a class="button attachments-invoke"><?php _e( esc_attr( $instance->button_text ), 'attachments' ); ?></a>
+                        <a class="button attachments-batch-remove" style="display: none;"><?php _e( 'Remove selected', 'attachments' ); ?></a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -974,6 +975,31 @@ if ( ! class_exists( 'Attachments' ) ) :
                         );
 
                     } );
+
+                    $element.on('click', '.attachments-batch-remove', function removeSelectedAttachments(event){
+
+                        if(confirm('<?php _e('Are you sure want to remove selected items?','attachments'); ?>')){
+
+                            var $btn = $(this),
+                                $attachmentsToRemove = $('.select-attachment:checked', $element).parents('.attachments-attachment');
+
+                            $btn.hide();
+                            $attachmentsToRemove.find('.attachment-meta').fadeOut(125);
+                            $attachmentsToRemove.css('min-height',0).animate(
+                                {
+                                    padding: 0,
+                                    margin: 0,
+                                    height: 0
+                                },
+                                600,
+                                function(){
+                                    $attachmentsToRemove.remove();
+                                }
+                            );
+
+                        }
+                    });
+
 
                 });
             </script>
@@ -1315,6 +1341,8 @@ if ( ! class_exists( 'Attachments' ) ) :
             ?>
                 <div class="attachments-attachment attachments-attachment-<?php echo esc_attr( $instance ); ?>">
                     <?php $array_flag = ( isset( $attachment->uid ) ) ? $attachment->uid : '{{ attachments.attachment_uid }}'; ?>
+
+                    <input type="checkbox" class="select-attachment" title="<?php _e('Check for batch operations', 'attachments'); ?>">
 
                     <input type="hidden" class="attachments-track-id" name="attachments[<?php echo esc_attr( $instance ); ?>][<?php echo esc_attr( $array_flag ); ?>][id]" value="<?php echo isset( $attachment->id ) ? esc_attr( $attachment->id ) : '{{ attachments.id }}' ; ?>" />
 
