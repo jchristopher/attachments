@@ -828,9 +828,9 @@ EOD;
                 if( is_array( $existing_instances ) && count( $existing_instances ) > 0 )
                 {
                     $post_attachments = array();
-                    foreach( $existing_instances as $instance_name => $instance_attachments )
+                    foreach( $existing_instances as $existing_instance_name => $instance_attachments )
                     {
-                        if( $instance_name == $instance_name )
+                        if( $instance_name == $existing_instance_name )
                         {
                             $post_attachments[$instance_name] = array();
                             $converted_attachment = array();
