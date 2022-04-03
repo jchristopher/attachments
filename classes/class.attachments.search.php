@@ -61,8 +61,10 @@ class AttachmentsSearch extends Attachments {
         }
 
         // since we have an array for our fields, we need to loop through and sanitize
-        for ( $i = 0; $i < count( $params['fields'] ); $i++ ) {
-            $params['fields'][ $i ] = sanitize_text_field( $params['fields'][ $i ] );
+        if( $params['fields'] !== null ) {
+            for ( $i = 0; $i < count( $params['fields'] ); $i++ ) {
+                $params['fields'][ $i ] = sanitize_text_field( $params['fields'][ $i ] );
+            }
         }
 
         // prepare our search args
