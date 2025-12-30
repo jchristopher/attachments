@@ -115,4 +115,13 @@ jQuery(document).ready(function($){
       }
       return false;
     });
+
+    $('body').on('click','.select-attachment', function showBatchRemoveBtnIfNeeded(e){
+        //select all selected attachment checkboxes
+        if( $('.select-attachment:checked').length ){
+            $('.attachments-batch-remove').show();
+        }else{
+            $('.attachments-batch-remove').hide();
+        }
+    });
 });
