@@ -86,6 +86,7 @@ Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/at
 * Compatibility with WordPress 6.9
 * Fixes Fatal Error in some cases when deleting. Props [m-hefti](https://github.com/jchristopher/attachments/pull/194)
 * Fixes field value population for non-English values. Props [marcochiesi](https://github.com/jchristopher/attachments/pull/188)
+* Fixed bug in generated code for migration from Attachments Pro Props [marcochiesi](https://github.com/jchristopher/attachments/pull/185)
 
 = 3.5.9 =
 * Added link to collapse Attachments to make sorting easier
