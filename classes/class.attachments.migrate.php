@@ -645,8 +645,12 @@ if( !function_exists( 'attachments_magic_tags_processor' ) )
                 // we are dealing with a field
                 $field = explode( '_', $name );
 
-                if( isset( $field[1] ) )
-                    $value = $attachments_auto_append_ref->field( $field[1] );
+                $single_attachment = $attachments_auto_append_ref->get_single( $attachments_magic_tag_index - 1 );
+                $field_names = array_keys( get_object_vars ( $single_attachment->fields ) );
+                $field_index = $field[1] - 1;
+
+                if( isset( $field_names[ $field_index ] ) )
+                    $value = $attachments_auto_append_ref->field( $field_names[ $field_index ] );
             }
         }
 
