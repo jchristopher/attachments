@@ -28,7 +28,7 @@ class Attachments_Field_Textarea extends Attachments_Field {
      */
     function html( $field ) {
     ?>
-        <textarea type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" data-default="<?php esc_attr_e( $field->default ); ?>"><?php echo esc_textarea( $field->value ); ?></textarea>
+        <textarea type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" data-default="<?php echo esc_attr( $field->default ); ?>"><?php echo esc_textarea( $field->value ); ?></textarea>
     <?php
     }
 

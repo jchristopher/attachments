@@ -28,7 +28,7 @@ class Attachments_Field_Text extends Attachments_Field {
      */
     function html( $field ) {
     ?>
-        <input type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" value="<?php esc_attr_e( $field->value ); ?>" data-default="<?php esc_attr_e( $field->default ); ?>" />
+        <input type="text" name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="attachments attachments-field attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" value="<?php esc_attr_e( $field->value ); ?>" data-default="<?php echo esc_attr( $field->default ); ?>" />
     <?php
     }
 

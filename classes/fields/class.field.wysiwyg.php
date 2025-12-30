@@ -50,7 +50,7 @@ class Attachments_Field_WYSIWYG extends Attachments_Field {
     ?>
         <div class="wp-editor-wrap attachments-field-wysiwyg-editor-wrap">
             <div class="wp-editor-container">
-                <textarea name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="wp-editor-area attachments attachments-field attachments-field-wysiwyg attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" rows="10" data-default="<?php esc_attr_e( $field->default ); ?>"><?php echo $field->value; ?></textarea>
+                <textarea name="<?php esc_attr_e( $field->field_name ); ?>" id="<?php esc_attr_e( $field->field_id ); ?>" class="wp-editor-area attachments attachments-field attachments-field-wysiwyg attachments-field-<?php esc_attr_e( $field->field_name ); ?> attachments-field-<?php esc_attr_e( $field->field_id ); ?>" rows="10" data-default="<?php echo esc_attr( $field->default ); ?>"><?php echo $field->value; ?></textarea>
             </div>
         </div>
     <?php
