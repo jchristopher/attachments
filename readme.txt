@@ -80,7 +80,7 @@ Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues
 
 == Changelog ==
 
-Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/docs/changelog.md)
+Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/blob/master/docs/changelog.md)
 
 = 3.5.10 =
 * Compatibility with WordPress 6.9
@@ -279,8 +279,8 @@ Now piggybacking the awesome Media workflow introduced in WordPress 3.5
 
 == Roadmap ==
 
-Please see [Attachments on GitHub](https://github.com/jchristopher/attachments/docs/roadmap.md)
+Please see [Attachments on GitHub](https://github.com/jchristopher/attachments/blob/master/docs/roadmap.md)
 
 == Usage ==
 
-**Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/docs/usage.md)
+**Extensive** usage instructions are [available on GitHub](https://github.com/jchristopher/attachments/blob/master/docs/usage.md)
