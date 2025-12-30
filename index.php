@@ -6,7 +6,7 @@
   * Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
   * Author:      Jon Christopher
   * Author URI:  https://jonchristopher.us/
-  * Version:     3.5.10
+  * Version:     3.5.11
   * Text Domain: attachments
   * Domain Path: /languages/
   * License:     GPLv2 or later

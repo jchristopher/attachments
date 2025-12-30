@@ -1,9 +1,9 @@
 === Attachments ===
 Contributors: jchristopher
-Tags: post, page, posts, pages, images, PDF, doc, Word, image, jpg, jpeg, picture, pictures, photos, attachment
+Tags: attachment, post, page, PDF, picture
 Requires at least: 3.0
 Tested up to: 6.9
-Stable tag: 3.5.10
+Stable tag: 3.5.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,7 +82,7 @@ Please see [Issues on GitHub](https://github.com/jchristopher/attachments/issues
 
 Please see [Attachments' changelog on GitHub](https://github.com/jchristopher/attachments/blob/master/docs/changelog.md)
 
-= 3.5.10 =
+= 3.5.11 =
 * Compatibility with WordPress 6.9
 * Fixes Fatal Error in some cases when deleting. Props [m-hefti](https://github.com/jchristopher/attachments/pull/194)
 * Fixes field value population for non-English values. Props [marcochiesi](https://github.com/jchristopher/attachments/pull/188)
