@@ -122,7 +122,9 @@ if ( ! class_exists( 'Attachments' ) ) :
         /**
          * Add notification about available Attachments extensions
          */
-        function update_message() { ?>
+        function update_message() { 
+            return;
+            ?>
             <div style="margin-top:10px;padding-top:8px;border-top:1px solid #eaeaea;"><span style="color:#f00;"><?php _e( 'Attachments Extensions Available!', 'attachments' ); ?></span> <span style="font-weight:normal;"><?php _e( 'These utilities make working with Attachments even easier!', 'attachments' ); ?></span></div>
             <div style="font-weight:normal;padding-top:8px;">
                 <p><strong><a href="https://mondaybynoon.com/members/plugins/attachments-ui/?utm_campaign=Attachments&utm_term=Upgrade%2bNotice">Attachments UI</a></strong> - <?php _e( 'Create Attachments Instances with an easy-to-use UI, easily limit meta box locations with fine grained control (e.g. Home page only), and more.', 'attachments' ); ?></p>

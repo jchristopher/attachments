@@ -4,9 +4,9 @@
   * Plugin Name: Attachments
   * Plugin URI:  https://github.com/jchristopher/attachments
   * Description: Attachments gives the ability to append any number of Media Library items to Pages, Posts, and Custom Post Types
-  * Author:      Jonathan Christopher
-  * Author URI:  http://mondaybynoon.com/
-  * Version:     3.5.9
+  * Author:      Jon Christopher
+  * Author URI:  https://jonchristopher.us/
+  * Version:     3.5.10
   * Text Domain: attachments
   * Domain Path: /languages/
   * License:     GPLv2 or later
